@@ -18,7 +18,7 @@ class GithubChangeHook(object):
             options = {}
         self._options = options
 
-    def getChanges(request):
+    def getChanges(self, request):
             """
             Reponds only to POST events and starts the build process
 
