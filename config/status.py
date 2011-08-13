@@ -13,7 +13,7 @@ STATUS.append(WebStatus(
     revlink=dict(zip(
         misc.components,
         [
-            "%s/%s/commit/%%s" % (misc.GITHUB_BASE, c) \
+            "%s/%s/commit/%%s" % (misc.GITHUB_BASE, c)
             for c in misc.components
         ]
     )),
@@ -29,19 +29,25 @@ STATUS.append(WebStatus(
 
     projects=dict(zip(
         misc.components,
-        ["%s/%s/wiki" % (misc.GITHUB_BASE, c) for c in misc.components]
+        [
+            "%s/%s/wiki" % (misc.GITHUB_BASE, c)
+            for c in misc.components
+        ]
     )),
 
     repositories=dict(zip(
         misc.components,
         [
-            "%s/%s/commits/master" % (misc.GITHUB_BASE, c) \
+            "%s/%s/commits/master" % (misc.GITHUB_BASE, c)
             for c in misc.components
         ]
     )),
 
     change_hook_dialects={
-        'erebot_github': {'user': 'fpoirotte', 'key': secrets.GITHUB_KEY},
+        'erebot_github': {
+            'user': 'fpoirotte',
+            'key': secrets.GITHUB_KEY,
+        },
     },
 ))
 
