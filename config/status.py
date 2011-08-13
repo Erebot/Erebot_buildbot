@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.status import words
-from buildbot.status.html import WebStatus
+from buildbot.status.web import baseweb
 from Erebot_buildbot.config import auth, misc
+from Erebot_buildbot.src import github_hook, change_hook
 import secrets
 
+# Override ChangeHookResource so that callables can be used directly.
+baseweb.ChangeHookResource = change_hook.CallableChangeHookResource
+
 STATUS = []
-STATUS.append(WebStatus(
+STATUS.append(baseweb.WebStatus(
     http_port='tcp:8010:interface=127.0.0.1',
     authz=auth.AUTHZ,
 
@@ -44,10 +48,10 @@ STATUS.append(WebStatus(
     )),
 
     change_hook_dialects={
-        'erebot_github': {
+        'erebot_github': github_hook.GithubChangeHook({
             'user': 'fpoirotte',
             'key': secrets.GITHUB_KEY,
-        },
+        }),
     },
 ))
 
