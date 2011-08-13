@@ -11,35 +11,35 @@ STATUS.append(WebStatus(
     authz=auth.AUTHZ,
 
     revlink=dict(zip(
-        misc.components,
+        misc.COMPONENTS,
         [
             "%s/%s/commit/%%s" % (misc.GITHUB_BASE, c)
-            for c in misc.components
+            for c in misc.COMPONENTS
         ]
     )),
 
     changecommentlink=dict(zip(
-        misc.components,
+        misc.COMPONENTS,
         [(
             r"#(\d+)",
             "%s/%s/issues/\\1" % (misc.GITHUB_BASE, c),
             r"Issue \g<0>"
-        ) for c in misc.components]
+        ) for c in misc.COMPONENTS]
     )),
 
     projects=dict(zip(
-        misc.components,
+        misc.COMPONENTS,
         [
             "%s/%s/wiki" % (misc.GITHUB_BASE, c)
-            for c in misc.components
+            for c in misc.COMPONENTS
         ]
     )),
 
     repositories=dict(zip(
-        misc.components,
+        misc.COMPONENTS,
         [
             "%s/%s/commits/master" % (misc.GITHUB_BASE, c)
-            for c in misc.components
+            for c in misc.COMPONENTS
         ]
     )),
 
