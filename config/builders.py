@@ -43,13 +43,13 @@ BUILDERS = [
         name='lint',
         slavenames=['Debian 6 - PHP 5.3'],
         factory=steps.QA_LINT,
-        category'QA',
+        category='QA',
     ),
     BuilderConfig(
         name='CodeSniffer',
         slavenames=['Debian 6 - PHP 5.3'],
         factory=steps.QA_CODESNIFFER,
-        category'QA',
+        category='QA',
     ),
 ]
 
