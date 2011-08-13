@@ -23,8 +23,8 @@ class Link(BuildStep):
         self.addURL(self.label, href)
         self.finished(SUCCESS)
 
-class PhingPHPUnit(ShellCommand, LogLineObserver):
-    name = 'PhingPHPUnit'
+class PHPUnit(ShellCommand, LogLineObserver):
+    name = 'PHPUnit'
 
     def __init__(self, **kwargs):
         ShellCommand.__init__(self, **kwargs)
