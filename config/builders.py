@@ -5,12 +5,12 @@ from Erebot_buildbot.config import steps
 BUILDERS = [
     BuilderConfig(
         name='debian-php52',
-        slavename='Debian6 - PHP 5.2',
+        slavename='Debian 6 - PHP 5.2',
         factory=steps.fact,
     ),
     BuilderConfig(
         name='debian-php53',
-        slavename='Debian6 - PHP 5.3',
+        slavename='Debian 6 - PHP 5.3',
         factory=steps.fact,
     ),
 ]

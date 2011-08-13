@@ -22,6 +22,7 @@ STATUS.append(baseweb.WebStatus(
         ]
     )),
 
+    # @TODO: use a callable instead, to add other links (eg. "sha:1234567").
     changecommentlink=dict(zip(
         misc.COMPONENTS,
         [(

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.schedulers.basic import Scheduler
+from buildbot.schedulers import basic, timed
 
 # Add a scheduler which will trigger the builder above
 # whenever the tree for that component changes and then
 # stabilizes.
 SCHEDULERS = [
-    Scheduler(
+    basic.Scheduler(
         name="full",
         treeStableTimer=60,
         builderNames=[
