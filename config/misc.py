@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-####### EREBOT MODULES
+GITHUB_BASE = "https://github.com/fpoirotte"
 
 COMPONENTS = (
     'Erebot',
@@ -24,7 +24,6 @@ COMPONENTS = (
     'Erebot_Module_RateLimiter',
     'Erebot_Module_Roulette',
     'Erebot_Module_ServerCapabilities',
-#    'Erebot_Module_Thiercelieux',
     'Erebot_Module_TriggerRegistry',
     'Erebot_Module_TV',
     'Erebot_Module_Uno',
@@ -32,6 +31,4 @@ COMPONENTS = (
     'Erebot_Module_WebGetter',
     'Erebot_Module_Wordlists',
 )
-
-GITHUB_BASE = "https://github.com/fpoirotte"
 

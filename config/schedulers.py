@@ -8,8 +8,8 @@ SCHEDULERS = [
         name="Regular",
         treeStableTimer=60,
         builderNames=[
-            'Tests PHP 5.2',
-            'Tests PHP 5.3',
+            'Tests - Debian 6 - PHP 5.2',
+            'Tests - Debian 6 - PHP 5.3',
             'Packaging',
         ],
     ),
@@ -21,10 +21,10 @@ SCHEDULERS = [
         name="Nightly",
         branch="master",
         builderNames=[
-            'API doc (HTML)',
-            'API doc (PDF)',
-            'lint',
-            'CodeSniffer',
+            'API doc - HTML',
+            'API doc - PDF',
+            'QA - lint',
+            'QA - CodeSniffer',
         ],
         # Run the builders twice a day, at 3:30 am/pm,
         # if and only if some change occurred since the last run.
@@ -33,6 +33,19 @@ SCHEDULERS = [
         onlyIfChanged=True,
     ),
 
-    # @TODO: add another Nightly scheduler for Windows (every week).
+    # It costs more to run the tests on Windows,
+    # so we run the tests on it less often.
+    timed.Nightly(
+        name="Windows",
+        branch="master",
+        builderNames=[
+            'Tests - WinXP - PHP 5.3',
+        ],
+        # Run the tests once a week on Mondays, at 5:00am.
+        hour=5,
+        minute=0,
+        dayOfWeek=0,
+        onlyIfChanged=True,
+    ),
 ]
 
