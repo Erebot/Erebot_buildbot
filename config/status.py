@@ -12,8 +12,10 @@ STATUS.append(WebStatus(
 
     revlink=dict(zip(
         misc.components,
-        ["%s/%s/commit/%%s" % (misc.GITHUB_BASE, c)
-            for c in misc.components]
+        [
+            "%s/%s/commit/%%s" % (misc.GITHUB_BASE, c) \
+            for c in misc.components
+        ]
     )),
 
     changecommentlink=dict(zip(
@@ -32,8 +34,10 @@ STATUS.append(WebStatus(
 
     repositories=dict(zip(
         misc.components,
-        ["%s/%s/commits/master" % (misc.GITHUB_BASE, c)
-            for c in misc.components]
+        [
+            "%s/%s/commits/master" % (misc.GITHUB_BASE, c) \
+            for c in misc.components
+        ]
     )),
 
     change_hook_dialects={
