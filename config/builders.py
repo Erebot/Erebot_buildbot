@@ -8,6 +8,9 @@ BUILDERS = [
         slavenames=['Debian 6 - PHP 5.2'],
         factory=steps.TESTS,
         category='Tests',
+        env={
+            'PATH': ':${PATH}',
+        },
     ),
     BuilderConfig(
         name='Tests - Debian 6 - PHP 5.3',
@@ -46,15 +49,9 @@ BUILDERS = [
         category='Packaging',
     ),
     BuilderConfig(
-        name='QA - lint',
+        name='Quality Assurance',
         slavenames=['Debian 6 - PHP 5.3'],
-        factory=steps.QA_LINT,
-        category='QA',
-    ),
-    BuilderConfig(
-        name='QA - CodeSniffer',
-        slavenames=['Debian 6 - PHP 5.3'],
-        factory=steps.QA_CODESNIFFER,
+        factory=steps.QA,
         category='QA',
     ),
 ]

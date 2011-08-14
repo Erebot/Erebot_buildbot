@@ -23,8 +23,7 @@ SCHEDULERS = [
         builderNames=[
             'API doc - HTML',
             'API doc - PDF',
-            'QA - lint',
-            'QA - CodeSniffer',
+            'Quality Assurance',
         ],
         # Run the builders twice a day, at 3:30 am/pm,
         # if and only if some change occurred since the last run.
