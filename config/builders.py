@@ -8,9 +8,6 @@ BUILDERS = [
         slavenames=['Debian 6 - PHP 5.2'],
         factory=steps.TESTS,
         category='Tests',
-        env={
-            'PATH': ':${PATH}',
-        },
     ),
     BuilderConfig(
         name='Tests - Debian 6 - PHP 5.3',

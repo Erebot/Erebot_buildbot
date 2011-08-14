@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.process import factory
+from buildbot.process import factory, properties
 from buildbot.steps import shell
 from Erebot_buildbot.config.steps import common
 
@@ -13,7 +13,7 @@ QA.addStep(shell.ShellCommand(
     descriptionDone="lint",
     warnOnWarnings=True,
     env={
-        'PATH': '%(bin_dir)s:${PATH}'
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
     maxTime=5 * 60,
 ))
@@ -24,7 +24,7 @@ QA.addStep(shell.ShellCommand(
     descriptionDone="CodeSniffer",
     warnOnWarnings=True,
     env={
-        'PATH': '%(bin_dir)s:${PATH}'
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
     maxTime=5 * 60,
 ))
@@ -35,7 +35,7 @@ QA.addStep(shell.ShellCommand(
     descriptionDone="Duplicates",
     warnOnWarnings=True,
     env={
-        'PATH': '%(bin_dir)s:${PATH}'
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
     maxTime=5 * 60,
 ))
@@ -46,7 +46,7 @@ QA.addStep(shell.ShellCommand(
     descriptionDone="Mess",
     warnOnWarnings=True,
     env={
-        'PATH': '%(bin_dir)s:${PATH}'
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
     maxTime=5* 60,
 ))

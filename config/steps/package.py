@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.process import factory
+from buildbot.process import factory, properties
 from buildbot.steps import shell
 from Erebot_buildbot.config.steps import common
 
@@ -12,7 +12,7 @@ PACKAGE.addStep(shell.Compile(
         # Ensures the output doesn't use
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
-        'PATH': "%(bin_dir)s:${PATH}",
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
     warnOnWarnings=True,
     warnOnFailure=True,

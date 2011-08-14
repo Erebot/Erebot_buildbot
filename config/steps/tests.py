@@ -16,7 +16,7 @@ TESTS.addStep(shell.Compile(
         # Ensures the output doesn't use
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
-        'PATH': "%(bin_dir)s:${PATH}",
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
     warnOnWarnings=True,
     warnOnFailure=True,
@@ -33,7 +33,7 @@ TESTS.addStep(PHPUnit(
     descriptionDone="tests",
     warnOnWarnings=True,
     env={
-        'PATH': "%(bin_dir)s:${PATH}",
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
     maxTime=10 * 60,
 ))
@@ -44,19 +44,24 @@ TESTS.addStep(PHPUnit(
     descriptionDone="tests",
     warnOnWarnings=True,
     env={
-        'PATH': "%(bin_dir)s:${PATH}",
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
     maxTime=10 * 60,
-    doStepIf=helpers.if_buildslave('Debian 6 - PHP 5.2'),
+    doStepIf=helpers.if_buildslave(),
 ))
+
+
+# Use only the PHP 5.2 setup to report coverage data.
+# Also, only upload code coverage reports for passing tests.
+def must_transfer_coverage(step):
+    slaves = ('Debian 6 - PHP 5.2', )
+    return step.getSlaveName() in slaves and step.getProperty('Passed')
 
 TESTS.addStep(transfer.DirectoryUpload(
     slavesrc="docs/coverage/",
     masterdest=
         properties.WithProperties("public_html/doc/coverage/%(project)s/"),
-    # Only upload the code coverage
-    # information when the tests passed.
-    doStepIf=lambda step: step.getProperty('Passed'),
+    doStepIf=must_transfer_coverage,
     maxsize=10 * (1 << 20), # 10 MiB
 ))
 
