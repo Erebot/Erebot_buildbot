@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.process import factory, properties
+from buildbot.steps import shell, transfer
 from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.src.steps import Link, PHPUnit
 

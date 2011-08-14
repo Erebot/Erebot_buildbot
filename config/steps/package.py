@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.process import factory
+from buildbot.steps import shell
 from Erebot_buildbot.config.steps import common
 
 PACKAGE = factory.BuildFactory()
