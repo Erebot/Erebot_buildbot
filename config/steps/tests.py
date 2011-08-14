@@ -38,19 +38,6 @@ TESTS.addStep(PHPUnit(
     maxTime=10 * 60,
 ))
 
-TESTS.addStep(PHPUnit(
-    command="phing test",
-    description="tests",
-    descriptionDone="tests",
-    warnOnWarnings=True,
-    env={
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
-    },
-    maxTime=10 * 60,
-    doStepIf=helpers.if_buildslave(),
-))
-
-
 # Use only the PHP 5.2 setup to report coverage data.
 # Also, only upload code coverage reports for passing tests.
 def must_transfer_coverage(step):
