@@ -3,7 +3,7 @@
 from buildbot.steps import source
 
 clone = source.Git(
-    mode='full',
+    mode='clobber',
     repourl='%s.git',
     submodules=True,
     progress=True,
