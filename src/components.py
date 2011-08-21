@@ -49,7 +49,7 @@ class ComponentsResource(HtmlResource):
         status = self.getStatus(req)
         builders = req.args.get("builder", status.getBuilderNames())
         bs = cxt['builders'] = []
-        cxt['components'] = misc.COMPONENTS[:]
+        cxt['components'] = sorted(misc.COMPONENTS, key=lambda x: x.lower())
         cxt['results'] = status.db.runInteractionNow(self._txn, status.db)
 
         base_builders_url = path_to_root(req) + "builders/"
