@@ -8,7 +8,7 @@ class ComponentsResource(HtmlResource):
     title = "Components"
     addSlash = True
 
-    def _txn(self, t, conn):
+    def _txn(self, t, conn, root):
         results = {}
         q = conn.quoteq("""
             SELECT
@@ -40,7 +40,7 @@ class ComponentsResource(HtmlResource):
             if buildername not in results:
                 results[buildername] = {}
             results[buildername][project] = (
-                number,
+                u"%s%s/builds/%s" % (root, buildername, number),
                 labels.get(result, "pending")
             )
         return results
@@ -48,11 +48,15 @@ class ComponentsResource(HtmlResource):
     def content(self, req, cxt):
         status = self.getStatus(req)
         builders = req.args.get("builder", status.getBuilderNames())
+        base_builders_url = path_to_root(req) + "builders/"
         bs = cxt['builders'] = []
         cxt['components'] = sorted(misc.COMPONENTS, key=lambda x: x.lower())
-        cxt['results'] = status.db.runInteractionNow(self._txn, status.db)
+        cxt['results'] = status.db.runInteractionNow(
+            self._txn,
+            status.db,
+            base_builders_url
+        )
 
-        base_builders_url = path_to_root(req) + "builders/"
         for bn in builders:
             bld = { 'link': base_builders_url + urllib.quote(bn, safe=''),
                     'name': bn }
