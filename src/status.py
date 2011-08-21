@@ -28,7 +28,7 @@ class WebStatus(OrigWebStatus):
             self.putChild("change_hook", CallableChangeHookResource(
                 dialects = self.change_hook_dialects))
 
-    def setupUsualPages(self, *args, **kwars):
+    def setupUsualPages(self, *args, **kwargs):
         OrigWebStatus.setupUsualPages(self, *args, **kwargs)
         self.putChild("components", ComponentsResource())
 
