@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% from "box_macros.html" import box %}
+
+{% block content %}
+<h1>Components:</h1>
+
+<table>
+  <tr>
+    <th>\</th>
+    {% for b in builders %}
+    <th class="box"><a href="{{ b.link }}">{{ b.name|e }}</a></th>
+    {% endfor %}
+  </tr>
+{% for c in components %}
+  <tr>
+  <td class="box">{{ c|e }}</td>
+  {% for b in builders %}
+    {% if b in results and c in results[b] %}
+      <td class="LastBuild box {{ results[b][c][1] }}">
+          <a href="{{ results[b][c][0] }}">#{{ results[b][c][0] }}</a>
+          <br/>{{ results[b][c][1] }}
+      </td>
+    {% else %}
+      <td class="LastBuild box">no build</td>
+    {% endif %}
+  </tr>
+{% endfor %}
+</table>
+

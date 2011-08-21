@@ -35,3 +35,24 @@ def with_links(links, f=None):
         return f(step)
     return _inner
 
+def negate(f):
+    def _inner(step):
+        return not f(step)
+    return _inner
+
+def pass_all(*fs):
+    def _inner(step):
+        for f in fs:
+            if not f(step):
+                return False
+        return True
+    return _inner
+
+def pass_any(*fs):
+    def _inner(step):
+        for f in fs:
+            if f(step):
+                return True
+        return False
+    return _inner
+
