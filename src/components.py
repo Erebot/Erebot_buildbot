@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import urllib
+from buildbot.status import builder
 from buildbot.status.web.base import HtmlResource, path_to_root
 from Erebot_buildbot.config import misc
 
@@ -35,7 +36,7 @@ class ComponentsResource(HtmlResource):
         for number, buildername, project, result in t.fetchall():
             if project not in misc.COMPONENTS:
                 continue
-            if builder not in results:
+            if buildername not in results:
                 results[buildername] = {}
             results[buildername][project] = (
                 number,
