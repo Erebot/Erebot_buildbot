@@ -33,6 +33,7 @@ class ComponentsResource(HtmlResource):
             ORDER BY b.number DESC;
         """)
         t.execute(q, ())
+        labels = dict(enumerate(builder.Results))
         for number, buildername, project, result in t.fetchall():
             if project not in misc.COMPONENTS:
                 continue
@@ -40,7 +41,7 @@ class ComponentsResource(HtmlResource):
                 results[buildername] = {}
             results[buildername][project] = (
                 number,
-                builder.Results.get(result, "pending")
+                labels.get(result, "pending")
             )
         return results
 
