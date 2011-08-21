@@ -16,7 +16,11 @@ class WebStatus(OrigWebStatus):
                 raise Exception("change_hook_dialects passed "
                                 "in both args and kwargs")
             change_hook_dialects = kwargs.pop('change_hook_dialects')
-        super(WebStatus, self).__init__(*args, **kwargs)
+
+        # Call the original initializer without the
+        # change_hook_dialects information.
+        OrigWebStatus.__init__(self, *args, **kwargs)
+
         if change_hook_dialects:
             self.change_hook_dialects = change_hook_dialects
             # Override the usual ChangeHookResource
@@ -25,6 +29,6 @@ class WebStatus(OrigWebStatus):
                 dialects = self.change_hook_dialects))
 
     def setupUsualPages(self, *args, **kwars):
-        super(WebStatus, self).setupUsualPages(*args, **kwargs)
+        OrigWebStatus.setupUsualPages(self, *args, **kwargs)
         self.putChild("components", ComponentsResource())
 
