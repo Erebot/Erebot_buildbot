@@ -40,6 +40,7 @@ class ComponentsResource(HtmlResource):
             if buildername not in results:
                 results[buildername] = {}
             results[buildername][project] = (
+                number,
                 u"%s%s/builds/%s" % (root, buildername, number),
                 labels.get(result, "pending")
             )
