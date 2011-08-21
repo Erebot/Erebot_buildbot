@@ -6,6 +6,7 @@ from Erebot_buildbot.src.change_hook import CallableChangeHookResource
 
 class WebStatus(OrigWebStatus):
     def __init__(self, *args, **kwargs):
+        args = list(args)
         try:
             change_hook_dialects = args.pop(17)
         except IndexError:
