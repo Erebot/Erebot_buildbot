@@ -8,8 +8,8 @@ from Erebot_buildbot.src.steps import Link, PHPUnit
 TESTS = factory.BuildFactory()
 TESTS.addStep(common.clone)
 
-# For the core, we must compile the translations
-# before the tests are run because they depend on that.
+# The Core requires the translations.
+# Other modules must do some additional work (eg. generate parser).
 TESTS.addStep(shell.Compile(
     command="phing",
     env={
@@ -24,7 +24,6 @@ TESTS.addStep(shell.Compile(
     warningExtractor=
         shell.WarningCountingShellCommand.warnExtractFromRegexpGroups,
     maxTime=10 * 60,
-    doStepIf=helpers.if_component('Erebot'),
 ))
 
 TESTS.addStep(PHPUnit(
