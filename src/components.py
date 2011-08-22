@@ -42,7 +42,7 @@ class ComponentsResource(HtmlResource):
             results[buildername][project] = (
                 number,
                 u"%s%s/builds/%s" % (root, buildername, number),
-                labels.get(result, "pending")
+                labels.get(result, "building")
             )
         return results
 
