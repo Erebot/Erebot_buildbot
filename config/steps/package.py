@@ -70,7 +70,6 @@ PACKAGE.addStep(shell.ShellCommand(
     descriptionDone="snapshot",
     haltOnFailure=True,
     maxTime=10*60,
-    locks=[pirum_lock.access('exclusive')],
 ))
 
 PACKAGE.addStep(shell.ShellCommand(
