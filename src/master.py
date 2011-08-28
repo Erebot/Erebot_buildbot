@@ -48,6 +48,7 @@ class MasterShellCommand(MSC):
         else:
             assert isinstance(self.env, dict)
             env = properties.render(self.env)
+        stdio_log.addHeader(" env: %r\n" % (env,))
         # TODO add a timeout?
         reactor.spawnProcess(self.LocalPP(self), argv[0], argv,
                 path=self.path, usePTY=self.usePTY, env=env )
