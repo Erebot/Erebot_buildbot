@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.process import factory, properties
-from buildbot.steps import shell, transfer, master
+from buildbot.steps import shell, transfer
 from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.config.locks import PIRUM_LOCK
 from Erebot_buildbot.src.steps import Link
+from Erebot_buildbot.src import master
 
 PACKAGE = factory.BuildFactory()
 PACKAGE.addStep(common.clone)
