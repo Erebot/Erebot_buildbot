@@ -3,7 +3,7 @@
 from buildbot.process import factory, properties
 from buildbot.steps import shell
 from Erebot_buildbot.config.steps import common, helpers
-from Erebot_buildbot.config.locks import pirum_lock
+from Erebot_buildbot.config.locks import PIRUM_LOCK
 
 PACKAGE = factory.BuildFactory()
 PACKAGE.addStep(common.clone)
