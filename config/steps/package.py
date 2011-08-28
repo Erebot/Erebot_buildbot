@@ -58,8 +58,10 @@ PACKAGE.addStep(shell.ShellCommand(
                 "<buildbot@erebot.net> (lead)' > CREDITS",
             "cat CREDITS.buildbot >> CREDITS",
             "mkdir -p /tmp/release-%(buildnumber)d",
-            "pyrus.phar /tmp/release-%(buildnumber)d set handle Ere-build-bot",
-            "pyrus.phar /tmp/release-%(buildnumber)d set openssl_cert /tmp/buildbot.p12.%(buildnumber)d",
+            "pyrus.phar /tmp/release-%(buildnumber)d "
+                "set handle Ere-build-bot",
+            "pyrus.phar /tmp/release-%(buildnumber)d "
+                "set openssl_cert /tmp/buildbot.p12.%(buildnumber)d",
             "cat /tmp/buildbot.sign.%(buildnumber)d | phing release "
                 "-Dstability=snapshot "
                 "-Drelease.tmp=/tmp/release-%(buildnumber)d",
@@ -149,9 +151,9 @@ PACKAGE.addStep(Link(
 ))
 
 PACKAGE.addStep(master.MasterShellCommand(
-    command="&&".join([
+    command=" && ".join([
         "/var/www/clean-pear.sh",
-        "/usr/bin/pirum build /var/www/pear",
+        "php /home/qa/master/buildenv/git/Pirum/pirum build /var/www/pear",
         "rm -rf /tmp/pirum_*",
         "chmod -R a+r /var/www/pear/rest/",
         "find /var/www/pear/rest -type d -exec chmod a+x '{}' '+'"
