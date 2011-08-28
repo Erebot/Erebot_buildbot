@@ -66,6 +66,12 @@ PACKAGE.addStep(shell.ShellCommand(
             "rm -rf /tmp/release-%(buildnumber)d",
         ])
     ),
+    env={
+        # Ensures the output doesn't use
+        # some locale-specific formatting.
+        'LANG': "en_US.UTF-8",
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+    },
     description="snapshot",
     descriptionDone="snapshot",
     haltOnFailure=True,
@@ -148,6 +154,12 @@ PACKAGE.addStep(master.MasterShellCommand(
         "chmod -R a+r /var/www/pear/rest/",
         "find /var/www/pear/rest -type d -exec chmod a+x '{}' '+'"
     ]),
+    env={
+        # Ensures the output doesn't use
+        # some locale-specific formatting.
+        'LANG': "en_US.UTF-8",
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+    },
     description=['PEAR', 'repos.', 'update'],
     descriptionDone=['PEAR', 'repos.', 'update'],
     doStepIf=helpers.has_pear_pkg,
