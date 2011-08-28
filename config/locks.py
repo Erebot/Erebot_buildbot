@@ -2,7 +2,7 @@
 
 from buildbot import locks
 
-checkout_lock = locks.SlaveLock("checkout")
-pirum_lock = locks.MasterLock("pirum")
-tagfiles_lock = locks.MasterLock("tagfiles")
+CHECKOUT_LOCK = locks.SlaveLock("checkout")
+PIRUM_LOCK = locks.MasterLock("pirum")
+TAGFILES_LOCK = locks.MasterLock("tagfiles")
 

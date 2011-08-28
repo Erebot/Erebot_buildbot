@@ -6,11 +6,12 @@ SCHEDULERS = [
     # Triggered on every commit by the github hook.
     basic.Scheduler(
         name="Regular",
-        treeStableTimer=60,
+        treeStableTimer=3 * 60,
         builderNames=[
             'Tests - Debian 6 - PHP 5.2',
             'Tests - Debian 6 - PHP 5.3',
             'Packaging',
+            'Quality Assurance',
         ],
     ),
 
@@ -23,7 +24,6 @@ SCHEDULERS = [
         builderNames=[
             'API doc - HTML',
             'API doc - PDF',
-            'Quality Assurance',
         ],
         # Run the builders twice a day, at 3:30 am/pm,
         # if and only if some change occurred since the last run.
