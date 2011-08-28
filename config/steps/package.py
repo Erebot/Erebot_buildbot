@@ -59,8 +59,10 @@ PACKAGE.addStep(shell.ShellCommand(
             "cat CREDITS.buildbot >> CREDITS",
             "mkdir -p /tmp/release-%(buildnumber)d",
             "pyrus /tmp/release-%(buildnumber)d set handle Ere-build-bot",
-            "pyrus /tmp/release-%(buildnumber)d set openssl_cert /tmp/buildbot.p12",
-            "cat /tmp/buildbot.sign.%(buildnumber)d | phing release -Dstability=snapshot",
+            "pyrus /tmp/release-%(buildnumber)d set openssl_cert /tmp/buildbot.p12.%(buildnumber)d",
+            "cat /tmp/buildbot.sign.%(buildnumber)d | phing release "
+                "-Dstability=snapshot "
+                "-Drelease.tmp=/tmp/release-%(buildnumber)d",
         ]) + "; " + " && ".join([
             "mv -f CREDITS.buildbot CREDITS",
             "rm -rf /tmp/release-%(buildnumber)d",
