@@ -57,7 +57,7 @@ PACKAGE.addStep(shell.ShellCommand(
             "echo 'Buildbot Continuous Integration [Ere-build-bot] "
                 "<buildbot@erebot.net> (lead)' > CREDITS",
             "cat CREDITS.buildbot >> CREDITS",
-            "mkdir -p /tmp/release-%(buildername)s-%(buildnumber)d",
+            "mkdir -p /tmp/release-%(buildnumber)d",
             "%(pyrus_bin)s /tmp/release-%(buildnumber)d set handle Ere-build-bot",
             "%(pyrus_bin)s /tmp/release-%(buildnumber)d set openssl_cert /tmp/buildbot.p12",
             "cat /tmp/buildbot.sign.%(buildnumber)d | phing release -Dstability=snapshot",
