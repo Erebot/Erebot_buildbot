@@ -12,11 +12,12 @@ DOC = factory.BuildFactory()
 DOC.addStep(common.clone)
 
 DOC.addStep(master.MasterShellCommand(
-    command=
-        "rm -f /tmp/tagfiles.tar.gz && "
-        "cd public_html/ && "
-        "mkdir -p public_html/tagfiles/ &&"
+    command=" && ".join([
+        "rm -f /tmp/tagfiles.tar.gz",
+        "mkdir -p public_html/tagfiles/",
+        "cd public_html/",
         "tar czvf /tmp/tagfiles.tar.gz tagfiles/",
+    ])
     description=["tar", "tagfiles"],
     descriptionDone=["tar", "tagfiles"],
     locks=[TAGFILES_LOCK.access('exclusive')],
@@ -29,10 +30,11 @@ DOC.addStep(transfer.FileDownload(
 ))
 
 DOC.addStep(shell.ShellCommand(
-    command=
-        "cd /tmp/ && "
-        "tar zxvf Erebot_tagfiles.tar.gz && "
+    command=" && ".join([
+        "cd /tmp/",
+        "tar zxvf Erebot_tagfiles.tar.gz",
         "rm -f /tmp/Erebot_tagfiles.tar.gz",
+    ])
     description=["untar", "tagfiles"],
     descriptionDone=["untar", "tagfiles"],
     locks=[TAGFILES_LOCK.access('exclusive')],
