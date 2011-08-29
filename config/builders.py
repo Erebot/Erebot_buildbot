@@ -22,21 +22,12 @@ BUILDERS = [
         category='Tests',
     ),
     BuilderConfig(
-        name='API doc - HTML',
+        name='API documentation',
         slavenames=[
             'Debian 6 - PHP 5.2',
             'Debian 6 - PHP 5.3',
         ],
-        factory=steps.HTML_DOC,
-        category='API',
-    ),
-    BuilderConfig(
-        name='API doc - PDF',
-        slavenames=[
-            'Debian 6 - PHP 5.2',
-            'Debian 6 - PHP 5.3',
-        ],
-        factory=steps.PDF_DOC,
+        factory=steps.DOC,
         category='API',
     ),
     BuilderConfig(

@@ -4,6 +4,7 @@ from buildbot.process import factory, properties
 from buildbot.steps import shell, transfer
 from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.config.locks import PIRUM_LOCK
+from Erebot_buildbot.config import misc
 from Erebot_buildbot.src.steps import Link
 from Erebot_buildbot.src import master
 
@@ -146,7 +147,8 @@ PACKAGE.addStep(transfer.FileUpload(
 PACKAGE.addStep(Link(
     label="PEAR Package",
     href=properties.WithProperties(
-        "http://pear.erebot.net/get/%(pear_pkg)s.tgz"
+        "%(buildbotURL)s/get/%(pear_pkg)s.tgz',
+        buildbotURL=misc.BUILDBOT_URL.rstrip('/'),
     ),
     doStepIf=helpers.has_pear_pkg,
 ))

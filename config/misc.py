@@ -32,3 +32,4 @@ COMPONENTS = (
     'Erebot_Module_Wordlists',
 )
 
+BUILDBOT_URL = "https://buildbot.erebot.net/"
