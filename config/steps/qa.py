@@ -25,9 +25,9 @@ QA.addStep(CountingShellCommand(
     descriptionDone="CodeSniffer",
     warnOnWarnings=True,
     flunkOnFailure=True,
-    warningPattern="WARNING in line ()([0-9]+) column [0-9]+: (.*)$",
+    warningPattern="^.*?WARNING in line ()([0-9]+) column [0-9]+: (.*)$",
     warningExtractor=CountingShellCommand.extractFromRegexpGroups,
-    errorPattern="ERROR in line ()([0-9]+) column [0-9]+: (.*)$",
+    errorPattern="^.*?ERROR in line ()([0-9]+) column [0-9]+: (.*)$",
     errorExtractor=CountingShellCommand.extractFromRegexpGroups,
     env={
         'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
