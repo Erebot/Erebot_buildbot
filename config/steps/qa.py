@@ -24,7 +24,7 @@ QA.addStep(CountingShellCommand(
     description="CodeSniffer",
     descriptionDone="CodeSniffer",
     warnOnWarnings=True,
-    failOnFailure=True,
+    flunkOnFailure=True,
     warningPattern="WARNING in line ()([0-9]+) column [0-9]+: (.*)$",
     warningExtractor=CountingShellCommand.extractFromRegexpGroups,
     errorPattern="ERROR in line ()([0-9]+) column [0-9]+: (.*)$",
