@@ -116,15 +116,6 @@ DOC.addStep(master.MasterShellCommand(
     descriptionDone=["untar", "doc"],
 ))
 
-DOC.addStep(transfer.DirectoryUpload(
-    slavesrc="docs/coverage/",
-    masterdest=properties.WithProperties(
-        "public_html/doc/coverage/%(project)s/"
-    ),
-    doStepIf=lambda step: step.getProperty('Passed'),
-    maxsize=10 * (1 << 20), # 10 MiB
-))
-
 DOC.addStep(Link(
     label="Code Coverage",
     href=properties.WithProperties(
