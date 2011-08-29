@@ -12,24 +12,8 @@ SCHEDULERS = [
             'Tests - Debian 6 - PHP 5.3',
             'Packaging',
             'Quality Assurance',
+            'API documentation',
         ],
-    ),
-
-    # There's no need to build the API documentation on every commit.
-    # Also, the QA tools need not be run on every commit either (this
-    # may change later on).
-    timed.Nightly(
-        name="Nightly",
-        branch="master",
-        builderNames=[
-            'API doc - HTML',
-            'API doc - PDF',
-        ],
-        # Run the builders twice a day, at 3:30 am/pm,
-        # if and only if some change occurred since the last run.
-        hour=[3, 15],
-        minute=30,
-        onlyIfChanged=True,
     ),
 
     # It costs more to run the tests on Windows,
