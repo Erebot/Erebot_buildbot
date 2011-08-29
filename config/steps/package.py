@@ -147,7 +147,7 @@ PACKAGE.addStep(transfer.FileUpload(
 PACKAGE.addStep(Link(
     label="PEAR Package",
     href=properties.WithProperties(
-        "%(buildbotURL)s/get/%(pear_pkg)s.tgz',
+        "%(buildbotURL)s/get/%(pear_pkg)s.tgz",
         buildbotURL=misc.BUILDBOT_URL.rstrip('/'),
     ),
     doStepIf=helpers.has_pear_pkg,
