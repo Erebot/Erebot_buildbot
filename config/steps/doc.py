@@ -127,7 +127,7 @@ DOC.addStep(Link(
     label="Code Coverage",
     href=properties.WithProperties(
         "%(buildbotURL)s/doc/coverage/%(project)s/",
-        buildbotURL=misc.BUILDBOT_URL.rstrip('/'),
+        buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
 
@@ -135,7 +135,7 @@ DOC.addStep(Link(
     label="Online doc",
     href=properties.WithProperties(
         "%(buildbotURL)s/doc/html/%(project)s/",
-        buildbotURL=misc.BUILDBOT_URL.rstrip('/'),
+        buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
 
@@ -143,7 +143,7 @@ DOC.addStep(Link(
     label="Tarball doc",
     href=properties.WithProperties(
         "%(buildbotURL)s/doc/html/%(project)s.tgz",
-        buildbotURL=misc.BUILDBOT_URL.rstrip('/'),
+        buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
 
@@ -151,7 +151,7 @@ DOC.addStep(Link(
     label="PDF doc",
     href=properties.WithProperties(
         "%(buildbotURL)s/doc/pdf/%(project)s.pdf",
-        buildbotURL=misc.BUILDBOT_URL.rstrip('/'),
+        buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
 
