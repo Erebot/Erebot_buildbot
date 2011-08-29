@@ -17,7 +17,7 @@ DOC.addStep(master.MasterShellCommand(
         "mkdir -p public_html/tagfiles/",
         "cd public_html/",
         "tar czvf /tmp/tagfiles.tar.gz tagfiles/",
-    ])
+    ]),
     description=["tar", "tagfiles"],
     descriptionDone=["tar", "tagfiles"],
     locks=[TAGFILES_LOCK.access('exclusive')],
@@ -34,7 +34,7 @@ DOC.addStep(shell.ShellCommand(
         "cd /tmp/",
         "tar zxvf Erebot_tagfiles.tar.gz",
         "rm -f /tmp/Erebot_tagfiles.tar.gz",
-    ])
+    ]),
     description=["untar", "tagfiles"],
     descriptionDone=["untar", "tagfiles"],
     locks=[TAGFILES_LOCK.access('exclusive')],
