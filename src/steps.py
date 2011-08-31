@@ -279,9 +279,9 @@ class CountingShellCommand(ShellCommand):
 
         stack.append(line)
         if is_error:
-            self.warnCount += 1
-        else:
             self.errorCount += 1
+        else:
+            self.warnCount += 1
 
     def createSummary(self, log):
         """
