@@ -11,8 +11,7 @@ TESTS.addStep(common.clone)
 # The Core requires the translations.
 # Other modules must do some additional work (eg. generate parser).
 TESTS.addStep(shell.Compile(
-    command="phing -logger phing.listener.DefaultLogger
-",
+    command="phing -logger phing.listener.DefaultLogger",
     env={
         # Ensures the output doesn't use
         # some locale-specific formatting.
