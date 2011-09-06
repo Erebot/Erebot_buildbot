@@ -68,6 +68,10 @@ class PHPUnit(ShellCommand, LogLineObserver):
                 self.metrics[metric] += value
                 self.step.setProgress(metric, self.metrics[metric])
 
+    def createSummary(self, log):
+        for metric, value in self.metrics.iteritems():
+            self.setProperty("PHPUnit-%s" % metric, value, "PHPUnit")
+
     def evaluateCommand(self, cmd):
         self.setProperty('Passed', False)
         if cmd.rc != 0:
@@ -350,13 +354,20 @@ class CountingShellCommand(ShellCommand):
                     "\n".join(errors) + "\n")
 
         warnings_stat = self.step_status.getStatistic('warnings', 0)
-        self.step_status.setStatistic('warnings', warnings_stat + self.warnCount)
+        self.step_status.setStatistic(
+            'warnings',
+            warnings_stat + self.warnCount
+        )
 
         try:
             old_count = self.getProperty("warnings-count")
         except KeyError:
             old_count = 0
-        self.setProperty("warnings-count", old_count + self.warnCount, "CountingShellCommand")
+        self.setProperty(
+            "warnings-count",
+            old_count + self.warnCount,
+            "CountingShellCommand"
+        )
 
         errors_stat = self.step_status.getStatistic('errors', 0)
         self.step_status.setStatistic('errors', errors_stat + self.errorCount)
@@ -365,8 +376,11 @@ class CountingShellCommand(ShellCommand):
             old_count = self.getProperty("errors-count")
         except KeyError:
             old_count = 0
-        self.setProperty("errors-count", old_count + self.errorCount, "CountingShellCommand")
-
+        self.setProperty(
+            "errors-count",
+            old_count + self.errorCount,
+            "CountingShellCommand"
+        )
 
     def evaluateCommand(self, cmd):
         if cmd.rc != 0:
