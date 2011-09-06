@@ -44,18 +44,25 @@ class PHPUnit(ShellCommand, LogLineObserver):
         self.phpError = False
 
     def outLineReceived(self, line):
+        # Handle (fatal) PHP errors.
         if 'PHP Error' in line:
             self.phpError = True
         if self.phpError:
             return
+
+        # Ignore everything that's not related to the tests.
         if '[phpunit]' not in line or ' Tests ' not in line:
             return
         (ign, sep, rest) = line.partition(' Tests ')
         if not rest:
             return
-        (rest, sep, ign) = rest.rpartition('\033')
-        if not rest:
-            return
+
+        # If colors are in use.
+        (rest2, sep, ign) = rest.rpartition('\033')
+        if rest2:
+            rest = rest2
+
+        # Extract metrics values.
         rest = rest.split(', ')
         metrics = {}
         for i in rest:
@@ -63,6 +70,7 @@ class PHPUnit(ShellCommand, LogLineObserver):
             value = float(value.rstrip(' s'))
             metrics[metric] = value
 
+        # Update final metrics & progress meter.
         for metric, value in metrics.iteritems():
             if value > 0:
                 self.metrics[metric] += value

@@ -11,7 +11,8 @@ TESTS.addStep(common.clone)
 # The Core requires the translations.
 # Other modules must do some additional work (eg. generate parser).
 TESTS.addStep(shell.Compile(
-    command="phing",
+    command="phing -logger phing.listener.DefaultLogger
+",
     env={
         # Ensures the output doesn't use
         # some locale-specific formatting.
@@ -20,14 +21,14 @@ TESTS.addStep(shell.Compile(
     },
     warnOnWarnings=True,
     warnOnFailure=True,
-    warningPattern="^\\[i18nStats\\] (.*?):([0-9]+): [Ww]arning: (.*)$",
+    warningPattern="^\\s*\\[i18nStats\\] (.*?):([0-9]+): [Ww]arning: (.*)$",
     warningExtractor=
         shell.WarningCountingShellCommand.warnExtractFromRegexpGroups,
     maxTime=10 * 60,
 ))
 
 TESTS.addStep(PHPUnit(
-    command="phing test",
+    command="phing -logger phing.listener.DefaultLogger test",
     description="tests",
     descriptionDone="tests",
     warnOnWarnings=True,
