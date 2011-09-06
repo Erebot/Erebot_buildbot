@@ -67,8 +67,9 @@ class PHPUnit(ShellCommand, LogLineObserver):
         metrics = {}
         for i in rest:
             metric, value = i.split(': ')
-            value = float(value.rstrip(' s'))
-            metrics[metric] = value
+            value = value.rsplit(' s', 2)[0]
+            conversion = '.' in value and float or int
+            metrics[metric] = conversion(value)
 
         # Update final metrics & progress meter.
         for metric, value in metrics.iteritems():
