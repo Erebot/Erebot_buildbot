@@ -56,6 +56,5 @@ STATUS.append(words.IRC(
     host="irc.iiens.net",
     nick="Ere-build-bot",
     channels=["#Erebot"],
-    notify_events=['started', 'failure', 'exception', 'finished', 'success'],
 ))
 
