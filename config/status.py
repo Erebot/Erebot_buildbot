@@ -52,10 +52,10 @@ STATUS.append(status.WebStatus(
     },
 ))
 
-#STATUS.append(words.IRC(
-#    host="irc.iiens.net",
-#    nick="Ere-build-bot",
-#    channels=["#Erebot"],
-#    notify_events=['started', 'failure', 'exception', 'finished', 'success'],
-#))
+STATUS.append(words.IRC(
+    host="irc.iiens.net",
+    nick="Ere-build-bot",
+    channels=["#Erebot"],
+    notify_events=['started', 'failure', 'exception', 'finished', 'success'],
+))
 
