@@ -2,7 +2,7 @@
 
 from buildbot.process import factory, properties
 from buildbot.steps import shell, transfer
-from Erebot_buildbot.config.steps import common
+from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.src import master
 
 LIVE = factory.BuildFactory()
@@ -19,6 +19,7 @@ then
 fi
 """,
     maxTime=30,
+    doStepIf=helpers.if_component('Erebot'),
 ))
 
 LIVE.addStep(common.clone)
@@ -31,11 +32,13 @@ LIVE.addStep(master.MasterShellCommand(
     ]),
     description="Config",
     descriptionDone="Config",
+    doStepIf=helpers.if_component('Erebot'),
 ))
 
 LIVE.addStep(transfer.FileDownload(
     mastersrc="/tmp/Erebot-config.tar.gz",
     slavedest="Erebot-config.tar.gz",
+    doStepIf=helpers.if_component('Erebot'),
 ))
 
 LIVE.addStep(shell.ShellCommand(
@@ -46,6 +49,7 @@ LIVE.addStep(shell.ShellCommand(
     description=["Unpack", 'config'],
     descriptionDone=["Unpack", 'config'],
     maxTime=5 * 60,
+    doStepIf=helpers.if_component('Erebot'),
 ))
 
 # Start new instance.
@@ -57,6 +61,7 @@ LIVE.addStep(shell.ShellCommand(
     description=["Start", "Erebot"],
     descriptionDone=["Start", "Erebot"],
     maxTime=60,
+    doStepIf=helpers.if_component('Erebot'),
 ))
 
 # Give it a little time to start properly.
@@ -64,6 +69,7 @@ LIVE.addStep(shell.ShellCommand(
     command="sleep 10",
     description="Pause",
     descriptionDone="Pause",
+    doStepIf=helpers.if_component('Erebot'),
 ))
 
 # Check that it is still running.
@@ -71,5 +77,6 @@ LIVE.addStep(shell.ShellCommand(
     command="kill -0 `cat Erebot.pid`",
     description=["Check", "instance"],
     descriptionDone=["Check", "instance"],
+    doStepIf=helpers.if_component('Erebot'),
 ))
 
