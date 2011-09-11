@@ -40,8 +40,6 @@ for component in misc.COMPONENTS:
             repourl='git://github.com/fpoirotte/%s.git' % component,
             submodules=False,
             progress=True,
-            description=['Dep:', component],
-            descriptionDone=['Dep:', component],
         ))
 
 LIVE.addStep(master.MasterShellCommand(
