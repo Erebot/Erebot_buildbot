@@ -49,7 +49,7 @@ for component in misc.COMPONENTS:
             workdir='build/vendor/%s' % component,
             mode='clobber',
             repourl='git://github.com/fpoirotte/%s.git' % component,
-            submodules=False,
+            submodules=True,
             progress=True,
             alwaysUseLatest=True,   # Would fail otherwise.
         ))
