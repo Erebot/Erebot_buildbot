@@ -33,6 +33,15 @@ for component in misc.COMPONENTS:
         ))
 
 LIVE.addStep(common.clone)
+LIVE.addStep(shell.Compile(
+    command="phing",
+    env={
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+    },
+    warnOnWarnings=True,
+    warnOnFailure=True,
+    maxTime=5 * 60,
+))
 
 for component in misc.COMPONENTS:
     if component.startswith('Erebot_Module_'):
@@ -44,6 +53,21 @@ for component in misc.COMPONENTS:
             progress=True,
             alwaysUseLatest=True,   # Would fail otherwise.
         ))
+
+        LIVE.addStep(shell.Compile(
+            command=(
+                "cd build/vendor/%s && "
+                # Build the translations.
+                "phing"
+            ) % component,
+            env={
+                'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+            },
+            warnOnWarnings=True,
+            warnOnFailure=True,
+            maxTime=5 * 60,
+        ))
+
 
 LIVE.addStep(master.MasterShellCommand(
     command=" && ".join([
