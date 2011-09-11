@@ -21,7 +21,27 @@ fi
     maxTime=30,
 ))
 
+for component in misc.COMPONENTS:
+    if component.startswith('Erebot_Module_'):
+        LIVE.addStep(shell.ShellCommand(
+            command='rm -rf build/vendor/%s' % component,
+            description=["Cleanup:", component],
+            descriptionDone=["Cleanup:", component],
+        ))
+
 LIVE.addStep(common.clone)
+
+for component in misc.COMPONENTS:
+    if component.startswith('Erebot_Module_'):
+        LIVE.addStep(source.Git(
+            workdir='build/vendor/%s' % component,
+            mode='clobber',
+            repourl='git://github.com/fpoirotte/%s.git' % component,
+            submodules=False,
+            progress=True,
+            description=['Dep:', component],
+            descriptionDone=['Dep:', component],
+        ))
 
 LIVE.addStep(master.MasterShellCommand(
     command=" && ".join([
