@@ -1,0 +1,10 @@
+<module
+    xmlns="http://www.erebot.net/xmlns/erebot"
+    name="Erebot_Module_DbConnector"
+    active="false"
+>
+    <param name="DSN"       value="mysql:dbname=erebot;host=127.0.0.1" />
+    <param name="username"  value="root" />
+    <param name="password"  value="" />
+</module>
+

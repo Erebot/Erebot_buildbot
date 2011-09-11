@@ -1,0 +1,8 @@
+<module
+    xmlns="http://www.erebot.net/xmlns/erebot"
+    name="Erebot_Module_TV"
+>
+	<param name="default_group" value="hertzien"/>
+	<param name="group_hertzien" value="TF1,France 2,France 3,Canal+,France 5,Arte,M6"/>
+	<param name="group_tnt" value="Direct 8,W9,TMC,NT1,NRJ12,France 4,La Chaîne Parlementaire,BFM TV,i Télé,Direct Star,Gulli,France Ô"/>
+</module>

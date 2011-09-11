@@ -1,0 +1,124 @@
+<module
+    xmlns="http://www.erebot.net/xmlns/erebot"
+    name="Erebot_Module_WebGetter"
+>
+    <!-- Google weather -->
+    <param name="1.trigger" value="weather"/>
+    <param name="1.url" value="http://www.google.com/search"/>
+    <param name="1.get.1.name" value="q"/>
+    <param name="1.get.1.value" value="weather &quot;$(0)s&quot;"/>
+    <param name="1.get.2.name" value="hl"/>
+    <param name="1.get.2.value" value="$(language)s"/>
+    <param name="1.description" value="Weather information (from Google)"/>
+    <!-- Temperature -->
+    <param name="1.vars.1" value="string(//table[@class='obcontainer'][1]//table[1]//tr[1]/td[2]/text())"/>
+    <!-- Description -->
+    <param name="1.vars.2" value="string(//table[@class='obcontainer'][1]//table[1]//tr[3]/td[1]/text())"/>
+    <!-- Wind direction -->
+    <param name="1.vars.3" value="string(//table[@class='obcontainer'][1]//table[1]//tr[4]/td[1]/text())"/>
+    <!-- Humidity -->
+    <param name="1.vars.4" value="string(//table[@class='obcontainer'][1]//table[1]//tr[5]/td[1]/text())"/>
+    <param name="1.format" value="Weather in '$(0)s': $(vars.2)s - Temperature: $(vars.1)s - $(vars.3)s - $(vars.4)s"/>
+
+    <!-- Vie de Merde -->
+    <param name="2.trigger" value="vdm"/>
+    <param name="2.url" value="http://www.viedemerde.fr/$(1)d"/>
+    <param name="1.description" value="Vie De Merde!"/>
+    <param name="2.vars.1" value="string(//ul[@class='content'][1]/li[1]/p[@class='text']/text())"/>
+    <param name="2.format" value="$(vars.1)s"/>
+
+    <!-- Mon Pire Coup -->
+    <param name="3.trigger" value="mpc"/>
+    <param name="3.url" value="http://www.monpirecoup.fr/index/com/"/>
+    <param name="3.get.1.name" value="id"/>
+    <param name="3.get.1.value" value="$(1)d"/>
+    <param name="3.description" value="Mon Pire Coup"/>
+    <param name="3.vars.1" value="string(//td[@class='coup_message'][1]/a[1]/text())"/>
+    <param name="3.format" value="$(vars.1)s"/>
+
+    <!-- Dans Ton Chat -->
+<!--    <param name="4.trigger" value="dtc"/>-->
+<!--    <param name="4.url" value="http://danstonchat.com/$(1)d.html"/>-->
+<!--    <param name="4.description" value="Dans Ton Chat"/>-->
+<!--    <param name="4.vars.1" value="fn:string-join(//p[@class='item-content'][1]/a/text(), '&#xA;')"/>-->
+<!--    <param name="4.format" value="$(vars.1)s"/>-->
+
+    <!-- Chuck Norris Facts -->
+    <param name="4.trigger" value="chuck"/>
+    <param name="4.url" value="http://chucknorrisfacts.fr/index.php"/>
+    <param name="4.get.1.name" value="p"/>
+    <param name="4.get.1.value" value="detail_fact"/>
+    <param name="4.get.2.name" value="fact"/>
+    <param name="4.get.2.value" value="$(1)d"/>
+    <param name="4.description" value="Chuck Norris Facts"/>
+    <param name="4.vars.1" value="string(//div[@class='fact']/text())"/>
+    <param name="4.format" value="Chuck Norris Facts: $(vars.1)s"/>
+
+    <!-- Richard Stallman Facts -->
+    <param name="5.trigger" value="rms"/>
+    <param name="5.url" value="http://stallmanfacts.com/view/$(1)d"/>
+    <param name="5.description" value="Richard Stallman Facts"/>
+    <param name="5.vars.1" value="normalize-space(string(//div[@class='random']/text()[3]))"/>
+    <param name="5.format" value="Richard Stallman Facts: $(vars.1)s"/>
+
+    <!-- TV Shows -->
+    <param name="6.trigger" value="tvshow"/>
+    <param name="6.url" value="http://www.tv.com/search.php"/>
+    <param name="6.get.1.name" value="type"/>
+    <param name="6.get.1.value" value="Search"/>
+    <param name="6.get.2.name" value="stype"/>
+    <param name="6.get.2.value" value="ajax_search"/>
+    <param name="6.get.3.name" value="qs"/>
+    <param name="6.get.3.value" value="$(0)s"/>
+    <param name="6.get.4.name" value="search_type"/>
+    <param name="6.get.4.value" value="program"/>
+    <param name="6.get.5.name" value="pg_results"/>
+    <param name="6.get.5.value" value="0"/>
+    <param name="6.get.6.name" value="sort"/>
+    <param name="6.get.6.value" value=""/>
+    <param name="6.description" value="Schedule for TV Shows"/>
+    <!-- Show -->
+    <param name="6.vars.1" value="string(//div[@class='deck']/h2/a/text())"/>
+    <!-- TV Channel / air time -->
+    <param name="6.vars.2" value="string(//div[@class='deck']/p/text())"/>
+    <!-- Next episode: title -->
+    <param name="6.vars.3" value="string(//div[@class='deck']/div/div[2]/ul/li[2]/span[1]/a/text())"/>
+    <!-- Next episode: air date -->
+    <param name="6.vars.4" value="string(//div[@class='deck']/div/div[2]/ul/li[2]/span[3]/text())"/>
+    <param name="6.format" value="Latest episode of '$(vars.1)s' (usually airing $(vars.2)s): &quot;$(vars.3)s&quot; ($(vars.4)s)"/>
+
+    <!-- RATP (RER) -->
+    <param name="7.trigger" value="ratp-rer"/>
+    <param name="7.url" value="http://wap.ratp.fr/siv/schedule"/>
+    <param name="7.get.1.name" value="service"/>
+    <param name="7.get.1.value" value="next"/>
+    <param name="7.get.2.name" value="reseau"/>
+    <param name="7.get.2.value" value="rer"/>
+    <param name="7.get.3.name" value="lineid"/>
+    <param name="7.get.3.value" value="R$(1)s"/>
+    <param name="7.get.4.name" value="directionsens"/>
+    <param name="7.get.4.value" value="$(2)s"/>
+    <param name="7.get.5.name" value="stationname"/>
+    <param name="7.get.5.value" value="$(3)s"/>
+    <param name="7.description" value="Next RER to pass at a given train station (RATP)"/>
+    <!-- Mission -->
+    <param name="7.vars.1" value="string(//a[1]/text())"/>
+    <!-- Destination -->
+    <param name="7.vars.2" value="normalize-space(translate(string(//td[@bgcolor='#ECF1F8'][1]/text()),'&gt;&#xA0;',''))"/>
+    <!-- Heure d'entrée en gare -->
+    <param name="7.vars.3" value="string(//td[@bgcolor='#ECF1F8']/b/text())"/>
+    <!-- Heure courante -->
+    <param name="7.vars.4" value="string(//td[@bgcolor='#C7D4EA'][1]/text())"/>
+    <param name="7.format" value="Prochain train en gare de '$(3)s' : $(vars.1)s à destination de '$(vars.2)s' -- Entrée en gare : $(vars.3)s [heure courante : $(vars.4)s]"/>
+
+    <!-- AllMusic -->
+    <param name="8.trigger" value="song"/>
+    <param name="8.url" value="http://www.allmusic.com/search/$(0)s/order:default-asc"/>
+    <param name="8.description" value="AllMusic search plugin"/>
+    <!-- URL -->
+    <param name="8.vars.1" value="string(//table[@class='search-results']//tr[2]/td[3]/a/@href/text())"/>
+    <param name="8.vars.2" value="string(//table[@class='search-results']//tr[2]/td[3]/a/text())"/>
+    <param name="8.vars.3" value="string(//table[@class='search-results']//tr[2]/td[4]/text())"/>
+    <param name="8.vars.4" value="string(//table[@class='search-results']//tr[2]/td[5]/text())"/>
+    <param name="8.format" value="AllMusic: '$(vars.2)s' (year: $(vars.3)s / genre: $(vars.4)s) -- More information at $(vars.1)s"/>
+</module>

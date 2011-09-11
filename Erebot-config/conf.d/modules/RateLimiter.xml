@@ -1,0 +1,7 @@
+<module
+    xmlns="http://www.erebot.net/xmlns/erebot"
+    name="Erebot_Module_RateLimiter"
+>
+    <param name="limit" value="2"/>
+    <param name="period" value="1"/>
+</module>

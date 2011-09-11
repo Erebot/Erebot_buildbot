@@ -1,0 +1,27 @@
+<network
+    xmlns="http://www.erebot.net/xmlns/erebot"
+    name="EpiKnet"
+>
+    <modules>
+        <module name="Erebot_Module_AutoIdent">
+            <param name="nickserv"  value="Themis NickServ" />
+            <param name="password"  value="tralala" />
+            <param name="pattern"   value=".*enregistré.*" />
+        </module>
+        <module name="Erebot_Module_AutoConnect" active="false" />
+    </modules>
+
+    <servers>
+        <server url="http://clicky:looksup@localhost/ irc://irc.epiknet.org:6667/" />
+<!--        <server url="ircs://web.epiknet.org:7002/?verify_peer=0" />-->
+    </servers>
+
+    <channels>
+        <channel name="#Erebot">
+            <modules>
+                <module name="Erebot_Module_AutoJoin" />
+            </modules>
+        </channel>
+    </channels>
+</network>
+

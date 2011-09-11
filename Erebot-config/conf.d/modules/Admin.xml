@@ -1,0 +1,7 @@
+<module
+    xmlns="http://www.erebot.net/xmlns/erebot"
+    name="Erebot_Module_Admin"
+    active="true"
+>
+    <param name="admins" value="*!*@erebot.net *!*@*.erebot.net"/>
+</module>

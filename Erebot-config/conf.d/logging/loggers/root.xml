@@ -1,0 +1,11 @@
+<logger
+    xmlns="http://www.erebot.net/xmlns/logging"
+    name="root"
+>
+    <level>DEBUG</level>
+    <handlers>
+        <handler>stderr</handler>
+        <handler>syslog</handler>
+    </handlers>
+</logger>
+

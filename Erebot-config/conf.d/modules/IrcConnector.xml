@@ -1,0 +1,10 @@
+<module
+    xmlns="http://www.erebot.net/xmlns/erebot"
+    name="Erebot_Module_IrcConnector"
+>
+    <param name="nickname"      value="Erebot"  />
+    <param name="identity"      value="Erebot"  />
+    <param name="hostname"      value="Erebot"  />
+    <param name="realname"      value="Doh!"    />
+    <param name="quit_message"  value="Elda Taruta"    />
+</module>
