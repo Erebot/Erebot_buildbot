@@ -20,6 +20,8 @@ then
 fi
 """,
     maxTime=30,
+    description=["Stop", "previous"],
+    descriptionDone=["Stop", "previous"],
 ))
 
 for component in misc.COMPONENTS:
@@ -40,6 +42,7 @@ for component in misc.COMPONENTS:
             repourl='git://github.com/fpoirotte/%s.git' % component,
             submodules=False,
             progress=True,
+            alwaysUseLatest=True,   # Would fail otherwise.
         ))
 
 LIVE.addStep(master.MasterShellCommand(
