@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.schedulers import basic, timed
+from buildbot.changes.filter import ChangeFilter
 
 SCHEDULERS = [
     # Triggered on every commit by the github hook.
@@ -15,6 +16,17 @@ SCHEDULERS = [
             'Quality Assurance',
             'API documentation',
         ],
+    ),
+
+    # This scheduler only executes for the Erebot project
+    # and updates the Live instance of the bot.
+    basic.Scheduler(
+        name="Live",
+        treeStableTimer=10 * 60,
+        builderNames=[
+            'Live',
+        ],
+        change_filter=ChangeFilter(project='Erebot'),
     ),
 ]
 
