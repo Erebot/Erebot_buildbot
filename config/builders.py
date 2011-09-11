@@ -42,5 +42,11 @@ BUILDERS = [
         factory=steps.QA,
         category='QA',
     ),
+    BuilderConfig(
+        name='Live',
+        slavenames=['Debian 6 - PHP 5.3'],
+        factory=steps.LIVE,
+        category='Live',
+    ),
 ]
 
