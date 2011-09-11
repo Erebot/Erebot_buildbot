@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.process import factory, properties
-from buildbot.steps import shell
+from buildbot.steps import shell, transfer
 from Erebot_buildbot.config.steps import common
-from Erebot_buildbot.src.steps import CountingShellCommand
 from Erebot_buildbot.src import master
 
 LIVE = factory.BuildFactory()
