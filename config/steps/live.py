@@ -56,7 +56,7 @@ for component in misc.COMPONENTS:
 
         LIVE.addStep(shell.Compile(
             command=(
-                "cd build/vendor/%s && "
+                "cd vendor/%s && "
                 # Build the translations.
                 "phing"
             ) % component,
