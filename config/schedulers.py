@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.schedulers import basic, timed
-from buildbot.changes.filter import ChangeFilter
+from buildbot.schedulers.filter import ChangeFilter
 
 SCHEDULERS = [
     # Triggered on every commit by the github hook.
