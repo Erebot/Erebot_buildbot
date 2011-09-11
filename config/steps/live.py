@@ -48,6 +48,16 @@ LIVE.addStep(shell.ShellCommand(
     maxTime=5 * 60,
 ))
 
+LIVE.addStep(shell.ShellCommand(
+    command=" && ".join([
+        "pear i pear/Console_CommandLine",
+        "pear i pear/File_Gettext",
+    ]),
+    description=["PEAR", 'deps'],
+    descriptionDone=["PEAR", 'deps'],
+    maxTime=5 * 60,
+))
+
 # Start new instance.
 LIVE.addStep(shell.ShellCommand(
     command="php scripts/Erebot --daemon --pidfile Erebot.pid",
