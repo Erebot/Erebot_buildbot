@@ -49,9 +49,11 @@ LIVE.addStep(shell.ShellCommand(
 ))
 
 LIVE.addStep(shell.ShellCommand(
-    command=" && ".join([
+    command="; ".join([
+        "pear channel-update pear.php.net", # Update protocols if needed.
         "pear i pear/Console_CommandLine",
         "pear i pear/File_Gettext",
+        ":",                                # Never fail.
     ]),
     env={
         'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
