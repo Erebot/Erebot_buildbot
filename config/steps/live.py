@@ -88,7 +88,7 @@ LIVE.addStep(shell.ShellCommand(
 # Start new instance.
 LIVE.addStep(shell.ShellCommand(
     command=
-        "php -d error_log=syslog "
+        "php -d error_log=syslog -d log_errors=On "
         "scripts/Erebot --daemon --pidfile /tmp/Erebot.pid &",
     env={
         'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
