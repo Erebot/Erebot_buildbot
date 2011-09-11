@@ -53,6 +53,9 @@ LIVE.addStep(shell.ShellCommand(
         "pear i pear/Console_CommandLine",
         "pear i pear/File_Gettext",
     ]),
+    env={
+        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+    },
     description=["PEAR", 'deps'],
     descriptionDone=["PEAR", 'deps'],
     maxTime=5 * 60,
