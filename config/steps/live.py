@@ -10,12 +10,12 @@ LIVE = factory.BuildFactory()
 # Stop or kill any previous instance of the bot.
 LIVE.addStep(shell.ShellCommand(
     command="""
-if [ -f Erebot.pid ]
+if [ -f /tmp/Erebot.pid ]
 then
-    kill -TERM `cat Erebot.pid` 2> /dev/null;
+    kill -TERM `cat /tmp/Erebot.pid` 2> /dev/null;
     sleep 5;
-    kill -KILL `cat Erebot.pid` 2> /dev/null;
-    rm -f Erebot.pid;
+    kill -KILL `cat /tmp/Erebot.pid` 2> /dev/null;
+    rm -f /tmp/Erebot.pid;
 fi
 """,
     maxTime=30,
@@ -63,7 +63,7 @@ LIVE.addStep(shell.ShellCommand(
 
 # Start new instance.
 LIVE.addStep(shell.ShellCommand(
-    command="php scripts/Erebot --daemon --pidfile Erebot.pid",
+    command="php scripts/Erebot --daemon --pidfile /tmp/Erebot.pid",
     env={
         'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
@@ -81,7 +81,7 @@ LIVE.addStep(shell.ShellCommand(
 
 # Check that it is still running.
 LIVE.addStep(shell.ShellCommand(
-    command="kill -0 `cat Erebot.pid`",
+    command="kill -0 `cat /tmp/Erebot.pid`",
     description=["Check", "instance"],
     descriptionDone=["Check", "instance"],
 ))
