@@ -16,6 +16,12 @@ BUILDERS = [
         category='Tests',
     ),
     BuilderConfig(
+        name='Tests - Debian 6 - PHP 5.4',
+        slavenames=['Debian 6 - PHP 5.4'],
+        factory=steps.TESTS,
+        category='Tests',
+    ),
+    BuilderConfig(
         name='Tests - WinXP - PHP 5.3',
         slavenames=['WinXP - PHP 5.3'],
         factory=steps.TESTS,
