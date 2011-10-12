@@ -60,9 +60,9 @@ PACKAGE.addStep(shell.ShellCommand(
                 "<buildbot@erebot.net> (lead)' > CREDITS",
             "cat CREDITS.buildbot >> CREDITS",
             "mkdir -p /tmp/release-%(buildnumber)d",
-            "php pyrus.phar /tmp/release-%(buildnumber)d "
+            "php `which pyrus.phar` /tmp/release-%(buildnumber)d "
                 "set handle Ere-build-bot",
-            "php pyrus.phar /tmp/release-%(buildnumber)d "
+            "php `which pyrus.phar` /tmp/release-%(buildnumber)d "
                 "set openssl_cert /tmp/buildbot.p12.%(buildnumber)d",
             "cat /tmp/buildbot.sign.%(buildnumber)d | phing release "
                 "-Dstability=snapshot "
