@@ -11,6 +11,7 @@ SCHEDULERS = [
         builderNames=[
             'Tests - Debian 6 - PHP 5.2',
             'Tests - Debian 6 - PHP 5.3',
+            'Tests - Debian 6 - PHP 5.4',
             'Tests - WinXP - PHP 5.3',
             'Packaging',
             'Quality Assurance',
