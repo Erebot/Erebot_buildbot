@@ -3,7 +3,7 @@
     name="syslog"
 >
     <level>DEBUG</level>
-    <formatter>detailed</formatter>
+    <formatter>syslog</formatter>
     <class>Plop_Handler_SysLog</class>
 </handler>
 

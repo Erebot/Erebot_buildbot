@@ -3,6 +3,5 @@
     name="detailed"
 >
     <format>%(asctime)s - %(levelname)s - %(message)s</format>
-    <datefmt>%H:%M:%S</datefmt>
 </formatter>
 

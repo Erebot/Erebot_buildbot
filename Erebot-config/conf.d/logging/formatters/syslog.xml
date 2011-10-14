@@ -1,0 +1,12 @@
+<formatter
+    xmlns="http://www.erebot.net/xmlns/logging"
+    name="syslog"
+>
+    <!--
+        See RFC 5424 for details on the format.
+        http://tools.ietf.org/html/rfc5424#section-6
+    -->
+    <format>1 %(asctime)s %(hostname)s %(processName)s %(process)s - %(message)s</format>
+    <datefmt>Y-m-d\TH:i:s.uP</datefmt>
+</formatter>
+
