@@ -112,14 +112,16 @@ LIVE.addStep(shell.ShellCommand(
 # Start new instance.
 LIVE.addStep(shell.ShellCommand(
     command=
-        "nohup php "
+        "php "
             "-d error_log=syslog "
             "-d log_errors=On "
             "-d ignore_repeated_errors=On "
         "scripts/Erebot "
             "--daemon "
-            "--pidfile /tmp/Erebot.pid"
-        " > /dev/null",
+            "--pidfile /tmp/Erebot.pid "
+        "< /dev/null "
+        "> /dev/null "
+        "2>&1",
     env={
         'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
     },
