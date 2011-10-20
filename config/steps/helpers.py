@@ -1,15 +1,33 @@
 # -*- coding: utf-8 -*-
 
-def get_pear_pkg(rc, stdout, stderr):
-    pear_pkg = stdout.strip().rstrip('.tgz')
-    if not pear_pkg or "\n" in pear_pkg:
-        pear_pkg = None
-    return {
-        "pear_pkg": pear_pkg,
-    }
+def find_packages():
+    def _extractor(rc, stdout, stderr):
+        lines = stdout.splitlines()
+        exts = ['.zip', '.tar', '.tgz', '.phar']
+        for ext in exts[:]:
+            exts.append(ext + '.pubkey')
+        exts.append('.pem')
+        prefix = None
+        props = {}
 
-def has_pear_pkg(step):
-    return bool(step.getProperty("pear_pkg"))
+        for line in lines:
+            for ext in exts:
+                if line.endswith(ext):
+                    prop_ext = 'pkg' + ext
+                    pfx = line[:-len(ext)]
+                    if prefix is None:
+                        prefix = pfx
+                    elif pfx != prefix:
+                        raise ValueError("Invalid prefix")
+                    elif prop_ext in props:
+                        raise ValueError("Extension %s already found" % ext)
+                    props[prop_ext] = line
+        return props
+    return _extractor
+
+def has_package(prop):
+    return lambda step: step.hasProperty(prop) and \
+                        len(step.getProperty(prop))
 
 def if_component(component):
     def _inner(step):

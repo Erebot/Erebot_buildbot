@@ -64,7 +64,15 @@ PACKAGE.addStep(shell.ShellCommand(
                 "set handle Ere-build-bot",
             "pyrus.phar /tmp/release-%(buildnumber)d "
                 "set openssl_cert /tmp/buildbot.p12.%(buildnumber)d",
-            "cat /tmp/buildbot.sign.%(buildnumber)d | phing release "
+            # Makes buildbot answer "yes" when Pyrus
+            # asks whether we want to sign the package,
+            # and then answer with the passphrase.
+            # We do it twice (for .tgz and .phar).
+            "cat "
+                "/tmp/buildbot.sign.%(buildnumber)d "
+                "/tmp/buildbot.sign.%(buildnumber)d "
+                "| "
+                "phing release "
                 "-Dstability=snapshot "
                 "-Drelease.tmp=/tmp/release-%(buildnumber)d",
         ]) + "; " + " && ".join([
@@ -108,50 +116,51 @@ PACKAGE.addStep(shell.ShellCommand(
 ))
 
 PACKAGE.addStep(shell.SetProperty(
-    command=properties.WithProperties("ls -1 %(project)s-*.tgz"),
-    description="version",
-    descriptionDone="version",
-    extract_fn=helpers.get_pear_pkg,
+    command=properties.WithProperties(
+        "ls -1 %(project)s-*.{{tgz,tar,zip,phar}{,.pubkey},pem} 2> /dev/null"
+    ),
+    description="Got any package?",
+    descriptionDone="Got any package?",
+    extract_fn=helpers.find_packages(),
 ))
 
-PACKAGE.addStep(transfer.FileUpload(
-    slavesrc=properties.WithProperties("%(pear_pkg)s.tgz"),
-    masterdest=properties.WithProperties(
-        "/var/www/pear/get/%(pear_pkg)s.tgz"
-    ),
-    mode=0644,
-    doStepIf=helpers.has_pear_pkg,
-    maxsize=50 * (1 << 20), # 50 MiB
-))
+for ext in (
+    '.zip', '.zip.pubkey',
+    '.tgz', '.tgz.pubkey',
+    '.tar', '.tar.pubkey',
+    '.phar', '.phar.pubkey',
+    '.pem',
+    ):
+    if ext == '.pem' or ext.endswith('.pubkey'):
+        maxsize = 20 * (1 << 10) # 20 KB
+    else:
+        maxsize = 50 * (1 << 20) # 50 MB
 
-PACKAGE.addStep(transfer.FileUpload(
-    slavesrc=properties.WithProperties("%(pear_pkg)s.tgz.pubkey"),
-    masterdest=properties.WithProperties(
-        "/var/www/pear/get/%(pear_pkg)s.tgz.pubkey"
-    ),
-    mode=0644,
-    doStepIf=helpers.has_pear_pkg,
-    maxsize=20 * (1 << 10), # 20 KiB
-))
+    PACKAGE.addStep(transfer.FileUpload(
+        slavesrc=properties.WithProperties("%%(pkg%s)s" % ext),
+        masterdest=properties.WithProperties(
+            "/var/www/pear/get/%%(pkg%s)s" % ext
+        ),
+        mode=0644,
+        doStepIf=helpers.has_package('pkg' + ext),
+        maxsize=maxsize
+    ))
 
-PACKAGE.addStep(transfer.FileUpload(
-    slavesrc=properties.WithProperties("%(pear_pkg)s.pem"),
-    masterdest=properties.WithProperties(
-        "/var/www/pear/get/%(pear_pkg)s.pem"
-    ),
-    mode=0644,
-    doStepIf=helpers.has_pear_pkg,
-    maxsize=20 * (1 << 10), # 20 KiB
-))
+    if ext == '.pem':
+        label = "Release certificate"
+    elif ext.endswith('.pubkey'):
+        label = "Signature (%s)" % ext
+    else:
+        label = "Package (%s)" % ext
 
-PACKAGE.addStep(Link(
-    label="PEAR Package",
-    href=properties.WithProperties(
-        "%(buildbotURL)s/get/%(pear_pkg)s.tgz",
-        buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
-    ),
-    doStepIf=helpers.has_pear_pkg,
-))
+    PACKAGE.addStep(Link(
+        label=label,
+        href=properties.WithProperties(
+            "%%(buildbotURL)s/get/%%(pkg%s)s" % ext,
+            buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
+        ),
+        doStepIf=helpers.has_package('pkg' + ext),
+    ))
 
 PACKAGE.addStep(master.MasterShellCommand(
     command=" && ".join([
@@ -169,7 +178,6 @@ PACKAGE.addStep(master.MasterShellCommand(
     },
     description=['PEAR', 'repos.', 'update'],
     descriptionDone=['PEAR', 'repos.', 'update'],
-    doStepIf=helpers.has_pear_pkg,
     locks=[PIRUM_LOCK.access('exclusive')],
 ))
 
