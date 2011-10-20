@@ -26,8 +26,7 @@ def find_packages():
     return _extractor
 
 def has_package(prop):
-    return lambda step: step.hasProperty(prop) and \
-                        len(step.getProperty(prop))
+    return lambda step: step.getProperty(prop, None)
 
 def if_component(component):
     def _inner(step):
