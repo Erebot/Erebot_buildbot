@@ -25,8 +25,14 @@ def find_packages():
         return props
     return _extractor
 
-def has_package(prop):
-    return lambda step: step.getProperty(prop, None)
+def get_package(ext):
+    ext = ext.lstrip('.')
+    # step.getProperty(foo, bar) is not supported
+    # by older versions of buildbot (< 0.8.4 ?).
+    def _getter(step):
+        props = step.build.getProperties()
+        return props.get('pkg.' + ext, None)
+    return _getter
 
 def if_component(component):
     def _inner(step):

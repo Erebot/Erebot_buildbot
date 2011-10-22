@@ -142,7 +142,7 @@ for ext in (
             "/var/www/pear/get/%%(pkg%s)s" % ext
         ),
         mode=0644,
-        doStepIf=helpers.has_package('pkg' + ext),
+        doStepIf=helpers.get_package(ext),
         maxsize=maxsize
     ))
 
@@ -159,7 +159,7 @@ for ext in (
             "%%(buildbotURL)s/get/%%(pkg%s)s" % ext,
             buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
         ),
-        doStepIf=helpers.has_package('pkg' + ext),
+        doStepIf=helpers.get_package(ext),
     ))
 
 PACKAGE.addStep(master.MasterShellCommand(
