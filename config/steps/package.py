@@ -64,17 +64,10 @@ PACKAGE.addStep(shell.ShellCommand(
                 "set handle Ere-build-bot",
             "pyrus.phar /tmp/release-%(buildnumber)d "
                 "set openssl_cert /tmp/buildbot.p12.%(buildnumber)d",
-            # Makes buildbot answer "yes" when Pyrus
-            # asks whether we want to sign the package,
-            # and then answer with the passphrase.
-            # We do it twice (for .tgz and .phar).
-            "cat "
-                "/tmp/buildbot.sign.%(buildnumber)d "
-                "/tmp/buildbot.sign.%(buildnumber)d "
-                "| "
-                "phing release "
-                "-Dstability=snapshot "
-                "-Drelease.tmp=/tmp/release-%(buildnumber)d",
+            "phing release "
+                " -Dstability=snapshot "
+                " -Drelease.tmp=/tmp/release-%(buildnumber)d "
+                " -Dpassfile=/tmp/buildbot.sign.%(buildnumber)d",
         ]) + "; " + " && ".join([
             "mv -f CREDITS.buildbot CREDITS",
             "rm -rf /tmp/release-%(buildnumber)d",
