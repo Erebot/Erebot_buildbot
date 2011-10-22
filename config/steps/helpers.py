@@ -31,7 +31,7 @@ def get_package(ext):
     # by older versions of buildbot (< 0.8.4 ?).
     def _getter(step):
         props = step.build.getProperties()
-        return props.get('pkg.' + ext, None)
+        return props.getProperty('pkg.' + ext, None)
     return _getter
 
 def if_component(component):
