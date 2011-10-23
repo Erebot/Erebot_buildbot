@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.process import factory, properties
+from buildbot.process import factory
+from buildbot.process.properties import WithProperties
 from buildbot.steps import shell
 from Erebot_buildbot.config.steps import common
 from Erebot_buildbot.src.steps import CountingShellCommand
 
 QA = factory.BuildFactory()
+QA.addStep(common.erebot_path)
 QA.addStep(common.clone)
 
 QA.addStep(shell.ShellCommand(
@@ -14,7 +16,7 @@ QA.addStep(shell.ShellCommand(
     descriptionDone="lint",
     warnOnWarnings=True,
     env={
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     maxTime=5 * 60,
 ))
@@ -30,7 +32,7 @@ QA.addStep(CountingShellCommand(
     errorPattern="^.*?ERROR in line ()([0-9]+) column [0-9]+: (.*)$",
     errorExtractor=CountingShellCommand.extractFromRegexpGroups,
     env={
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     maxTime=5 * 60,
 ))
@@ -41,7 +43,7 @@ QA.addStep(shell.ShellCommand(
     descriptionDone="Duplicates",
     warnOnWarnings=True,
     env={
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     maxTime=5 * 60,
 ))
@@ -56,7 +58,7 @@ QA.addStep(shell.WarningCountingShellCommand(
     warningExtractor=
         shell.WarningCountingShellCommand.warnExtractFromRegexpGroups,
     env={
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     maxTime=5* 60,
 ))

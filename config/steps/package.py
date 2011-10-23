@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.process import factory, properties
+from buildbot.process import factory
+from buildbot.process.properties import WithProperties
 from buildbot.steps import shell, transfer
 from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.config.locks import PIRUM_LOCK
@@ -9,6 +10,7 @@ from Erebot_buildbot.src.steps import Link
 from Erebot_buildbot.src import master
 
 PACKAGE = factory.BuildFactory()
+PACKAGE.addStep(common.erebot_path)
 PACKAGE.addStep(common.clone)
 
 PACKAGE.addStep(shell.Compile(
@@ -17,7 +19,7 @@ PACKAGE.addStep(shell.Compile(
         # Ensures the output doesn't use
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     warnOnWarnings=True,
     warnOnFailure=True,
@@ -28,7 +30,7 @@ PACKAGE.addStep(shell.Compile(
 ))
 
 PACKAGE.addStep(shell.ShellCommand(
-        command=properties.WithProperties(
+        command=WithProperties(
         """
         for f in `ls -1 RELEASE-*`;
         do
@@ -42,18 +44,18 @@ PACKAGE.addStep(shell.ShellCommand(
 
 PACKAGE.addStep(transfer.FileDownload(
     mastersrc='/home/qa/master/buildenv/sign',
-    slavedest=properties.WithProperties('/tmp/buildbot.sign.%(buildnumber)d'),
+    slavedest=WithProperties('/tmp/buildbot.sign.%(buildnumber)d'),
     mode=0600,
 ))
 
 PACKAGE.addStep(transfer.FileDownload(
     mastersrc='/home/qa/master/buildenv/certificate.p12',
-    slavedest=properties.WithProperties('/tmp/buildbot.p12.%(buildnumber)d'),
+    slavedest=WithProperties('/tmp/buildbot.p12.%(buildnumber)d'),
     mode=0600,
 ))
 
 PACKAGE.addStep(shell.ShellCommand(
-    command=properties.WithProperties(
+    command=WithProperties(
         " && ".join([
             "mv -f CREDITS CREDITS.buildbot",
             "echo 'Buildbot Continuous Integration [Ere-build-bot] "
@@ -77,7 +79,7 @@ PACKAGE.addStep(shell.ShellCommand(
         # Ensures the output doesn't use
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     description="snapshot",
     descriptionDone="snapshot",
@@ -86,7 +88,7 @@ PACKAGE.addStep(shell.ShellCommand(
 ))
 
 PACKAGE.addStep(shell.ShellCommand(
-    command=properties.WithProperties(
+    command=WithProperties(
         "rm -f /tmp/buildbot.sign.%(buildnumber)d "
             "/tmp/buildbot.p12.%(buildnumber)d"
     ),
@@ -96,7 +98,7 @@ PACKAGE.addStep(shell.ShellCommand(
 ))
 
 PACKAGE.addStep(shell.ShellCommand(
-    command=properties.WithProperties(
+    command=WithProperties(
     """
     for f in `ls -1 RELEASE-*`;
     do
@@ -109,7 +111,7 @@ PACKAGE.addStep(shell.ShellCommand(
 ))
 
 PACKAGE.addStep(shell.SetProperty(
-    command=properties.WithProperties(
+    command=WithProperties(
         "ls -1 %(project)s-"
             "*.tgz *.tar *.zip *.phar *.pubkey *.pem "
             "2> /dev/null || :"
@@ -132,8 +134,8 @@ for ext in (
         maxsize = 50 * (1 << 20) # 50 MB
 
     PACKAGE.addStep(transfer.FileUpload(
-        slavesrc=properties.WithProperties("%%(pkg%s)s" % ext),
-        masterdest=properties.WithProperties(
+        slavesrc=WithProperties("%%(pkg%s)s" % ext),
+        masterdest=WithProperties(
             "/var/www/pear/get/%%(pkg%s)s" % ext
         ),
         mode=0644,
@@ -150,7 +152,7 @@ for ext in (
 
     PACKAGE.addStep(Link(
         label=label,
-        href=properties.WithProperties(
+        href=WithProperties(
             "%%(buildbotURL)s/get/%%(pkg%s)s" % ext,
             buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
         ),
@@ -169,7 +171,7 @@ PACKAGE.addStep(master.MasterShellCommand(
         # Ensures the output doesn't use
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     description=['PEAR', 'repos.', 'update'],
     descriptionDone=['PEAR', 'repos.', 'update'],

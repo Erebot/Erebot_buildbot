@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.process import factory, properties
+from buildbot.process import factory
+from buildbot.process.properties import WithProperties
 from buildbot.steps import shell, transfer
 from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.src.steps import Link, PHPUnit
 
 TESTS = factory.BuildFactory()
+TESTS.addStep(common.erebot_path)
 TESTS.addStep(common.clone)
 
 # The Core requires the translations.
@@ -16,7 +18,7 @@ TESTS.addStep(shell.Compile(
         # Ensures the output doesn't use
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     warnOnWarnings=True,
     warnOnFailure=True,
@@ -32,7 +34,7 @@ TESTS.addStep(PHPUnit(
     descriptionDone="tests",
     warnOnWarnings=True,
     env={
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     maxTime=10 * 60,
 ))
@@ -46,7 +48,7 @@ def must_transfer_coverage(step):
 TESTS.addStep(transfer.DirectoryUpload(
     slavesrc="docs/coverage/",
     masterdest=
-        properties.WithProperties("public_html/doc/coverage/%(project)s/"),
+        WithProperties("public_html/doc/coverage/%(project)s/"),
     doStepIf=must_transfer_coverage,
     maxsize=10 * (1 << 20), # 10 MiB
 ))

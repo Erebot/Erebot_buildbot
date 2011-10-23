@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.process import factory, properties
+from buildbot.process import factory
+from buildbot.process.properties import WithProperties
 from buildbot.steps import shell, transfer, source
 from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.config import misc
 from Erebot_buildbot.src import master
 
 LIVE = factory.BuildFactory()
+LIVE.addStep(common.erebot_path)
 
 # Stop or kill any previous instance of the bot.
 LIVE.addStep(shell.ShellCommand(
@@ -36,7 +38,7 @@ LIVE.addStep(common.clone)
 LIVE.addStep(shell.Compile(
     command="phing",
     env={
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     warnOnWarnings=True,
     warnOnFailure=True,
@@ -61,7 +63,7 @@ for component in misc.COMPONENTS:
                 "phing"
             ) % component,
             env={
-                'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+                'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
             },
             warnOnWarnings=True,
             warnOnFailure=True,
@@ -102,7 +104,7 @@ LIVE.addStep(shell.ShellCommand(
         ":",                                # Never fail.
     ]),
     env={
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     description=["PEAR", 'deps'],
     descriptionDone=["PEAR", 'deps'],
@@ -123,7 +125,7 @@ LIVE.addStep(shell.ShellCommand(
         "> /dev/null "
         "2>&1",
     env={
-        'PATH': properties.WithProperties("%(bin_dir)s:${PATH}"),
+        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
     },
     description=["Start", "Erebot"],
     descriptionDone=["Start", "Erebot"],
