@@ -110,9 +110,7 @@ PACKAGE.addStep(shell.ShellCommand(
 
 PACKAGE.addStep(shell.SetProperty(
     command=properties.WithProperties(
-        "/bin/bash "
-            "ls -1 %(project)s-*.{{tgz,tar,zip,phar}{,.pubkey},pem} "
-            "2> /dev/null"
+        "ls -1 %(project)s-*.tgz *.tar *.zip *.phar *.pubkey *.pem 2> /dev/null"
     ),
     description="Got any package?",
     descriptionDone="Got any package?",
