@@ -33,3 +33,5 @@ COMPONENTS = (
 )
 
 BUILDBOT_URL = "https://buildbot.erebot.net/"
+PEAR_URL = "https://pear.erebot.net/"
+

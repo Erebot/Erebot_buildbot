@@ -153,8 +153,8 @@ for ext in (
     PACKAGE.addStep(Link(
         label=label,
         href=WithProperties(
-            "%%(buildbotURL)s/get/%%(pkg%s)s" % ext,
-            buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
+            "%%(pear)s/get/%%(pkg%s)s" % ext,
+            pear=lambda _: misc.PEAR_URL.rstrip('/'),
         ),
         doStepIf=helpers.get_package(ext),
     ))
