@@ -9,6 +9,7 @@ def find_packages():
         exts.append('.pem')
         prefix = None
         props = {}
+        found_packages = False
 
         for line in lines:
             for ext in exts:
@@ -22,6 +23,8 @@ def find_packages():
                     elif prop_ext in props:
                         raise ValueError("Extension %s already found" % ext)
                     props[prop_ext] = line
+                    found_packages = True
+        props["found_packages"] = found_packages
         return props
     return _extractor
 

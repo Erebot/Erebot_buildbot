@@ -112,14 +112,29 @@ PACKAGE.addStep(shell.ShellCommand(
 
 PACKAGE.addStep(shell.SetProperty(
     command=WithProperties(
-        "ls -1 %(project)s-"
-            "*.tgz *.tar *.zip *.phar *.pubkey *.pem "
-            "2> /dev/null || :"
+        "ls -1 "
+            "%(project)s-*.tgz "
+            "%(project)s-*.tar "
+            "%(project)s-*.zip "
+            "%(project)s-*.phar "
+            "%(project)s-*.pubkey "
+            "%(project)s-*.pem "
+        "2> /dev/null || :"
     ),
     description="Got any package?",
     descriptionDone="Got any package?",
     extract_fn=helpers.find_packages(),
 ))
+
+# This step will always fail (and mark the whole build as failed)
+# if not even one package was built during the snapshot step.
+PACKAGE.addStep(
+    command="! :",  # always exits with return value set to 1.
+    haltOnFailure=True,
+    description="Check packages",
+    descriptionDone="Check packages",
+    doStepIf=lambda step: not step.getProperty('found_packages')
+)
 
 for ext in (
     '.zip', '.zip.pubkey',
