@@ -128,13 +128,13 @@ PACKAGE.addStep(shell.SetProperty(
 
 # This step will always fail (and mark the whole build as failed)
 # if not even one package was built during the snapshot step.
-PACKAGE.addStep(
+PACKAGE.addStep(shell.ShellCommand(
     command="! :",  # always exits with return value set to 1.
     haltOnFailure=True,
     description="Check packages",
     descriptionDone="Check packages",
     doStepIf=lambda step: not step.getProperty('found_packages')
-)
+))
 
 for ext in (
     '.zip', '.zip.pubkey',
