@@ -4,7 +4,7 @@ GITHUB_BASE = "https://github.com/fpoirotte"
 
 COMPONENTS = (
     'Erebot',
-    'Plop',
+    'Erebot_API',
     'Erebot_Module_Admin',
     'Erebot_Module_AutoConnect',
     'Erebot_Module_AutoIdent',
@@ -30,6 +30,7 @@ COMPONENTS = (
     'Erebot_Module_WatchList',
     'Erebot_Module_WebGetter',
     'Erebot_Module_Wordlists',
+    'Plop',
 )
 
 BUILDBOT_URL = "https://buildbot.erebot.net/"
