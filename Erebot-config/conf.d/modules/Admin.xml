@@ -3,5 +3,5 @@
     name="Erebot_Module_Admin"
     active="true"
 >
-    <param name="admins" value="*!*@erebot.net *!*@*.erebot.net 0::ffff:127.0.0.1 fe80::21f:16ff:fe10:8ecc 2001:41d0:2:37e4::1 94.23.54.228 127.0.0.1"/>
+    <param name="admins" value="*!*@erebot.net *!*@*.erebot.net *!*@0::ffff:127.0.0.1 *!*@fe80::21f:16ff:fe10:8ecc *!*@2001:41d0:2:37e4::1 *!*@94.23.54.228 *!*@127.0.0.1"/>
 </module>
