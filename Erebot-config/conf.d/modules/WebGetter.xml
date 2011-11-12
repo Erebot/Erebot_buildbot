@@ -142,5 +142,7 @@
     <param name="10.vars.3" value="string(//p[@id='qoqa_price']/text())"/>
     <!-- Shipping cost -->
     <param name="10.vars.4" value="string(//p[@id='shipping']/text())"/>
-    <param name="10.format" value="QoQa: $(vars.2)s (par $(vars.1)s) pour $(vars.3)s ($(vars.4)s)"/>
+    <!-- Stocks -->
+    <param name="10.vars.5" value="string(//div[@id='jauge-vertical-container']/div[1]/span[1]/text())"/>
+    <param name="10.format" value="QoQa: $(vars.2)s (par $(vars.1)s) pour $(vars.3)s ($(vars.4)s) -- Stocks : $(vars.5)s [http://www.qoqa.fr pour commander]"/>
 </module>
