@@ -126,7 +126,7 @@
     <param name="9.trigger" value="civil"/>
     <param name="9.url" value="http://fr.wikisource.org/wiki/Manuel_de_civilit%C3%A9_pour_les_petites_filles_%C3%A0_l%E2%80%99usage_des_maisons_d%E2%80%99%C3%A9ducation"/>
     <param name="9.description" value="Manuel de Civilité pour les Petites Filles à l'usage des Maisons d'éducation"/>
-    <param name="9.vars.1" value="string(//div[@class='text']/p[$(0)]/text())"/>
+    <param name="9.vars.1" value="string(//div[@id='bodyContent']/div[4]/div/p[$(0)s]/text())"/>
     <param name="9.format" value="Civilité: $(vars.1)s"/>
 
     <!-- QoQa -->
