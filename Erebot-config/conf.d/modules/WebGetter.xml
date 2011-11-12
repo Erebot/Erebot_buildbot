@@ -128,4 +128,19 @@
     <param name="9.description" value="Manuel de Civilité pour les Petites Filles à l'usage des Maisons d'éducation"/>
     <param name="9.vars.1" value="string(//div[@class='text']/p[$(0)]/text())"/>
     <param name="9.format" value="Civilité: $(vars.1)s"/>
+
+    <!-- QoQa -->
+    <param name="10.trigger" value="qoqa"/>
+    <param name="10.url" value="http://www.qoqa.fr"/>
+    <param name="10.description" value="Les bons plans de Mr. QoQa."/>
+    <param name="10.encoding" value="__double"/>
+    <!-- Brand -->
+    <param name="10.vars.1" value="string(//span[@class='product-brand']/text())"/>
+    <!-- Product -->
+    <param name="10.vars.2" value="string(//span[@class='product-name']/text())"/>
+    <!-- Price -->
+    <param name="10.vars.3" value="string(//p[@id='qoqa_price']/text())"/>
+    <!-- Shipping cost -->
+    <param name="10.vars.4" value="string(//p[@id='shipping']/text())"/>
+    <param name="10.format" value="QoQa: $(vars.2)s (par $(vars.1)s) pour $(vars.3)s ($(vars.4)s)"/>
 </module>
