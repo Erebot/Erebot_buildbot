@@ -87,9 +87,9 @@ DOC.addStep(shell.ShellCommand(
 ))
 
 DOC.addStep(transfer.FileUpload(
-    slavesrc=WithProperties("%(project)s.tagfile"),
+    slavesrc=WithProperties("%(project)s.tagfile.xml"),
     masterdest=WithProperties(
-        "public_html/tagfiles/%(project)s.tagfile"
+        "public_html/tagfiles/%(project)s.tagfile.xml"
     ),
     maxsize=1 * (1 << 20), # 1 MiB
     locks=[TAGFILES_LOCK.access('exclusive')],
