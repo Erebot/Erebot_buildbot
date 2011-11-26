@@ -34,6 +34,7 @@ class MultiProjectBuildFactory(BuildFactory):
         b.useProgress = self.useProgress
         b.workdir = self.workdir
         project = request[0].source.project
-        b.setStepFactories(self.factories.get(project, self.empty_factory))
+        steps = self.factories.get(project, self.empty_factory).steps
+        b.setStepFactories(steps)
         return b
 
