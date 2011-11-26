@@ -14,7 +14,7 @@ LIVE_WWW.addStep(master.MasterShellCommand(
     command="git log -1 --pretty=oneline --no-color | cut -d ' ' -f 1",
     description=["Revision"],
     descriptionDone=["Revision"],
-    extract_fn=lambda rc, stdout, stderr: {'got_revision', stdout},
+    extract_fn=lambda rc, stdout, stderr: {'got_revision': stdout},
     strip=True,
 ))
 
