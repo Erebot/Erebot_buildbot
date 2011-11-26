@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from buildbot.process.factory impot BuildFactory
+from buildbot.process.factory import BuildFactory
 
 class MultiProjectBuildFactory(BuildFactory):
     """
