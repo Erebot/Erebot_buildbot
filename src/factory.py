@@ -27,12 +27,13 @@ class MultiProjectBuildFactory(BuildFactory):
 
     def newBuild(self, request):
         """Create a new Build instance.
-        @param request: a L{base.BuildRequest} describing what is to be built
+        @param request: a list of L{base.BuildRequest}
+            describing what is to be built
         """
         b = self.buildClass(request)
         b.useProgress = self.useProgress
         b.workdir = self.workdir
-        steps = self.factories.get(request.source.project, self.empty_factory)
-        b.setStepFactories(steps)
+        project = request[0].source.project
+        b.setStepFactories(self.factories.get(project, self.empty_factory))
         return b
 
