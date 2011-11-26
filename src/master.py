@@ -109,8 +109,8 @@ class MasterShellCommand(MSC):
             self.setProperty(propname, result, "SetProperty Step")
         elif self.extract_fn:
             new_props = self.extract_fn(status_object.value.exitCode,
-                    ''.join([data[1] for data in self.logger_output if data[0] == 1]),
-                    ''.join([data[1] for data in self.logger_output if data[0] == 2]))
+                    ''.join([data[1] for data in self.logged_output if data[0] == 1]),
+                    ''.join([data[1] for data in self.logged_output if data[0] == 2]))
             for k,v in new_props.items():
                 self.setProperty(k, v, "SetProperty Step")
 
