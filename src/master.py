@@ -20,7 +20,7 @@ class MasterShellCommand(MSC):
         self.property = property
         self.strip = strip
 
-        MSC.__init__(command, description, descriptionDone, env, path, usePTY, **kwargs)
+        MSC.__init__(self, command, description, descriptionDone, env, path, usePTY, **kwargs)
         self.addFactoryArguments(property=self.property)
         self.addFactoryArguments(extract_fn=self.extract_fn)
         self.addFactoryArguments(strip=self.strip)
@@ -117,5 +117,5 @@ class MasterShellCommand(MSC):
             for k,v in new_props.items():
                 self.setProperty(k, v, "SetProperty Step")
 
-        return MSC.processEnded(status_object)
+        return MSC.processEnded(self, status_object)
 
