@@ -7,6 +7,7 @@ when used in the env argument.
 import os, types, re
 from twisted.python import runtime
 from twisted.internet import reactor
+from twisted.internet.protocol import ProcessProtocol
 from buildbot.steps.master import MasterShellCommand as MSC
 
 class MasterShellCommand(MSC):
