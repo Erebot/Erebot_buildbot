@@ -4,7 +4,7 @@ from buildbot.process import factory
 from Erebot_buildbot.src import master
 
 LIVE_WWW = factory.BuildFactory()
-LIVE_WWW.addStep(shell.MasterShellCommand(
+LIVE_WWW.addStep(master.MasterShellCommand(
     command="cd /var/www/Erebot/erebot && git pull",
     maxTime=5*60,
     description=["Updating"],
