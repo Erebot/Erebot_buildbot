@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from buildbot.config import BuilderConfig
 from Erebot_buildbot.config import steps
+from Erebot_buildbot.src.factory import MultiProjectBuildFactory
 
 BUILDERS = [
     BuilderConfig(
@@ -51,7 +52,10 @@ BUILDERS = [
     BuilderConfig(
         name='Live',
         slavenames=['Debian 6 - PHP 5.3'],
-        factory=steps.LIVE,
+        factory=MultiProjectBuildFactory({
+            'Erebot': steps.LIVE,
+            'www.erebot.net': steps.LIVE_WWW,
+        }),
         category='Live',
     ),
 ]

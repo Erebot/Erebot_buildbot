@@ -3,6 +3,7 @@
 GITHUB_BASE = "https://github.com/fpoirotte"
 
 COMPONENTS = (
+    'www.erebot.net',
     'Erebot',
     'Erebot_API',
     'Erebot_Module_Admin',
