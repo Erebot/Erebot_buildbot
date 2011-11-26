@@ -10,6 +10,37 @@ from twisted.internet import reactor
 from buildbot.steps.master import MasterShellCommand as MSC
 
 class MasterShellCommand(MSC):
+    def __init__(self, command,
+                 description=None, descriptionDone=None,
+                 env=None, path=None, usePTY=0,
+                 extract_fn=None, property=None, strip=True,
+                 **kwargs):
+        self.extract_fn = extract_fn
+        self.property = property
+        self.strip = strip
+
+        MSC.__init__(command, description, descriptionDone, env, path, usePTY, **kwargs)
+        self.addFactoryArguments(property=self.property)
+        self.addFactoryArguments(extract_fn=self.extract_fn)
+        self.addFactoryArguments(strip=self.strip)
+        self.logged_output = []
+
+    class LocalPP(ProcessProtocol):
+        def __init__(self, step):
+            self.step = step
+
+        def outReceived(self, data):
+            self.step.logged_output.append( (1, data) )
+            self.step.stdio_log.addStdout(data)
+
+        def errReceived(self, data):
+            self.step.logged_output.append( (2, data) )
+            self.step.stdio_log.addStderr(data)
+
+        def processEnded(self, status_object):
+            self.step.stdio_log.addHeader("exit status %d\n" % status_object.value.exitCode)
+            self.step.processEnded(status_object)
+
     def start(self):
         # render properties
         properties = self.build.getProperties()
@@ -68,4 +99,22 @@ class MasterShellCommand(MSC):
         reactor.spawnProcess(self.LocalPP(self), argv[0], argv,
                 path=self.path, usePTY=self.usePTY, env=env )
         # (the LocalPP object will call processEnded for us)
+
+    def processEnded(self, status_object):
+        if self.property:
+            result = ''.join([data[1] for data in self.logged_output])
+            if self.strip: result = result.strip()
+            propname = self.build.getProperties().render(self.property)
+            self.setProperty(propname, result, "SetProperty Step")
+        elif self.extract_fn:
+            log = cmd.logs['stdio']
+            new_props = self.extract_fn(status_object.value.exitCode,
+                    ''.join([data[1] for data in self.logger_output
+                            if data[0] == 1]),
+                    ''.join([data[1] for data in self.logger_output
+                            if data[0] == 2]))
+            for k,v in new_props.items():
+                self.setProperty(k, v, "SetProperty Step")
+
+        return MSC.processEnded(status_object)
 
