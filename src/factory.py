@@ -18,7 +18,7 @@ class MultiProjectBuildFactory(BuildFactory):
     @property
     def steps(self):
         substeps = []
-        for factory in self.factories:
+        for factory in self.factories.itervalues():
             substeps.extend(factory.steps)
         return substeps
 
