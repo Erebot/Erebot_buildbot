@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.status import words
 from Erebot_buildbot.config import auth, misc
-from Erebot_buildbot.src import github_hook, status
+from Erebot_buildbot.src import github_hook, status, words
 import secrets
 
 STATUS = []
