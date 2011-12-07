@@ -126,6 +126,10 @@ LIVE.addStep(shell.ShellCommand(
         "2>&1",
     env={
         'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'LC_MESSAGES': 'fr_FR.UTF-8',
+        'LC_MONETARY': 'fr_FR.UTF-8',
+        'LC_NUMERIC': 'fr_FR.UTF-8',
+        'LC_TIME': 'fr_FR.UTF-8',
     },
     description=["Start", "Erebot"],
     descriptionDone=["Start", "Erebot"],
