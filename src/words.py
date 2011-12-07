@@ -15,7 +15,7 @@ try:
 except ImportError:
     have_ssl = False
 
-class IRCContact(Contact):
+class IRCContact(words.IRCContact):
     implements(IStatusReceiver)
 
     def send(self, message):

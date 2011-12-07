@@ -6,12 +6,17 @@ class MultiProjectBuildFactory(BuildFactory):
     The L{MultiProjectBuildFactory} class can be used to define
     a different factory for each project.
     """
+    # Must be disabled to avoid buildbot getting confused
+    # and inflicting damage to itself as a result of confusion.
+    useProgress = 0
+
     def __init__(self, factories):
         if not isinstance(factories, dict):
             raise ValueError('Expected a dict mapping projects to factories')
         for project, factory in factories.iteritems():
             if not isinstance(factory, BuildFactory):
                 raise ValueError('Invalid BuildFactory for project %s', project)
+            factory.useProgress = 0
         self.factories = factories
         self.empty_factory = BuildFactory()
 
