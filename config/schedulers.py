@@ -5,7 +5,7 @@ from buildbot.schedulers.filter import ChangeFilter
 from Erebot_buildbot.config import misc
 
 def exclude_gh_pages(branch):
-    return branch != 'gh-pages
+    return branch != 'gh-pages'
 
 SCHEDULERS = [
     # Triggered on every commit by the github hook.
