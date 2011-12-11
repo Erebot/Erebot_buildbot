@@ -4,6 +4,9 @@ from buildbot.schedulers import basic, timed
 from buildbot.schedulers.filter import ChangeFilter
 from Erebot_buildbot.config import misc
 
+def exclude_gh_pages(branch):
+    return branch != 'gh-pages
+
 SCHEDULERS = [
     # Triggered on every commit by the github hook.
     # Runs for Erebot (core), modules & PLOP.
@@ -17,11 +20,14 @@ SCHEDULERS = [
             'Tests - WinXP - PHP 5.3',
             'API documentation',
         ],
-        change_filter=ChangeFilter(project=[
-            p for p in misc.COMPONENTS if
-                p.startswith('Erebot_Module_') or
-                p in ('Erebot', 'Plop')
-        ]),
+        change_filter=ChangeFilter(
+            project=[
+                p for p in misc.COMPONENTS if
+                    p.startswith('Erebot_Module_') or
+                    p in ('Erebot', 'Plop')
+            ],
+            branch_fn=exclude_gh_pages,
+        ),
     ),
 
     # Triggered on every commit by the github hook.
@@ -33,11 +39,14 @@ SCHEDULERS = [
             'Packaging',
             'Quality Assurance',
         ],
-        change_filter=ChangeFilter(project=[
-            p for p in misc.COMPONENTS if
-                p.startswith('Erebot_Module_') or
-                p in ('Erebot', 'Plop', 'Erebot_API')
-        ]),
+        change_filter=ChangeFilter(
+            project=[
+                p for p in misc.COMPONENTS if
+                    p.startswith('Erebot_Module_') or
+                    p in ('Erebot', 'Plop', 'Erebot_API')
+            ],
+            branch_fn=exclude_gh_pages,
+        ),
     ),
 
     # This scheduler only executes for the Erebot project
@@ -48,7 +57,10 @@ SCHEDULERS = [
         builderNames=[
             'Live',
         ],
-        change_filter=ChangeFilter(project=['Erebot', 'www.erebot.net']),
+        change_filter=ChangeFilter(
+            project=['Erebot', 'www.erebot.net'],
+            branch_fn=exclude_gh_pages,
+        ),
     ),
 ]
 
