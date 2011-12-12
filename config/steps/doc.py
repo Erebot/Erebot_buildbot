@@ -118,7 +118,7 @@ DOC.addStep(shell.ShellCommand(
     command=WithProperties(
         " && ".join([
             "/bin/mv docs/%(project)s-enduser.tgz ./",
-            "/usr/bin/git fetch -t %(rw_repository)s.git +gh-pages --progress",
+            "/usr/bin/git fetch -t %(rw_repository)s +gh-pages --progress",
             "/usr/bin/git reset --hard FETCH_HEAD",
             "/bin/rm -rf docs/ buildenv/ tests/ vendor/ *.tagfile.xml",
             "/usr/bin/git branch -M gh-pages",
