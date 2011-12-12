@@ -44,7 +44,11 @@ DOC.addStep(shell.ShellCommand(
 ))
 
 DOC.addStep(shell.WarningCountingShellCommand(
-    command="phing doc_html -Dtagfiles.reference=-",
+    command=WithProperties(
+        "phing doc_html"
+            " -Dtagfiles.reference=-"
+            " -Ddoc_release=.g%(got_revision)s"
+    ),
     description="HTML doc",
     descriptionDone="HTML doc",
     warningPattern="^(.*?):([0-9]+): [Ww]arning: (.*)$",
