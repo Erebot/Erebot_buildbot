@@ -117,6 +117,7 @@ DOC.addStep(shell.ShellCommand(
     command=WithProperties(
         " && ".join([
             "mv docs/%(project)s-enduser.tgz ./",
+            "git branch --track gh-pages origin/gh-pages",
             "git checkout -f gh-pages",
             "rm -rf docs/ buildenv/ tests/ vendor/ *.tagfile.xml",
             "git rm -rf '*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
