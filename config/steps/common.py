@@ -29,7 +29,7 @@ clone = Git(
 
 real_repository = SetProperty(
     command=WithProperties("echo %(repository)s"),
-    extract_fn=extr
+    extract_fn=_extract_repository,
 )
 
 erebot_path = SetPropertiesFromEnv(variables=['EREBOT_PATH'])
