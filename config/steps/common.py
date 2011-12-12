@@ -16,9 +16,8 @@ def convert_repourl(repository):
     return 'git@%s:%s.git' % tuple(repository.split('://', 1)[1].split('/', 1))
 
 def _extract_repository(rc, stdout, stderr):
-    return {
-        "rw_repository": convert_repourl(stdout.strip()),
-    }
+    repos = stdout.strip().rpartition('.git')[0]
+    return {"rw_repository": convert_repourl(repos)}
 
 clone = Git(
     mode='clobber',
