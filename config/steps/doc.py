@@ -116,11 +116,9 @@ DOC.addStep(master.MasterShellCommand(
 DOC.addStep(shell.ShellCommand(
     command=WithProperties(
         " && ".join([
-            "cd docs/",
-            "mv %(project)s-enduser.tgz ../",
-            "cd -",
+            "mv docs/%(project)s-enduser.tgz ./",
             "git checkout -f gh-pages",
-            "rm -rf docs/",
+            "rm -rf docs/ buildenv/ tests/ vendor/ *.tagfile.xml",
             "git rm -rf '*.html' '*.js' objects.inv _static/ _sources/",
             "tar -z -x -v --strip-components=1 -f %(project)s-enduser.tgz",
             "rm -f %(project)s-enduser.tgz",
