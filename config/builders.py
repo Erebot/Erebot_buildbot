@@ -29,7 +29,7 @@ BUILDERS = [
         category='Tests',
     ),
     BuilderConfig(
-        name='API documentation',
+        name='Documentation',
         slavenames=[
             'Debian 6 - PHP 5.2',
             'Debian 6 - PHP 5.3',

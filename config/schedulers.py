@@ -18,7 +18,7 @@ SCHEDULERS = [
             'Tests - Debian 6 - PHP 5.3',
             'Tests - Debian 6 - PHP 5.4',
             'Tests - WinXP - PHP 5.3',
-            'API documentation',
+            'Documentation',
         ],
         change_filter=ChangeFilter(
             project=[
