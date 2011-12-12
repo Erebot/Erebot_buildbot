@@ -12,6 +12,7 @@ from Erebot_buildbot.src import master
 DOC = factory.BuildFactory()
 DOC.addStep(common.erebot_path)
 DOC.addStep(common.clone)
+DOC.addStep(common.real_repository)
 
 DOC.addStep(master.MasterShellCommand(
     command=" && ".join([
@@ -116,20 +117,27 @@ DOC.addStep(master.MasterShellCommand(
 DOC.addStep(shell.ShellCommand(
     command=WithProperties(
         " && ".join([
-            "mv docs/%(project)s-enduser.tgz ./",
-            "git branch --track gh-pages origin/gh-pages",
-            "git checkout -f gh-pages",
-            "rm -rf docs/ buildenv/ tests/ vendor/ *.tagfile.xml",
-            "git rm -rf '*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
-            "tar -z -x -v --strip-components=1 -f %(project)s-enduser.tgz",
-            "rm -f %(project)s-enduser.tgz",
-            "git add '*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
-            "git commit -a -m 'Rebuild end-user doc for %(got_revision)s'",
-            "git push",
+            "/bin/mv docs/%(project)s-enduser.tgz ./",
+            "/usr/bin/git fetch -t %(rw_repository)s.git +gh-pages --progress",
+            "/usr/bin/git reset --hard FETCH_HEAD",
+            "/bin/rm -rf docs/ buildenv/ tests/ vendor/ *.tagfile.xml",
+            "/usr/bin/git branch -M gh-pages",
+            "/usr/bin/git remote add -t gh-pages origin %(rw_repository)s",
+            "/usr/bin/git rm -rf '*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
+            "/bin/tar -z -x -v --strip-components=1 -f %(project)s-enduser.tgz",
+            "/bin/rm -f %(project)s-enduser.tgz",
+            "/usr/bin/git add '*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
+            "/usr/bin/git commit -a -m 'Rebuild end-user doc for %(got_revision)s'",
+            "/usr/bin/git push",
         ])
     ),
     description=["pushing", "end-user", "doc"],
     descriptionDone=["push", "end-user", "doc"],
+))
+
+DOC.addStep(shell.SetProperty(
+    command="/usr/bin/git rev-parse HEAD",
+    property="doc_revision"
 ))
 
 DOC.addStep(Link(

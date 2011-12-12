@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from buildbot.process.properties import WithProperties
 from buildbot.steps.source import Git
 from buildbot.steps.slave import SetPropertiesFromEnv
+from buildbot.steps.shell import SetProperty
 
 def convert_repourl(repository):
     """
@@ -13,11 +15,21 @@ def convert_repourl(repository):
     """
     return 'git@%s:%s.git' % tuple(repository.split('://', 1)[1].split('/', 1))
 
+def _extract_repository(rc, stdout, stderr):
+    return {
+        "rw_repository": convert_repourl(stdout.strip()),
+    }
+
 clone = Git(
     mode='clobber',
     repourl=convert_repourl,
     submodules=True,
     progress=True,
+)
+
+real_repository = SetProperty(
+    command=WithProperties("echo %(repository)s"),
+    extract_fn=extr
 )
 
 erebot_path = SetPropertiesFromEnv(variables=['EREBOT_PATH'])
