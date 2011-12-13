@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 from buildbot.process import factory
 from buildbot.process.properties import WithProperties
 from buildbot.steps import shell, transfer
@@ -49,9 +50,9 @@ DOC.addStep(shell.WarningCountingShellCommand(
             " -Dtagfiles.reference=-"
             " -Ddoc_release=.g%(got_revision)s"
     ),
-    description="HTML doc",
-    descriptionDone="HTML doc",
-    warningPattern="^(.*?):([0-9]+): [Ww]arning: (.*)$",
+    description=["Building", "documentation"],
+    descriptionDone=["Build", "documentation"],
+    warningPattern=re.compile("^(.*?):([0-9]+): Warning: (.*)$", re.I),
     warningExtractor=
         shell.WarningCountingShellCommand.warnExtractFromRegexpGroups,
     warnOnWarnings=True,
