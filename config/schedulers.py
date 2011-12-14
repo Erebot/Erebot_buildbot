@@ -18,7 +18,7 @@ def _exclude_if_only_doc(change):
     documentation.
     """
     for f in change.files:
-        if not f['name'].startswith(u'docs/'):
+        if not f.startswith(u'docs/'):
             return True
     return False
 
