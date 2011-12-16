@@ -12,7 +12,7 @@ from Erebot_buildbot.src import master
 
 DOC = factory.BuildFactory()
 DOC.addStep(common.erebot_path)
-DOC.addStep(common.clone)
+DOC.addStep(common.clone_rw)
 DOC.addStep(common.real_repository)
 
 DOC.addStep(master.MasterShellCommand(
