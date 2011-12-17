@@ -29,13 +29,14 @@ def convert_repourl(rw):
         Eg. "https://github.com/fpoirotte/Erebot"
         becomes "git://github.com/fpoirotte/Erebot.git".
         """
-        return 'git://' + repository.split('://', 1)[1]
+        return 'git://%s.git' % repository.split('://', 1)[1]
     return rw and _rw or _ro
 
 
-def _extract_repository(rc, stdout, stderr):
+def _extract_repositories(rc, stdout, stderr):
     return {
-        "rw_repository": convert_repourl(stdout.strip()),
+        "ro_repository": convert_repourl(0)(stdout.strip()),
+        "rw_repository": convert_repourl(1)(stdout.strip()),
     }
 
 clone = Git(
@@ -52,9 +53,9 @@ clone_rw = Git(
     progress=True,
 )
 
-real_repository = SetProperty(
+extract_repositories = SetProperty(
     command=WithProperties("echo %(repository)s"),
-    extract_fn=_extract_repository,
+    extract_fn=_extract_repositories,
 )
 
 erebot_path = SetPropertiesFromEnv(variables=['EREBOT_PATH'])
