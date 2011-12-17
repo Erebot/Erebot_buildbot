@@ -129,9 +129,7 @@ DOC.addStep(shell.ShellCommand(
             "/usr/bin/git branch -M gh-pages",
             "/usr/bin/git remote add "
                 "-t gh-pages origin %(rw_repository)s",
-            "/usr/bin/git rm -rf --ignore-unmatch "
-                ".nojekyll '*.html' '*.js' objects."
-                "inv _static/ _sources/ .buildinfo",
+            "/usr/bin/git rm -rf --ignore-unmatch '*'",
             "/bin/tar -z -x -v --strip-components=1 "
                 "-f %(project)s-enduser.tgz",
             "/usr/bin/touch .nojekyll",
