@@ -128,11 +128,14 @@ DOC.addStep(shell.ShellCommand(
             "/bin/rm -rf docs/ buildenv/ tests/ vendor/ *.tagfile.xml",
             "/usr/bin/git branch -M gh-pages",
             "/usr/bin/git remote add -t gh-pages origin %(rw_repository)s",
-            "/usr/bin/git rm -rf '*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
+            "/usr/bin/git rm -rf --ignore-unmatch "
+                "'*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
             "/bin/tar -z -x -v --strip-components=1 -f %(project)s-enduser.tgz",
             "/bin/rm -f %(project)s-enduser.tgz",
-            "/usr/bin/git add '*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
-            "/usr/bin/git commit -a -m 'Rebuild end-user doc for %(got_revision)s'",
+            "/usr/bin/git add "
+                "'*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
+            "/usr/bin/git commit "
+                "-a -m 'Rebuild end-user doc for %(got_revision)s'",
             "/usr/bin/git push",
         ])
     ),
