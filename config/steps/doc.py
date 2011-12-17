@@ -136,7 +136,8 @@ DOC.addStep(shell.ShellCommand(
             "/bin/rm -f %(project)s-enduser.tgz",
             "/usr/bin/git add "
                 "'*.html' '*.js' objects.inv "
-                "_static/ _sources/ .buildinfo",
+                "_static/ _sources/ .buildinfo "
+                ".nojekyll",
             "/usr/bin/git commit -a -m "
                 "'Rebuild end-user doc for "
                 "%(got_revision)s [%(buildnumber)d]'",
