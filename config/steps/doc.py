@@ -17,10 +17,10 @@ DOC.addStep(common.extract_repositories)
 
 DOC.addStep(master.MasterShellCommand(
     command=" && ".join([
-        "rm -f /tmp/tagfiles.tar.gz",
-        "mkdir -p public_html/tagfiles/",
+        "/bin/rm -f /tmp/tagfiles.tar.gz",
+        "/bin/mkdir -p public_html/tagfiles/",
         "cd public_html/",
-        "tar czvf /tmp/tagfiles.tar.gz tagfiles/",
+        "/bin/tar czvf /tmp/tagfiles.tar.gz tagfiles/",
     ]),
     description=["taring", "tagfiles"],
     descriptionDone=["tar", "tagfiles"],
@@ -36,8 +36,8 @@ DOC.addStep(transfer.FileDownload(
 DOC.addStep(shell.ShellCommand(
     command=" && ".join([
         "cd /tmp/",
-        "tar zxvf Erebot_tagfiles.tar.gz",
-        "rm -f /tmp/Erebot_tagfiles.tar.gz",
+        "/bin/tar zxvf Erebot_tagfiles.tar.gz",
+        "/bin/rm -f /tmp/Erebot_tagfiles.tar.gz",
     ]),
     description=["untaring", "tagfiles"],
     descriptionDone=["untar", "tagfiles"],
@@ -69,17 +69,17 @@ DOC.addStep(shell.ShellCommand(
     command=WithProperties(
         "cd docs/ && "
 
-        "ln -sf api %(project)s && "
-        "find -L %(project)s "
-        "-name '*.html' -print0 -o "
-        "-name '*.png' -print0 -o "
-        "-name '*.css' -print0 -o "
-        "-name '*.js' -print0 | "
-        "tar -c -z -v -f %(project)s-api.tgz --null -T -; "
+        "/bin/ln -sf api %(project)s && "
+        "/usr/bin/find -L %(project)s "
+            "-name '*.html' -print0 -o "
+            "-name '*.png' -print0 -o "
+            "-name '*.css' -print0 -o "
+            "-name '*.js' -print0 | "
+            "/bin/tar -c -z -v -f %(project)s-api.tgz --null -T -; "
 
-        "ln -sf -T enduser/html %(project)s && "
-        "find -L %(project)s -print0 | "
-        "tar -c -z -v -f %(project)s-enduser.tgz --null -T -; "
+        "/bin/ln -sf -T enduser/html %(project)s && "
+        "/usr/bin/find -L %(project)s -print0 | "
+        "/bin/tar -c -z -v -f %(project)s-enduser.tgz --null -T -; "
 
         "cd -"
     ),
@@ -112,8 +112,8 @@ DOC.addStep(transfer.FileUpload(
 
 DOC.addStep(master.MasterShellCommand(
     command=WithProperties(
-        "tar -z -x -v -f public_html/doc/api/%(project)s.tgz -C "
-            "public_html/doc/api/; "
+        "/bin/tar -z -x -v -f public_html/doc/api/%(project)s.tgz "
+            "-C public_html/doc/api/; "
     ),
     description=["untaring", "API", "doc"],
     descriptionDone=["untar", "API", "doc"],
@@ -127,15 +127,21 @@ DOC.addStep(shell.ShellCommand(
             "/usr/bin/git reset --hard FETCH_HEAD",
             "/bin/rm -rf docs/ buildenv/ tests/ vendor/ *.tagfile.xml",
             "/usr/bin/git branch -M gh-pages",
-            "/usr/bin/git remote add -t gh-pages origin %(rw_repository)s",
+            "/usr/bin/git remote add "
+                "-t gh-pages origin %(rw_repository)s",
             "/usr/bin/git rm -rf --ignore-unmatch "
-                "'*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
-            "/bin/tar -z -x -v --strip-components=1 -f %(project)s-enduser.tgz",
+                ".nojekyll '*.html' '*.js' objects."
+                "inv _static/ _sources/ .buildinfo",
+            "/bin/tar -z -x -v --strip-components=1 "
+                "-f %(project)s-enduser.tgz",
+            "/usr/bin/touch .nojekyll",
             "/bin/rm -f %(project)s-enduser.tgz",
             "/usr/bin/git add "
-                "'*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
+                "'*.html' '*.js' objects.inv "
+                "_static/ _sources/ .buildinfo",
             "/usr/bin/git commit -a -m "
-                "'Rebuild end-user doc for %(got_revision)s [%(buildnumber)d]'",
+                "'Rebuild end-user doc for "
+                "%(got_revision)s [%(buildnumber)d]'",
             "/usr/bin/git push",
         ])
     ),

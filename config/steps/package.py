@@ -34,7 +34,7 @@ PACKAGE.addStep(shell.ShellCommand(
         """
         for f in `ls -1 RELEASE-*`;
         do
-            mv -v ${f} ${f}snapshot%(buildnumber)d;
+            /bin/mv -v ${f} ${f}snapshot%(buildnumber)d;
         done
         """
         ),
@@ -57,11 +57,11 @@ PACKAGE.addStep(transfer.FileDownload(
 PACKAGE.addStep(shell.ShellCommand(
     command=WithProperties(
         " && ".join([
-            "mv -f CREDITS CREDITS.buildbot",
-            "echo 'Buildbot Continuous Integration [Ere-build-bot] "
+            "/bin/mv -f CREDITS CREDITS.buildbot",
+            "/bin/echo 'Buildbot Continuous Integration [Ere-build-bot] "
                 "<buildbot@erebot.net> (lead)' > CREDITS",
-            "cat CREDITS.buildbot >> CREDITS",
-            "mkdir -p /tmp/release-%(buildnumber)d",
+            "/bin/cat CREDITS.buildbot >> CREDITS",
+            "/bin/mkdir -p /tmp/release-%(buildnumber)d",
             "pyrus.phar /tmp/release-%(buildnumber)d "
                 "set handle Ere-build-bot",
             "pyrus.phar /tmp/release-%(buildnumber)d "
@@ -71,8 +71,8 @@ PACKAGE.addStep(shell.ShellCommand(
                 " -Drelease.tmp=/tmp/release-%(buildnumber)d "
                 " -Dpassfile=/tmp/buildbot.sign.%(buildnumber)d",
         ]) + "; " + " && ".join([
-            "mv -f CREDITS.buildbot CREDITS",
-            "rm -rf /tmp/release-%(buildnumber)d",
+            "/bin/mv -f CREDITS.buildbot CREDITS",
+            "/bin/rm -rf /tmp/release-%(buildnumber)d",
         ])
     ),
     env={
@@ -89,7 +89,7 @@ PACKAGE.addStep(shell.ShellCommand(
 
 PACKAGE.addStep(shell.ShellCommand(
     command=WithProperties(
-        "rm -f /tmp/buildbot.sign.%(buildnumber)d "
+        "/bin/rm -f /tmp/buildbot.sign.%(buildnumber)d "
             "/tmp/buildbot.p12.%(buildnumber)d"
     ),
     description=["buildenv", "cleanup"],
@@ -102,7 +102,7 @@ PACKAGE.addStep(shell.ShellCommand(
     """
     for f in `ls -1 RELEASE-*`;
     do
-        mv -v ${f} ${f%%snapshot%(buildnumber)d};
+        /bin/mv -v ${f} ${f%%snapshot%(buildnumber)d};
     done
     """
     ),
@@ -112,14 +112,14 @@ PACKAGE.addStep(shell.ShellCommand(
 
 PACKAGE.addStep(shell.SetProperty(
     command=WithProperties(
-        "ls -1 "
+        "/bin/ls -1 "
             "%(project)s-*.tgz "
             "%(project)s-*.tar "
             "%(project)s-*.zip "
             "%(project)s-*.phar "
             "%(project)s-*.pubkey "
             "%(project)s-*.pem "
-        "2> /dev/null || :"
+            "2> /dev/null || :"
     ),
     description="Got any package?",
     descriptionDone="Got any package?",
@@ -178,9 +178,9 @@ PACKAGE.addStep(master.MasterShellCommand(
     command=" && ".join([
         "/var/www/clean-pear.sh",
         "php /home/qa/master/buildenv/git/Pirum/pirum build /var/www/pear",
-        "rm -rf /tmp/pirum_*",
-        "chmod -R a+r /var/www/pear/rest/",
-        "find /var/www/pear/rest -type d -exec chmod a+x '{}' '+'"
+        "/bin/rm -rf /tmp/pirum_*",
+        "/bin/chmod -R a+r /var/www/pear/rest/",
+        "/usr/bin/find /var/www/pear/rest -type d -exec chmod a+x '{}' '+'"
     ]),
     env={
         # Ensures the output doesn't use
