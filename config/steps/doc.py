@@ -12,8 +12,8 @@ from Erebot_buildbot.src import master
 
 DOC = factory.BuildFactory()
 DOC.addStep(common.erebot_path)
-DOC.addStep(common.clone)
-DOC.addStep(common.real_repository)
+DOC.addStep(common.clone_rw)
+DOC.addStep(common.extract_repositories)
 
 DOC.addStep(master.MasterShellCommand(
     command=" && ".join([
@@ -48,7 +48,7 @@ DOC.addStep(shell.WarningCountingShellCommand(
     command=WithProperties(
         "phing doc_html"
             " -Dtagfiles.reference=-"
-            " -Ddoc_release=.g%(got_revision)s"
+            " -Ddoc_release=.snapshot%(buildnumber)d"
     ),
     description=["Building", "documentation"],
     descriptionDone=["Build", "documentation"],
@@ -134,8 +134,8 @@ DOC.addStep(shell.ShellCommand(
             "/bin/rm -f %(project)s-enduser.tgz",
             "/usr/bin/git add "
                 "'*.html' '*.js' objects.inv _static/ _sources/ .buildinfo",
-            "/usr/bin/git commit "
-                "-a -m 'Rebuild end-user doc for %(got_revision)s'",
+            "/usr/bin/git commit -a -m "
+                "'Rebuild end-user doc for %(got_revision)s [%(buildnumber)d]'",
             "/usr/bin/git push",
         ])
     ),
