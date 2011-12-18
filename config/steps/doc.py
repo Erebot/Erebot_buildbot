@@ -48,7 +48,7 @@ DOC.addStep(shell.WarningCountingShellCommand(
     command=WithProperties(
         "phing doc_html"
             " -Dtagfiles.reference=-"
-            " -Ddoc_release=.snapshot%(buildnumber)d"
+            " -Ddoc_release=snapshot%(buildnumber)d"
     ),
     description=["Building", "documentation"],
     descriptionDone=["Build", "documentation"],
