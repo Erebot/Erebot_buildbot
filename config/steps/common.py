@@ -54,7 +54,7 @@ clone_rw = Git(
 )
 
 extract_repositories = SetProperty(
-    command=WithProperties("echo %(repository)s"),
+    command=WithProperties("/bin/echo %(repository)s"),
     extract_fn=_extract_repositories,
 )
 

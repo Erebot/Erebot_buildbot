@@ -15,10 +15,10 @@ LIVE.addStep(shell.ShellCommand(
     command="""
 if [ -f /tmp/Erebot.pid ]
 then
-    kill -TERM `cat /tmp/Erebot.pid` 2> /dev/null;
-    sleep 5;
-    kill -KILL `cat /tmp/Erebot.pid` 2> /dev/null;
-    rm -f /tmp/Erebot.pid;
+    /bin/kill -TERM `cat /tmp/Erebot.pid` 2> /dev/null;
+    /bin/sleep 5;
+    /bin/kill -KILL `cat /tmp/Erebot.pid` 2> /dev/null;
+    /bin/rm -f /tmp/Erebot.pid;
 fi
 """,
     maxTime=30,
@@ -29,7 +29,7 @@ fi
 for component in misc.COMPONENTS:
     if component.startswith('Erebot_Module_'):
         LIVE.addStep(shell.ShellCommand(
-            command='rm -rf build/vendor/%s' % component,
+            command='/bin/rm -rf build/vendor/%s' % component,
             description=["Cleanup:", component],
             descriptionDone=["Cleanup:", component],
         ))
@@ -73,9 +73,9 @@ for component in misc.COMPONENTS:
 
 LIVE.addStep(master.MasterShellCommand(
     command=" && ".join([
-        "rm -f /tmp/Erebot-config.tar.gz",
+        "/bin/rm -f /tmp/Erebot-config.tar.gz",
         "cd Erebot_buildbot/Erebot-config/",
-        "tar czvf /tmp/Erebot-config.tar.gz Erebot.xml conf.d/",
+        "/bin/tar czvf /tmp/Erebot-config.tar.gz Erebot.xml conf.d/",
     ]),
     description="Config",
     descriptionDone="Config",
@@ -88,8 +88,8 @@ LIVE.addStep(transfer.FileDownload(
 
 LIVE.addStep(shell.ShellCommand(
     command=" && ".join([
-        "tar zxvf Erebot-config.tar.gz",
-        "rm -f Erebot-config.tar.gz",
+        "/bin/tar zxvf Erebot-config.tar.gz",
+        "/bin/rm -f Erebot-config.tar.gz",
     ]),
     description=["Unpack", 'config'],
     descriptionDone=["Unpack", 'config'],
@@ -121,9 +121,9 @@ LIVE.addStep(shell.ShellCommand(
         "scripts/Erebot "
             "--daemon "
             "--pidfile /tmp/Erebot.pid "
-        "< /dev/null "
-        "> /dev/null "
-        "2>&1",
+            "< /dev/null "
+            "> /dev/null "
+            "2>&1",
     env={
         'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
         'LC_MESSAGES': 'fr_FR.UTF-8',
@@ -138,14 +138,14 @@ LIVE.addStep(shell.ShellCommand(
 
 # Give it a little time to start properly.
 LIVE.addStep(shell.ShellCommand(
-    command="sleep 10",
+    command="/bin/sleep 10",
     description="Pause",
     descriptionDone="Pause",
 ))
 
 # Check that it is still running.
 LIVE.addStep(shell.ShellCommand(
-    command="kill -0 `cat /tmp/Erebot.pid`",
+    command="/bin/kill -0 `cat /tmp/Erebot.pid`",
     description=["Check", "instance"],
     descriptionDone=["Check", "instance"],
 ))
