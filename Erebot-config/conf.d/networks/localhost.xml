@@ -3,7 +3,7 @@
     name="localhost"
 >
     <modules>
-        <module name="Erebot_Module_AutoConnect" active="false" />
+<!--        <module name="Erebot_Module_AutoConnect" active="false" />-->
     </modules>
 
     <servers>
