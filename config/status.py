@@ -45,7 +45,7 @@ STATUS.append(status.WebStatus(
 
     change_hook_dialects={
         'erebot_github': github_hook.GithubChangeHook({
-            'user': 'fpoirotte',
+            'user': 'Erebot',
             'key': secrets.GITHUB_KEY,
         }),
     },

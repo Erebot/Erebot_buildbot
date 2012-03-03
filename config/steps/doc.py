@@ -188,7 +188,7 @@ DOC.addStep(Link(
 DOC.addStep(Link(
     label="End-user doc (online)",
     href=WithProperties(
-        "http://fpoirotte.github.com/%(project)s/"
+        "http://erebot.github.com/%(project)s/"
     ),
 ))
 

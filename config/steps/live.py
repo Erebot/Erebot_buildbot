@@ -50,7 +50,7 @@ for component in misc.COMPONENTS:
         LIVE.addStep(source.Git(
             workdir='build/vendor/%s' % component,
             mode='clobber',
-            repourl='git://github.com/fpoirotte/%s.git' % component,
+            repourl='git://github.com/Erebot/%s.git' % component,
             submodules=True,
             progress=True,
             alwaysUseLatest=True,   # Would fail otherwise.

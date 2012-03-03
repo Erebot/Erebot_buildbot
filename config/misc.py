@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-GITHUB_BASE = "https://github.com/fpoirotte"
+GITHUB_BASE = "https://github.com/Erebot"
 
 COMPONENTS = (
     'www.erebot.net',

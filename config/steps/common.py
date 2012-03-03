@@ -16,8 +16,8 @@ def convert_repourl(rw):
         Converts the (read-only) repository received by the github hook
         into a read/write URL.
 
-        Eg. "https://github.com/fpoirotte/Erebot"
-        becomes "git@github.com:fpoirotte/Erebot.git".
+        Eg. "https://github.com/Erebot/Erebot"
+        becomes "git@github.com:Erebot/Erebot.git".
         """
         return 'git@%s:%s.git' % tuple(repository.split('://', 1)[1].split('/', 1))
 
@@ -26,8 +26,8 @@ def convert_repourl(rw):
         Converts the (read-only) HTTP repository received by the github hook
         into a read-only git URL.
 
-        Eg. "https://github.com/fpoirotte/Erebot"
-        becomes "git://github.com/fpoirotte/Erebot.git".
+        Eg. "https://github.com/Erebot/Erebot"
+        becomes "git://github.com/Erebot/Erebot.git".
         """
         return 'git://%s.git' % repository.split('://', 1)[1]
     return rw and _rw or _ro
