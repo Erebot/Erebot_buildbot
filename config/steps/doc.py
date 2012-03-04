@@ -76,9 +76,11 @@ DOC.addStep(shell.ShellCommand(
             "-name '*.css' -print0 -o "
             "-name '*.js' -print0 | "
             "/bin/tar -c -h -z -v -f %(project)s-api.tgz --null -T -; "
+        "/usr/bin/zip -r -v -n .png:.gif -R '*.html' -R '*.png' -R '*.css' -R '*.js' %(project)s-api.zip; "
 
         "/bin/ln -sf -T enduser/html %(project)s && "
         "/bin/tar -c -h -z -v -f %(project)s-enduser.tgz %(project)s; "
+        "/usr/bin/zip -r %(project)s-enduser.zip %(project)s/; "
 
         "cd -"
     ),
@@ -98,7 +100,14 @@ DOC.addStep(transfer.FileUpload(
 DOC.addStep(transfer.FileUpload(
     slavesrc=WithProperties("docs/%(project)s-api.tgz"),
     masterdest=
-        WithProperties("public_html/doc/api/%(project)s.tgz"),
+        WithProperties("public_html/doc/api/%(project)s-api.tgz"),
+    maxsize=50 * (1 << 20), # 50 MiB
+))
+
+DOC.addStep(transfer.FileUpload(
+    slavesrc=WithProperties("docs/%(project)s-api.zip"),
+    masterdest=
+        WithProperties("public_html/doc/api/%(project)s-api.zip"),
     maxsize=50 * (1 << 20), # 50 MiB
 ))
 
@@ -109,9 +118,16 @@ DOC.addStep(transfer.FileUpload(
     maxsize=50 * (1 << 20), # 50 MiB
 ))
 
+DOC.addStep(transfer.FileUpload(
+    slavesrc=WithProperties("docs/%(project)s-enduser.zip"),
+    masterdest=
+        WithProperties("public_html/doc/enduser/%(project)s.zip"),
+    maxsize=50 * (1 << 20), # 50 MiB
+))
+
 DOC.addStep(master.MasterShellCommand(
     command=WithProperties(
-        "/bin/tar -z -x -v -f public_html/doc/api/%(project)s.tgz "
+        "/bin/tar -z -x -v -f public_html/doc/api/%(project)s-api.tgz "
             "-C public_html/doc/api/; "
     ),
     description=["untaring", "API", "doc"],
@@ -161,17 +177,33 @@ DOC.addStep(Link(
 ))
 
 DOC.addStep(Link(
-    label="API doc (tarball)",
+    label="API doc (tar)",
     href=WithProperties(
-        "%(buildbotURL)s/doc/api/%(project)s.tgz",
+        "%(buildbotURL)s/doc/api/%(project)s-api.tgz",
         buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
 
 DOC.addStep(Link(
-    label="End-user doc (tarball)",
+    label="API doc (zip)",
+    href=WithProperties(
+        "%(buildbotURL)s/doc/api/%(project)s-api.zip",
+        buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
+    ),
+))
+
+DOC.addStep(Link(
+    label="End-user doc (tar)",
     href=WithProperties(
         "%(buildbotURL)s/doc/enduser/%(project)s.tgz",
+        buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
+    ),
+))
+
+DOC.addStep(Link(
+    label="End-user doc (zip)",
+    href=WithProperties(
+        "%(buildbotURL)s/doc/enduser/%(project)s.zip",
         buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
