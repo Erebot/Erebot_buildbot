@@ -78,8 +78,7 @@ DOC.addStep(shell.ShellCommand(
             "/bin/tar -c -h -z -v -f %(project)s-api.tgz --null -T -; "
 
         "/bin/ln -sf -T enduser/html %(project)s && "
-        "/usr/bin/find -L %(project)s -print0 | "
-        "/bin/tar -c -h -z -v -f %(project)s-enduser.tgz --null -T -; "
+        "/bin/tar -c -h -z -v -f %(project)s-enduser.tgz %(project)s; "
 
         "cd -"
     ),
