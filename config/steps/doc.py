@@ -70,22 +70,29 @@ DOC.addStep(shell.ShellCommand(
         "cd docs/ && "
 
         "/bin/ln -sf api %(project)s && "
+        "echo -e '\ntgz archive for %(project)s'\"'\"'s API doc' &&"
         "/usr/bin/find -L %(project)s "
             "-name '*.html' -print0 -o "
             "-name '*.png' -print0 -o "
             "-name '*.css' -print0 -o "
             "-name '*.js' -print0 | "
             "/bin/tar -c -h -z -v -f %(project)s-api.tgz --null -T -; "
-        "/usr/bin/zip -r -v -n .png:.gif -R '*.html' -R '*.png' -R '*.css' -R '*.js' %(project)s-api.zip; "
 
+        "echo -e '\nzip archive for %(project)s'\"'\"'s API doc' &&"
+        "/usr/bin/zip -v -n .png:.gif %(project)s-api.zip %(project)s/ -i "
+            "'*.html' -i '*.png' -i '*.css' -i '*.js'; "
+
+        "echo -e '\ntgz archive for %(project)s'\"'\"'s end-user doc' &&"
         "/bin/ln -sf -T enduser/html %(project)s && "
         "/bin/tar -c -h -z -v -f %(project)s-enduser.tgz %(project)s; "
+
+        "echo -e '\nzip archive for %(project)s'\"'\"'s end-user doc' &&"
         "/usr/bin/zip -r %(project)s-enduser.zip %(project)s/; "
 
         "cd -"
     ),
-    description=["taring", "doc"],
-    descriptionDone=["tar", "doc"],
+    description=["archiving", "doc"],
+    descriptionDone=["archive", "doc"],
 ))
 
 DOC.addStep(transfer.FileUpload(
