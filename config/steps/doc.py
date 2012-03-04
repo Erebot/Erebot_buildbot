@@ -50,8 +50,8 @@ DOC.addStep(shell.WarningCountingShellCommand(
             " -Dtagfiles.reference=-"
             " -Ddoc_release=snapshot%(buildnumber)d"
     ),
-    description=["Building", "documentation"],
-    descriptionDone=["Build", "documentation"],
+    description=["building", "doc"],
+    descriptionDone=["build", "doc"],
     warningPattern=re.compile("^(.*?):([0-9]+): Warning: (.*)$", re.I),
     warningExtractor=
         shell.WarningCountingShellCommand.warnExtractFromRegexpGroups,
@@ -75,16 +75,16 @@ DOC.addStep(shell.ShellCommand(
             "-name '*.png' -print0 -o "
             "-name '*.css' -print0 -o "
             "-name '*.js' -print0 | "
-            "/bin/tar -c -z -v -f %(project)s-api.tgz --null -T -; "
+            "/bin/tar -c -h -z -v -f %(project)s-api.tgz --null -T -; "
 
         "/bin/ln -sf -T enduser/html %(project)s && "
         "/usr/bin/find -L %(project)s -print0 | "
-        "/bin/tar -c -z -v -f %(project)s-enduser.tgz --null -T -; "
+        "/bin/tar -c -h -z -v -f %(project)s-enduser.tgz --null -T -; "
 
         "cd -"
     ),
-    description=["building", "doc"],
-    descriptionDone=["build", "doc"],
+    description=["taring", "doc"],
+    descriptionDone=["tar", "doc"],
 ))
 
 DOC.addStep(transfer.FileUpload(
