@@ -29,7 +29,7 @@ class ComponentsResource(HtmlResource):
             )
         return results
 
-    def _txn(self, t, conn, root):
+    def _txn(self, txn, conn, root):
         q = """
             SELECT
                 b.number,
