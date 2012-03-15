@@ -1,55 +1,66 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.process import factory
-from buildbot.process.properties import WithProperties
+from buildbot.process.properties import WithProperties, Property
 from buildbot.steps import shell, transfer
 from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.src.steps import Link, PHPUnit
 
 TESTS = factory.BuildFactory()
+TESTS.addStep(common.fill_properties)
 TESTS.addStep(common.erebot_path)
 TESTS.addStep(common.clone)
 
-# The Core requires the translations.
-# Other modules must do some additional work (eg. generate parser).
+# The Core's unittests require the translations be available
+# and pther modules do some additional work (eg. generate a parser).
 TESTS.addStep(shell.Compile(
     command="phing -logger phing.listener.DefaultLogger",
     env={
         # Ensures the output doesn't use
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
-    warnOnWarnings=True,
-    warnOnFailure=True,
+    flunkOnWarnings=True,
+    flunkOnFailure=True,
     warningPattern="^\\s*\\[i18nStats\\] (.*?):([0-9]+): [Ww]arning: (.*)$",
     warningExtractor=
         shell.WarningCountingShellCommand.warnExtractFromRegexpGroups,
     maxTime=10 * 60,
 ))
 
-TESTS.addStep(PHPUnit(
-    command="phing -logger phing.listener.DefaultLogger test",
-    description="tests",
-    descriptionDone="tests",
-    warnOnWarnings=True,
-    env={
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
-    },
-    maxTime=10 * 60,
-))
+# Skip tests with there is no PHPn_PATH or PHPn_DESC.
+def _path_checker(i):
+    def _inner(s):
+        return (
+            s.build.slavebuilder.slave.slave_environ.get('PHP%d_PATH' % i) and
+            s.build.slavebuilder.slave.slave_environ.get('PHP%d_DESC' % i)
+        )
+    return _inner
 
-# Use only the PHP 5.2 setup to report coverage data.
-# Also, only upload code coverage reports for passing tests.
-def must_transfer_coverage(step):
-    slaves = ('Debian 6 - PHP 5.2', )
-    return step.getSlaveName() in slaves and step.getProperty('Passed')
+for i in xrange(1, common.nb_versions + 1):
+    TESTS.addStep(PHPUnit(
+        command="phing -logger phing.listener.DefaultLogger test",
+        description=[WithProperties("PHP  %%(PHP%d_DESC:-)s" % i)],
+        descriptionDone=[WithProperties("PHP  %%(PHP%d_DESC:-)s" % i)],
+        warnOnWarnings=True,
+        env={
+            'PATH': WithProperties("${PHP%d_PATH}" % i),
+        },
+        maxTime=10 * 60,
+        doStepIf=_path_checker(i),
+    ))
+
+# Only report coverage data for the slave running on the host itself.
+# Also, only upload code coverage reports when all tests pass.
+def _must_transfer_coverage(s):
+    slaves = ('Debian 6', )
+    return s.getSlaveName() in slaves and s.getProperty('Passed', False)
 
 TESTS.addStep(transfer.DirectoryUpload(
     slavesrc="docs/coverage/",
-    masterdest=
-        WithProperties("public_html/doc/coverage/%(project)s/"),
-    doStepIf=must_transfer_coverage,
+    masterdest=WithProperties("public_html/doc/coverage/%(project)s/"),
+    doStepIf=_must_transfer_coverage,
     maxsize=10 * (1 << 20), # 10 MiB
 ))
 

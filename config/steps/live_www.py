@@ -2,8 +2,10 @@
 
 from buildbot.process import factory
 from Erebot_buildbot.src import master
+from Erebot_buildbot.config.steps import common
 
 LIVE_WWW = factory.BuildFactory()
+LIVE_WWW.addStep(common.fill_properties)
 LIVE_WWW.addStep(master.MasterShellCommand(
     command=" && ".join([
         "cd /var/www/www.erebot.net/",

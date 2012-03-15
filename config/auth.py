@@ -5,16 +5,18 @@ from buildbot.status.web.authz import Authz
 import secrets
 
 auth = BasicAuth(secrets.WEB_USERS)
+_policy = 'auth'
 AUTHZ = Authz(
     auth=auth,
-    forceBuild='auth',
-    forceAllBuilds='auth',
-    pingBuilder='auth',
-    gracefulShutdown='auth',
-    stopBuild='auth',
-    stopAllBuilds='auth',
-    cancelPendingBuild='auth',
-    stopChange='auth',
-    cleanShutdown='auth',
+    forceBuild=_policy,
+    forceAllBuilds=_policy,
+    pingBuilder=_policy,
+    gracefulShutdown=_policy,
+    stopBuild=_policy,
+    stopAllBuilds=_policy,
+    cancelPendingBuild=_policy,
+    stopChange=_policy,
+    cleanShutdown=_policy,
+    showUsersPage=_policy,
 )
 

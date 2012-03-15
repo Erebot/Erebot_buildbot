@@ -8,6 +8,11 @@ from twisted.application import internet
 from buildbot.interfaces import IStatusReceiver
 from buildbot.status import base
 
+try:
+    from buildbot.status.words import IChannel
+except:
+    IChannel = None
+
 # twisted.internet.ssl requires PyOpenSSL, so be resilient if it's missing
 try:
     from twisted.internet import ssl
@@ -28,7 +33,8 @@ class IRCContact(words.IRCContact):
 class IrcStatusBot(words.IrcStatusBot):
     """I represent the buildbot to an IRC server.
     """
-    implements(words.IChannel)
+    if IChannel:
+        implements(IChannel)
     contactClass = IRCContact
 
 class IrcStatusFactory(words.IrcStatusFactory):
@@ -46,7 +52,8 @@ class IRC(words.IRC):
                      "channels", "allowForce", "useSSL",
                      "categories"]
 
-    def __init__(self, host, nick, channels, port=6667, allowForce=True,
+    def __init__(self, host, nick, channels, pm_to_nicks=[],
+                 port=6667, allowForce=True,
                  categories=None, password=None, notify_events={},
                  noticeOnChannel = False, showBlameList = True,
                  useSSL=False):
@@ -59,15 +66,25 @@ class IRC(words.IRC):
         self.port = port
         self.nick = nick
         self.channels = channels
+        self.pm_to_nicks = pm_to_nicks
         self.password = password
         self.allowForce = allowForce
         self.categories = categories
         self.notify_events = notify_events
         log.msg('Notify events %s' % notify_events)
-        self.f = IrcStatusFactory(self.nick, self.password,
-                                  self.channels, self.categories, self.notify_events,
-                                  noticeOnChannel = noticeOnChannel,
-                                  showBlameList = showBlameList)
+        try:
+            self.f = IrcStatusFactory(self.nick, self.password,
+                                      self.channels, self.categories,
+                                      self.notify_events,
+                                      noticeOnChannel = noticeOnChannel,
+                                      showBlameList = showBlameList)
+        except TypeError:
+            # Newer versions have an additional parameter ()
+            self.f = IrcStatusFactory(self.nick, self.password,
+                                      self.channels, self.pm_to_nicks,
+                                      self.categories, self.notify_events,
+                                      noticeOnChannel = noticeOnChannel,
+                                      showBlameList = showBlameList)
         # don't set up an actual ClientContextFactory if we're running tests.
         if self.in_test_harness:
             return
@@ -82,5 +99,4 @@ class IRC(words.IRC):
             c = internet.TCPClient(self.host, self.port, self.f)
 
         c.setServiceParent(self)
-
 

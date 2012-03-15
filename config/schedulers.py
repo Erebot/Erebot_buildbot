@@ -1,8 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.schedulers import basic, timed
+from buildbot.schedulers import timed
 from buildbot.schedulers.filter import ChangeFilter
-from Erebot_buildbot.config import misc
+from Erebot_buildbot.config import misc, builders
+
+try:
+    from buildbot.schedulers.basic import SingleBranchScheduler
+except:
+    from buildbot.schedulers.basic import Scheduler as SingleBranchScheduler
+
+try:
+    from buildbot.schedulers.forcesched import ForceScheduler
+except ImportError:
+    ForceScheduler = None
 
 def _exclude_gh_pages(branch):
     """
@@ -26,14 +36,12 @@ SCHEDULERS = [
     # Runs the tests for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages or if the changeset
     # only deals with the documentation.
-    basic.Scheduler(
+    SingleBranchScheduler(
         name="Tests",
         treeStableTimer=3 * 60,
         builderNames=[
-            'Tests - Debian 6 - PHP 5.2',
-            'Tests - Debian 6 - PHP 5.3',
-            'Tests - Debian 6 - PHP 5.4',
-            'Tests - WinXP - PHP 5.3',
+            'Tests - Debian 6',
+            'Tests - WinXP',
         ],
         change_filter=ChangeFilter(
             project=[
@@ -48,7 +56,7 @@ SCHEDULERS = [
 
     # Builds the doc for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages.
-    basic.Scheduler(
+    SingleBranchScheduler(
         name="Documentation",
         treeStableTimer=3 * 60,
         builderNames=[
@@ -67,7 +75,7 @@ SCHEDULERS = [
     # Runs for Erebot (core), modules, PLOP & Erebot_API
     # Not triggered for GitHub Pages or if the changeset
     # only deals with the documentation.
-    basic.Scheduler(
+    SingleBranchScheduler(
         name="Common",
         treeStableTimer=3 * 60,
         builderNames=[
@@ -89,7 +97,7 @@ SCHEDULERS = [
     # and updates the Live instance of the bot.
     # Not triggered for GitHub Pages or if the changeset
     # only deals with the documentation.
-    basic.Scheduler(
+    SingleBranchScheduler(
         name="Live",
         treeStableTimer=10 * 60,
         builderNames=[
@@ -102,4 +110,23 @@ SCHEDULERS = [
         ),
     ),
 ]
+
+if ForceScheduler:
+    from buildbot.schedulers.forcesched import (
+        FixedParameter,
+        ChoiceStringParameter,
+        BaseParameter,
+        StringParameter,
+    )
+    SCHEDULERS.append(ForceScheduler(
+        name="force",
+        branch=FixedParameter(name="branch", default="master"),
+        repository=BaseParameter(None),
+        project=ChoiceStringParameter(
+            name="project", choices=list(misc.COMPONENTS)),
+        reason=StringParameter(name="reason", default="Forced build", size=50),
+        revision=StringParameter(name="revision", size=45),
+        properties=[],
+        builderNames=[b.name for b in builders.BUILDERS],
+    ))
 

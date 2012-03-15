@@ -6,8 +6,15 @@ import re
 from twisted.python import log
 from buildbot.steps.shell import ShellCommand
 from buildbot.process.buildstep import BuildStep, LogLineObserver
-from buildbot.status.builder import SUCCESS, WARNINGS, FAILURE, SKIPPED, \
-                                     EXCEPTION, STDOUT, STDERR
+try:
+    from buildbot.status.logfile import STDOUT, STDERR
+except ImportError:
+    # For older versions.
+    from buildbot.status.builder import STDOUT, STDERR
+
+from buildbot.status.builder import SUCCESS, WARNINGS, FAILURE, \
+                                    SKIPPED, EXCEPTION
+
 
 class Link(BuildStep):
     name = "Link"
@@ -24,6 +31,7 @@ class Link(BuildStep):
         href = properties.render(self.href)
         self.addURL(self.label, href)
         self.finished(SUCCESS)
+
 
 class PHPUnit(ShellCommand, LogLineObserver):
     name = 'PHPUnit'
@@ -79,25 +87,26 @@ class PHPUnit(ShellCommand, LogLineObserver):
 
     def createSummary(self, log):
         for metric, value in self.metrics.iteritems():
-            self.setProperty("PHPUnit-%s" % metric, value, "PHPUnit")
+            self.setProperty(
+                "PHPUnit-%s" % metric,
+                self.getProperty("PHPUnit-%s" % metric, 0) + value,
+                "PHPUnit"
+            )
 
     def evaluateCommand(self, cmd):
-        self.setProperty('Passed', False)
-        if cmd.rc != 0:
-            return FAILURE
-        if self.phpError:
-            return FAILURE
-        if self.metrics['Failures']:
+        self.setProperty('Passed', bool(self.getProperty('Passed', True)))
+        if cmd.rc != 0 or self.phpError or self.metrics['Failures']:
+            self.setProperty('Passed', False)
             return FAILURE
         if self.metrics['Errors']:
+            self.setProperty('Passed', False)
             return EXCEPTION
-
-        self.setProperty('Passed', True)
         if self.metrics['Skipped'] or self.metrics['Incomplete']:
             return WARNINGS
         if not self.metrics['run']:
             return WARNINGS
         return SUCCESS
+
 
 #class Xslt(BuildStep):
 #    name = "xslt"
@@ -166,6 +175,7 @@ class PHPUnit(ShellCommand, LogLineObserver):
 #            outfile_desc.close()
 
 #        self.finished(SUCCESS)
+
 
 class CountingShellCommand(ShellCommand):
     errorCount = 0
@@ -399,4 +409,58 @@ class CountingShellCommand(ShellCommand):
         if self.warnCount:
             return WARNINGS
         return SUCCESS
+
+
+class MorphProperties(BuildStep):
+    name = "MorphProperties"
+    progress = False
+
+    def __init__(self, morph_fn, **kwargs):
+        BuildStep.__init__(self, **kwargs)
+        self.addFactoryArguments(morph_fn=morph_fn)
+        self.morph_fn = morph_fn
+
+    def start(self):
+        self.morph_fn(self.build.getProperties())
+        self.finished(SUCCESS)
+
+class SetPropertiesFromEnv(BuildStep):
+    """
+    Sets properties from envirionment variables on the slave.
+
+    Note this is transfered when the slave first connects
+    """
+    name='SetPropertiesFromEnv'
+    description='Setting'
+    descriptionDone='Set'
+
+    def __init__(self, variables, source="SlaveEnvironment", **kwargs):
+        BuildStep.__init__(self, **kwargs)
+        self.addFactoryArguments(variables = variables,
+                                 source = source)
+        self.variables = variables
+        self.source = source
+
+    def start(self):
+        # on Windows, environment variables are case-insensitive, but we have
+        # a case-sensitive dictionary in slave_environ.  Fortunately, that
+        # dictionary is also folded to uppercase, so we can simply fold the
+        # variable names to uppercase to duplicate the case-insensitivity.
+        fold_to_uppercase = (self.buildslave.slave_system == 'win32')
+
+        properties = self.build.getProperties()
+        environ = self.buildslave.slave_environ
+        variables = self.variables
+        if isinstance(variables, str):
+            variables = [self.variables]
+        for variable in variables:
+            key = variable
+            if fold_to_uppercase:
+                key = variable.upper()
+            value = environ.get(key, None)
+            if value:
+                # note that the property is not uppercased
+                properties.setProperty(variable, value, self.source,
+                                       runtime=True)
+        self.finished(SUCCESS)
 

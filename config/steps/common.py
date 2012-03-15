@@ -1,9 +1,37 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.process.properties import WithProperties
+from buildbot.process.properties import WithProperties, Property
 from buildbot.steps.source import Git
-from buildbot.steps.slave import SetPropertiesFromEnv
 from buildbot.steps.shell import SetProperty
+from Erebot_buildbot.src.steps import MorphProperties, SetPropertiesFromEnv
+from Erebot_buildbot.config import misc
+
+def _fill_props(properties):
+    if properties.getProperty('project') and \
+        not properties.getProperty('repository'):
+        properties.setProperty(
+            'repository',
+            "%s/%s" % (misc.GITHUB_BASE.rstrip('/'), properties['project']),
+            'MorphProperties'
+        )
+    elif properties.getProperty('repository') and \
+        not properties.getProperty('project'):
+        repo = properties['repository'].rstrip('/')
+        project = repo.rpartition('/')[2]
+        if project.endswith('.git'):
+            project = project[:-4]
+        if project:
+            properties.setProperty('project', project, 'MorphProperties')
+    properties.setProperty(
+        'ro_repository',
+        convert_repourl(0)(properties['repository']),
+        'Repositories'
+    )
+    properties.setProperty(
+        'rw_repository',
+        convert_repourl(1)(properties['repository']),
+        'Repositories'
+    )
 
 def convert_repourl(rw):
     """
@@ -19,7 +47,8 @@ def convert_repourl(rw):
         Eg. "https://github.com/Erebot/Erebot"
         becomes "git@github.com:Erebot/Erebot.git".
         """
-        return 'git@%s:%s.git' % tuple(repository.split('://', 1)[1].split('/', 1))
+        return 'git@%s:%s.git' % \
+            tuple(repository.split('://', 1)[1].split('/', 1))
 
     def _ro(repository):
         """
@@ -33,29 +62,26 @@ def convert_repourl(rw):
     return rw and _rw or _ro
 
 
-def _extract_repositories(rc, stdout, stderr):
-    return {
-        "ro_repository": convert_repourl(0)(stdout.strip()),
-        "rw_repository": convert_repourl(1)(stdout.strip()),
-    }
-
 clone = Git(
     mode='clobber',
-    repourl=convert_repourl(0),
+    repourl=Property("ro_repository"),
     submodules=True,
     progress=True,
 )
 
 clone_rw = Git(
     mode='clobber',
-    repourl=convert_repourl(1),
+    repourl=Property("rw_repository"),
     submodules=True,
     progress=True,
 )
 
-extract_repositories = SetProperty(
-    command=WithProperties("/bin/echo %(repository)s"),
-    extract_fn=_extract_repositories,
-)
+fill_properties = MorphProperties(morph_fn=_fill_props)
 
-erebot_path = SetPropertiesFromEnv(variables=['EREBOT_PATH'])
+nb_versions = 10
+_slaves_props = []
+for _i in xrange(1, nb_versions + 1):
+#    _slaves_props.append('PHP%d_PATH' % _i)
+    _slaves_props.append('PHP%d_DESC' % _i)
+erebot_path = SetPropertiesFromEnv(variables=['PHP_MAIN'] + _slaves_props)
+

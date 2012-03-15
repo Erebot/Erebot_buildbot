@@ -7,6 +7,7 @@ from Erebot_buildbot.config.steps import common
 from Erebot_buildbot.src.steps import CountingShellCommand
 
 QA = factory.BuildFactory()
+QA.addStep(common.fill_properties)
 QA.addStep(common.erebot_path)
 QA.addStep(common.clone)
 

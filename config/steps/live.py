@@ -8,6 +8,7 @@ from Erebot_buildbot.config import misc
 from Erebot_buildbot.src import master
 
 LIVE = factory.BuildFactory()
+LIVE.addStep(common.fill_properties)
 LIVE.addStep(common.erebot_path)
 
 # Stop or kill any previous instance of the bot.
@@ -50,7 +51,9 @@ for component in misc.COMPONENTS:
         LIVE.addStep(source.Git(
             workdir='build/vendor/%s' % component,
             mode='clobber',
-            repourl='git://github.com/Erebot/%s.git' % component,
+            repourl=common.convert_repourl(0)(
+                '%s/%s' % (misc.GITHUB_BASE.rstrip('/'), component)
+            ),
             submodules=True,
             progress=True,
             alwaysUseLatest=True,   # Would fail otherwise.

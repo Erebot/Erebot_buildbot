@@ -10,6 +10,7 @@ from Erebot_buildbot.src.steps import Link
 from Erebot_buildbot.src import master
 
 PACKAGE = factory.BuildFactory()
+PACKAGE.addStep(common.fill_properties)
 PACKAGE.addStep(common.erebot_path)
 PACKAGE.addStep(common.clone)
 

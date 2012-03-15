@@ -11,9 +11,9 @@ from Erebot_buildbot.src.steps import Link
 from Erebot_buildbot.src import master
 
 DOC = factory.BuildFactory()
+DOC.addStep(common.fill_properties)
 DOC.addStep(common.erebot_path)
 DOC.addStep(common.clone_rw)
-DOC.addStep(common.extract_repositories)
 
 DOC.addStep(master.MasterShellCommand(
     command=" && ".join([
