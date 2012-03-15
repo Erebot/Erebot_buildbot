@@ -15,7 +15,7 @@ class Authz(_Authz):
         # This method does not exist on older versions but is required
         # by templates in newer versions.
         parent = super(Authz, self)
-        if hasattr(parent, 'authenticated):
+        if hasattr(parent, 'authenticated'):
             return parent.authenticated(request)
         return False
 
