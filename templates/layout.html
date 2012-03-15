@@ -35,8 +35,8 @@
         - <a href="{{ path_to_root }}json/help">JSON API</a>
         - <a href="{{ path_to_root }}about">About</a>
 
-        <div class="auth">
         {% if authz.authenticated %}
+        <div class="auth">
         {% if authz.authenticated(request) %}
         {{ authz.getUsernameHTML(request) }}
         |<a href="{{ path_to_root }}logout">Logout</a>
@@ -47,8 +47,8 @@
         <input type="submit" value="login" />
         </form>
         {% endif %}
-        {% endif %}
         </div>
+        {% endif %}
     </div>
     <div class="header">
         <a href="{{ path_to_root }}components">Components</a>

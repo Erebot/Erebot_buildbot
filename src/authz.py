@@ -11,13 +11,12 @@ class Authz(_Authz):
     if 'showUsersPage' not in knownActions:
         knownActions.append('showUsersPage')
 
-    def authenticated(self, request):
-        # This method does not exist on older versions but is required
-        # by templates in newer versions.
-        parent = super(Authz, self)
-        if hasattr(parent, 'authenticated'):
-            return parent.authenticated(request)
-        return False
+    # This method does not exist on older versions but is used
+    # by templates in newer versions. We define an attribute with
+    # the same name and add a test in layout.html to check that
+    # the method is indeed defined before it's called.
+    if not hasattr(_Authz, 'authenticated):
+        authenticated = None
 
     def advertiseAction(self, action, request):
         # This method takes 3 arguments in recent versions of buildbot,
