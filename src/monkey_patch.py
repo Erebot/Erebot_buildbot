@@ -42,4 +42,10 @@ transfer.DirectoryUpload.finished = finished
 
 if not hasattr(authz.Authz, 'authenticated'):
     authz.Authz.authenticated = None
+    # buildbot 0.8.3pl1 did not support 'showUsersPage'
+    # but we need it for later versions, so we just patch
+    # the class to add it (it is not used by any template
+    # in that release, so it's not a big deal anyway).
+    if 'showUsersPage' not in authz.Authz.knownActions:
+        authz.Authz.knownActions.append('showUsersPage')
 
