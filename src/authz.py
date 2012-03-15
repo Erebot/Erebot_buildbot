@@ -15,7 +15,7 @@ class Authz(_Authz):
     # by templates in newer versions. We define an attribute with
     # the same name and add a test in layout.html to check that
     # the method is indeed defined before it's called.
-    if not hasattr(_Authz, 'authenticated):
+    if not hasattr(_Authz, 'authenticated'):
         authenticated = None
 
     def advertiseAction(self, action, request):
