@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.status.web.auth import BasicAuth
-from buildbot.status.web.authz import Authz
+from Erebot_buildbot.src.authz import Authz
 import secrets
 
 auth = BasicAuth(secrets.WEB_USERS)
