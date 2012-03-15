@@ -36,7 +36,7 @@ BUILDERS = [
     ),
     BuilderConfig(
         name='Live',
-        slavenames=['Debian 6 - PHP 5.3'],
+        slavenames=['Debian 6'],
         factory=MultiProjectBuildFactory({
             'Erebot': steps.LIVE,
             'www.erebot.net': steps.LIVE_WWW,
