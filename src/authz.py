@@ -18,7 +18,7 @@ class Authz(_Authz):
     if not hasattr(_Authz, 'authenticated'):
         authenticated = None
 
-    def advertiseAction(self, action, request):
+    def advertiseAction(self, action, request=None):
         # This method takes 3 arguments in recent versions of buildbot,
         # while it only accepted 2 arguments in buildbot 0.8.3pl1.
         # We patch it so that the signature becomes the same (3 args)
