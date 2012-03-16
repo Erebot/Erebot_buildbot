@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.process.properties import WithProperties as _WithProperties
+from buildbot.process.properties import WithProperties
 from buildbot.steps.source import Git
-from buildbot.steps.shell import SetProperty
 from Erebot_buildbot.src.steps import MorphProperties, SetPropertiesFromEnv
 from Erebot_buildbot.config import misc
 
@@ -63,20 +62,20 @@ def convert_repourl(rw):
 
 
 # This wrapper is required on buildbot 0.8.3pl1 due to a bogus assert.
-class WithProperties(_WithProperties):
+class GitWithProperties(WithProperties):
     def __call__(self, repo):
         return self
 
 clone = Git(
     mode='clobber',
-    repourl=WithProperties("%(ro_repository)s"),
+    repourl=GitWithProperties("%(ro_repository)s"),
     submodules=True,
     progress=True,
 )
 
 clone_rw = Git(
     mode='clobber',
-    repourl=WithProperties("%(rw_repository)s"),
+    repourl=GitWithProperties("%(rw_repository)s"),
     submodules=True,
     progress=True,
 )
