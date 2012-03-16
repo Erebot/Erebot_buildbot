@@ -55,7 +55,11 @@ for i in xrange(1, common.nb_versions + 1):
 # Also, only upload code coverage reports when all tests pass.
 def _must_transfer_coverage(s):
     slaves = ('Debian 6', )
-    return s.getSlaveName() in slaves and s.getProperty('Passed', False)
+    try:
+        passed = s.getProperty('Passed')
+    except KeyError:
+        passed = None
+    return s.getSlaveName() in slaves and passed
 
 TESTS.addStep(transfer.DirectoryUpload(
     slavesrc="docs/coverage/",
