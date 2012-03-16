@@ -62,23 +62,21 @@ def convert_repourl(rw):
     return rw and _rw or _ro
 
 
-# This function is required on buildbot 0.8.3pl1 due to a bogus assert.
-def _git_repository(repo):
-    def _inner(_dummy):
-        return WithProperties(repo)
-    return _inner
+# This wrapper is required on buildbot 0.8.3pl1 due to a bogus assert.
+class WithProperties(_WithProperties):
+    def __call__(self, repo):
+        return self
 
 clone = Git(
     mode='clobber',
-    repourl=_git_repository("%(ro_repository)s"),
+    repourl=WithProperties("%(ro_repository)s"),
     submodules=True,
     progress=True,
 )
 
 clone_rw = Git(
     mode='clobber',
-    # The lambda is required on buildbot 0.8.3pl1 due to a bogus assert.
-    repourl=_git_repository("%(rw_repository)s"),
+    repourl=WithProperties("%(rw_repository)s"),
     submodules=True,
     progress=True,
 )
