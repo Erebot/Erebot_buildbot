@@ -87,14 +87,20 @@ class PHPUnit(ShellCommand, LogLineObserver):
 
     def createSummary(self, log):
         for metric, value in self.metrics.iteritems():
+            # We use self.build.getProperty() directly
+            # to reach maximum compatibility.
+            old_value = self.build.getProperty("PHPUnit-%s" % metric, 0)
             self.setProperty(
                 "PHPUnit-%s" % metric,
-                self.getProperty("PHPUnit-%s" % metric, 0) + value,
+                old_value + value,
                 "PHPUnit"
             )
 
     def evaluateCommand(self, cmd):
-        self.setProperty('Passed', bool(self.getProperty('Passed', True)))
+        # We use self.build.getProperty() directly
+        # to reach maximum compatibility.
+        passed = self.build.getProperty("Passed", True)
+        self.setProperty('Passed', bool(passed))
         if cmd.rc != 0 or self.phpError or self.metrics['Failures']:
             self.setProperty('Passed', False)
             return FAILURE
@@ -378,10 +384,9 @@ class CountingShellCommand(ShellCommand):
             warnings_stat + self.warnCount
         )
 
-        try:
-            old_count = self.getProperty("warnings-count")
-        except KeyError:
-            old_count = 0
+        # We use self.build.getProperty() directly
+        # to reach maximum compatibility.
+        old_count = self.build.getProperty("warnings-count", 0)
         self.setProperty(
             "warnings-count",
             old_count + self.warnCount,
@@ -391,10 +396,9 @@ class CountingShellCommand(ShellCommand):
         errors_stat = self.step_status.getStatistic('errors', 0)
         self.step_status.setStatistic('errors', errors_stat + self.errorCount)
 
-        try:
-            old_count = self.getProperty("errors-count")
-        except KeyError:
-            old_count = 0
+        # We use self.build.getProperty() directly
+        # to reach maximum compatibility.
+        old_count = self.build.getProperty("errors-count", 0)
         self.setProperty(
             "errors-count",
             old_count + self.errorCount,
