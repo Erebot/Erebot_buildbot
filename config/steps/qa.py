@@ -17,7 +17,7 @@ QA.addStep(shell.ShellCommand(
     descriptionDone="lint",
     warnOnWarnings=True,
     env={
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     maxTime=5 * 60,
 ))
@@ -33,7 +33,7 @@ QA.addStep(CountingShellCommand(
     errorPattern="^.*?ERROR in line ()([0-9]+) column [0-9]+: (.*)$",
     errorExtractor=CountingShellCommand.extractFromRegexpGroups,
     env={
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     maxTime=5 * 60,
 ))
@@ -44,7 +44,7 @@ QA.addStep(shell.ShellCommand(
     descriptionDone="Duplicates",
     warnOnWarnings=True,
     env={
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     maxTime=5 * 60,
 ))
@@ -59,7 +59,7 @@ QA.addStep(shell.WarningCountingShellCommand(
     warningExtractor=
         shell.WarningCountingShellCommand.warnExtractFromRegexpGroups,
     env={
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     maxTime=5* 60,
 ))

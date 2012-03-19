@@ -60,7 +60,7 @@ DOC.addStep(shell.WarningCountingShellCommand(
         # Ensures the output doesn't use
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     maxTime=10*60,
 ))

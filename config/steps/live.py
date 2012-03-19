@@ -39,7 +39,7 @@ LIVE.addStep(common.clone)
 LIVE.addStep(shell.Compile(
     command="phing",
     env={
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     warnOnWarnings=True,
     warnOnFailure=True,
@@ -66,7 +66,7 @@ for component in misc.COMPONENTS:
                 "phing"
             ) % component,
             env={
-                'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+                'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
             },
             warnOnWarnings=True,
             warnOnFailure=True,
@@ -107,7 +107,7 @@ LIVE.addStep(shell.ShellCommand(
         ":",                                # Never fail.
     ]),
     env={
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     description=["PEAR", 'deps'],
     descriptionDone=["PEAR", 'deps'],
@@ -128,7 +128,7 @@ LIVE.addStep(shell.ShellCommand(
             "> /dev/null "
             "2>&1",
     env={
-        'PATH': WithProperties("%(EREBOT_PATH)s:${PATH}"),
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
         'LC_MESSAGES': 'fr_FR.UTF-8',
         'LC_MONETARY': 'fr_FR.UTF-8',
         'LC_NUMERIC': 'fr_FR.UTF-8',
