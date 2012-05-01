@@ -38,8 +38,8 @@ BUILDERS = [
         name='Live',
         slavenames=['Debian 6'],
         factory=MultiProjectBuildFactory({
-            'Erebot': steps.LIVE,
-            'www.erebot.net': steps.LIVE_WWW,
+            'Erebot/Erebot': steps.LIVE,
+            'Erebot/www.erebot.net': steps.LIVE_WWW,
         }),
         category='Live',
     ),

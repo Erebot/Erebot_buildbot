@@ -63,7 +63,7 @@ def _must_transfer_coverage(s):
 
 TESTS.addStep(transfer.DirectoryUpload(
     slavesrc="docs/coverage/",
-    masterdest=WithProperties("public_html/doc/coverage/%(project)s/"),
+    masterdest=WithProperties("public_html/doc/coverage/%(shortProject)s/"),
     doStepIf=_must_transfer_coverage,
     maxsize=10 * (1 << 20), # 10 MiB
 ))

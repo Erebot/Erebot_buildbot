@@ -17,20 +17,54 @@ STATUS.append(status.WebStatus(
         ]
     )),
 
-    # @TODO: use a callable instead, to add other links (eg. "sha:1234567").
     changecommentlink=dict(zip(
         misc.COMPONENTS,
+
+        # Refs to issues for this component.
         [(
-            r"#(\d+)",
+            r"(?<![0-9a-zA-Z-])#(\d+)",
             "%s/%s/issues/\\1" % (misc.GITHUB_BASE, c),
             r"Issue \g<0>"
-        ) for c in misc.COMPONENTS]
+        ) for c in misc.COMPONENTS] +
+
+        # Refs to commits for this component.
+        [(
+            r"sha:([0-9a-fA-F]{7,40})(?![0-9a-fA-F])",
+            "%s/%s/commit/\\1" % (misc.GITHUB_BASE, c),
+            r"Commit \g<1>"
+        ) for c in misc.COMPONENTS] +
+
+        # Other types of references.
+        [
+            # Refs to github users.
+            (
+                r"(?<![0-9a-zA-Z-])@([0-9a-fA-F-]+)",
+                "%s/\\1" % misc.GITHUB_BASE,
+                r"Github user \g<1>"
+            ),
+
+            # Refs to issues in other projects.
+            (
+                r"([0-9a-zA-Z-]+/[0-9a-zA-Z_-]+)#(\d+)",
+                "%s/\\1/issues/\\2" % misc.GITHUB_BASE,
+                r"Issue \g<2> in \g<1>"
+            ),
+
+            # Refs to commits in other projects.
+            # Eg. "foo/bar@1234567".
+            # 7 to 40 hexadecimal digits may be used.
+            (
+                r"([0-9a-zA-Z-]+/[0-9a-zA-Z_-]+)@([0-9a-fA-F]{7,40})(?![0-9a-fA-F])",
+                "%s/\\1/commit/\\2" % misc.GITHUB_BASE,
+                r"Commit \g<2> in \g<1>"
+            ),
+        ],
     )),
 
     projects=dict(zip(
         misc.COMPONENTS,
         [
-            "%s/%s/wiki" % (misc.GITHUB_BASE, c)
+            "%s/%s/" % (misc.GITHUB_BASE, c)
             for c in misc.COMPONENTS
         ]
     )),
@@ -45,7 +79,7 @@ STATUS.append(status.WebStatus(
 
     change_hook_dialects={
         'erebot_github': github_hook.GithubChangeHook({
-            'user': 'Erebot',
+            'user': ('Erebot', 'fpoirotte'),
             'key': secrets.GITHUB_KEY,
         }),
     },

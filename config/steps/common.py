@@ -16,11 +16,21 @@ def _fill_props(properties):
     elif properties.getProperty('repository') and \
         not properties.getProperty('project'):
         repo = properties['repository'].rstrip('/')
-        project = repo.rpartition('/')[2]
+        project = '/'.join(repo.split('/')[-2:])
         if project.endswith('.git'):
             project = project[:-4]
         if project:
             properties.setProperty('project', project, 'MorphProperties')
+    properties.setProperty(
+        'ghUser',
+        project.partition('/')[0],
+        'MorphProperties'
+    )
+    properties.setProperty(
+        'shortProject',
+        project.rpartition('/')[2],
+        'MorphProperties'
+    )
     properties.setProperty(
         'ro_repository',
         convert_repourl(0)(properties['repository']),

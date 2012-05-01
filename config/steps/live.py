@@ -28,9 +28,9 @@ fi
 ))
 
 for component in misc.COMPONENTS:
-    if component.startswith('Erebot_Module_'):
+    if component.startswith('Erebot/Erebot_Module_'):
         LIVE.addStep(shell.ShellCommand(
-            command='/bin/rm -rf build/vendor/%s' % component,
+            command='/bin/rm -rf build/vendor/%s' % component.partition('/')[2],
             description=["Cleanup:", component],
             descriptionDone=["Cleanup:", component],
         ))
@@ -47,9 +47,9 @@ LIVE.addStep(shell.Compile(
 ))
 
 for component in misc.COMPONENTS:
-    if component.startswith('Erebot_Module_'):
+    if component.startswith('Erebot/Erebot_Module_'):
         LIVE.addStep(source.Git(
-            workdir='build/vendor/%s' % component,
+            workdir='build/vendor/%s' % component.partition('/')[2],
             mode='clobber',
             repourl=common.convert_repourl(0)(
                 '%s/%s' % (misc.GITHUB_BASE.rstrip('/'), component)
@@ -64,7 +64,7 @@ for component in misc.COMPONENTS:
                 "cd vendor/%s && "
                 # Build the translations.
                 "phing"
-            ) % component,
+            ) % component.partition('/')[2],
             env={
                 'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
             },

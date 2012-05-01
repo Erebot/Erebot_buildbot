@@ -24,7 +24,7 @@ def _exclude_gh_pages(branch):
 def _exclude_if_only_doc(change):
     """
     Returns C{True} if the C{change} contains
-    modifications to something else than the
+    modifications to something other than the
     documentation.
     """
     for f in change.files:
@@ -46,8 +46,12 @@ SCHEDULERS = [
         change_filter=ChangeFilter(
             project=[
                 p for p in misc.COMPONENTS if
-                    p.startswith('Erebot_Module_') or
-                    p in ('Erebot', 'Plop')
+                    p.startswith('Erebot/Erebot_Module_') or
+                    p in (
+                        'Erebot/Erebot',
+                        'Erebot/Plop',
+                        'fpoirotte/xrl',
+                    )
             ],
             branch_fn=_exclude_gh_pages,
             filter_fn=_exclude_if_only_doc,
@@ -65,8 +69,12 @@ SCHEDULERS = [
         change_filter=ChangeFilter(
             project=[
                 p for p in misc.COMPONENTS if
-                    p.startswith('Erebot_Module_') or
-                    p in ('Erebot', 'Plop')
+                    p.startswith('Erebot/Erebot_Module_') or
+                    p in (
+                        'Erebot/Erebot',
+                        'Erebot/Plop',
+                        'fpoirotte/xrl',
+                    )
             ],
             branch_fn=_exclude_gh_pages,
         ),
@@ -85,8 +93,13 @@ SCHEDULERS = [
         change_filter=ChangeFilter(
             project=[
                 p for p in misc.COMPONENTS if
-                    p.startswith('Erebot_Module_') or
-                    p in ('Erebot', 'Plop', 'Erebot_API')
+                    p.startswith('Erebot/Erebot_Module_') or
+                    p in (
+                        'Erebot/Erebot',
+                        'Erebot/Plop',
+                        'Erebot/Erebot_API',
+                        'fpoirotte/xrl',
+                    )
             ],
             branch_fn=_exclude_gh_pages,
             filter_fn=_exclude_if_only_doc,
@@ -104,7 +117,10 @@ SCHEDULERS = [
             'Live',
         ],
         change_filter=ChangeFilter(
-            project=['Erebot', 'www.erebot.net'],
+            project=[
+                'Erebot/Erebot',
+                'Erebot/www.erebot.net',
+            ],
             branch_fn=_exclude_gh_pages,
             filter_fn=_exclude_if_only_doc,
         ),

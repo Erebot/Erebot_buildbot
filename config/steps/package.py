@@ -114,12 +114,12 @@ PACKAGE.addStep(shell.ShellCommand(
 PACKAGE.addStep(shell.SetProperty(
     command=WithProperties(
         "/bin/ls -1 "
-            "%(project)s-*.tgz "
-            "%(project)s-*.tar "
-            "%(project)s-*.zip "
-            "%(project)s-*.phar "
-            "%(project)s-*.pubkey "
-            "%(project)s-*.pem "
+            "%(shortProject)s-*.tgz "
+            "%(shortProject)s-*.tar "
+            "%(shortProject)s-*.zip "
+            "%(shortProject)s-*.phar "
+            "%(shortProject)s-*.pubkey "
+            "%(shortProject)s-*.pem "
             "2> /dev/null || :"
     ),
     description="Got any package?",

@@ -69,25 +69,25 @@ DOC.addStep(shell.ShellCommand(
     command=WithProperties(
         "cd docs/ && "
 
-        "/bin/ln -sf -T api %(project)s && "
-        "echo -e '\\ntgz archive for %(project)s'\"'\"'s API doc' &&"
-        "/usr/bin/find -L %(project)s "
+        "/bin/ln -sf -T api %(shortProject)s && "
+        "echo -e '\\ntgz archive for %(shortProject)s'\"'\"'s API doc' &&"
+        "/usr/bin/find -L %(shortProject)s "
             "-name '*.html' -print0 -o "
             "-name '*.png' -print0 -o "
             "-name '*.css' -print0 -o "
             "-name '*.js' -print0 | "
-            "/bin/tar -c -h -z -v -f %(project)s-api.tgz --null -T -; "
+            "/bin/tar -c -h -z -v -f %(shortProject)s-api.tgz --null -T -; "
 
-        "echo -e '\\nzip archive for %(project)s'\"'\"'s API doc' &&"
-        "/usr/bin/zip -v -r -n .png:.gif %(project)s-api.zip %(project)s/ -i "
-            "'*.html' -i '*.png' -i '*.css' -i '*.js'; "
+        "echo -e '\\nzip archive for %(shortProject)s'\"'\"'s API doc' &&"
+        "/usr/bin/zip -v -r -n .png:.gif %(shortProject)s-api.zip "
+        "   %(shortProject)s/ -i '*.html' -i '*.png' -i '*.css' -i '*.js'; "
 
-        "echo -e '\\ntgz archive for %(project)s'\"'\"'s end-user doc' &&"
-        "/bin/ln -sf -T enduser/html %(project)s && "
-        "/bin/tar -c -h -z -v -f %(project)s-enduser.tgz %(project)s; "
+        "echo -e '\\ntgz archive for %(shortProject)s'\"'\"'s end-user doc' &&"
+        "/bin/ln -sf -T enduser/html %(shortProject)s && "
+        "/bin/tar -c -h -z -v -f %(shortProject)s-enduser.tgz %(shortProject)s; "
 
-        "echo -e '\\nzip archive for %(project)s'\"'\"'s end-user doc' &&"
-        "/usr/bin/zip -r %(project)s-enduser.zip %(project)s/; "
+        "echo -e '\\nzip archive for %(shortProject)s'\"'\"'s end-user doc' &&"
+        "/usr/bin/zip -r %(shortProject)s-enduser.zip %(shortProject)s/; "
 
         "cd -"
     ),
@@ -96,45 +96,45 @@ DOC.addStep(shell.ShellCommand(
 ))
 
 DOC.addStep(transfer.FileUpload(
-    slavesrc=WithProperties("%(project)s.tagfile.xml"),
+    slavesrc=WithProperties("%(shortProject)s.tagfile.xml"),
     masterdest=WithProperties(
-        "public_html/tagfiles/%(project)s.tagfile.xml"
+        "public_html/tagfiles/%(shortProject)s.tagfile.xml"
     ),
     maxsize=1 * (1 << 20), # 1 MiB
     locks=[TAGFILES_LOCK.access('exclusive')],
 ))
 
 DOC.addStep(transfer.FileUpload(
-    slavesrc=WithProperties("docs/%(project)s-api.tgz"),
+    slavesrc=WithProperties("docs/%(shortProject)s-api.tgz"),
     masterdest=
-        WithProperties("public_html/doc/api/%(project)s-api.tgz"),
+        WithProperties("public_html/doc/api/%(shortProject)s-api.tgz"),
     maxsize=50 * (1 << 20), # 50 MiB
 ))
 
 DOC.addStep(transfer.FileUpload(
-    slavesrc=WithProperties("docs/%(project)s-api.zip"),
+    slavesrc=WithProperties("docs/%(shortProject)s-api.zip"),
     masterdest=
-        WithProperties("public_html/doc/api/%(project)s-api.zip"),
+        WithProperties("public_html/doc/api/%(shortProject)s-api.zip"),
     maxsize=50 * (1 << 20), # 50 MiB
 ))
 
 DOC.addStep(transfer.FileUpload(
-    slavesrc=WithProperties("docs/%(project)s-enduser.tgz"),
+    slavesrc=WithProperties("docs/%(shortProject)s-enduser.tgz"),
     masterdest=
-        WithProperties("public_html/doc/enduser/%(project)s.tgz"),
+        WithProperties("public_html/doc/enduser/%(shortProject)s.tgz"),
     maxsize=50 * (1 << 20), # 50 MiB
 ))
 
 DOC.addStep(transfer.FileUpload(
-    slavesrc=WithProperties("docs/%(project)s-enduser.zip"),
+    slavesrc=WithProperties("docs/%(shortProject)s-enduser.zip"),
     masterdest=
-        WithProperties("public_html/doc/enduser/%(project)s.zip"),
+        WithProperties("public_html/doc/enduser/%(shortProject)s.zip"),
     maxsize=50 * (1 << 20), # 50 MiB
 ))
 
 DOC.addStep(master.MasterShellCommand(
     command=WithProperties(
-        "/bin/tar -z -x -v -f public_html/doc/api/%(project)s-api.tgz "
+        "/bin/tar -z -x -v -f public_html/doc/api/%(shortProject)s-api.tgz "
             "-C public_html/doc/api/; "
     ),
     description=["untaring", "API", "doc"],
@@ -144,7 +144,7 @@ DOC.addStep(master.MasterShellCommand(
 DOC.addStep(shell.ShellCommand(
     command=WithProperties(
         " && ".join([
-            "/bin/mv docs/%(project)s-enduser.tgz ./",
+            "/bin/mv docs/%(shortProject)s-enduser.tgz ./",
             "/usr/bin/git fetch -t %(rw_repository)s +gh-pages --progress",
             "/usr/bin/git reset --hard FETCH_HEAD",
             "/bin/rm -rf docs/ buildenv/ tests/ vendor/ *.tagfile.xml",
@@ -153,9 +153,9 @@ DOC.addStep(shell.ShellCommand(
                 "-t gh-pages origin %(rw_repository)s",
             "/usr/bin/git rm -rf --ignore-unmatch '*'",
             "/bin/tar -z -x -v --strip-components=1 "
-                "-f %(project)s-enduser.tgz",
+                "-f %(shortProject)s-enduser.tgz",
             "/usr/bin/touch .nojekyll",
-            "/bin/rm -f %(project)s-enduser.tgz",
+            "/bin/rm -f %(shortProject)s-enduser.tgz",
             "/usr/bin/git add "
                 "'*.html' '*.js' objects.inv "
                 "_static/ _sources/ .buildinfo "
@@ -178,7 +178,7 @@ DOC.addStep(shell.SetProperty(
 DOC.addStep(Link(
     label="Code Coverage",
     href=WithProperties(
-        "%(buildbotURL)s/doc/coverage/%(project)s/",
+        "%(buildbotURL)s/doc/coverage/%(shortProject)s/",
         buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
@@ -186,7 +186,7 @@ DOC.addStep(Link(
 DOC.addStep(Link(
     label="API doc (tar)",
     href=WithProperties(
-        "%(buildbotURL)s/doc/api/%(project)s-api.tgz",
+        "%(buildbotURL)s/doc/api/%(shortProject)s-api.tgz",
         buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
@@ -194,7 +194,7 @@ DOC.addStep(Link(
 DOC.addStep(Link(
     label="API doc (zip)",
     href=WithProperties(
-        "%(buildbotURL)s/doc/api/%(project)s-api.zip",
+        "%(buildbotURL)s/doc/api/%(shortProject)s-api.zip",
         buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
@@ -202,7 +202,7 @@ DOC.addStep(Link(
 DOC.addStep(Link(
     label="End-user doc (tar)",
     href=WithProperties(
-        "%(buildbotURL)s/doc/enduser/%(project)s.tgz",
+        "%(buildbotURL)s/doc/enduser/%(shortProject)s.tgz",
         buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
@@ -210,7 +210,7 @@ DOC.addStep(Link(
 DOC.addStep(Link(
     label="End-user doc (zip)",
     href=WithProperties(
-        "%(buildbotURL)s/doc/enduser/%(project)s.zip",
+        "%(buildbotURL)s/doc/enduser/%(shortProject)s.zip",
         buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
@@ -218,7 +218,7 @@ DOC.addStep(Link(
 DOC.addStep(Link(
     label="API doc (online)",
     href=WithProperties(
-        "%(buildbotURL)s/doc/api/%(project)s/",
+        "%(buildbotURL)s/doc/api/%(shortProject)s/",
         buildbotURL=lambda _: misc.BUILDBOT_URL.rstrip('/'),
     ),
 ))
@@ -226,7 +226,7 @@ DOC.addStep(Link(
 DOC.addStep(Link(
     label="End-user doc (online)",
     href=WithProperties(
-        "http://erebot.github.com/%(project)s/"
+        "http://%(ghUser)s.github.com/%(shortProject)s/"
     ),
 ))
 
