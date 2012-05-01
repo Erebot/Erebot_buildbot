@@ -31,7 +31,7 @@ class GithubChangeHook(object):
             """
             try:
                 payload = json.loads(request.args['payload'][0])
-                project = payload['repository']['url'].partition('://')[1]
+                project = payload['repository']['url'].partition('://')[2]
                 project = project.split('/', 1)[1]
                 user = payload['repository']['owner']['name']
                 repo = payload['repository']['name']
