@@ -28,17 +28,30 @@ class GithubChangeHook(object):
             """
             try:
                 payload = json.loads(request.args['payload'][0])
-                category = request.args.get('category', [None])[0]
-                project = request.args.get('project', [None])[0]
+                project = payload['repository']['url'].partition('://')[1]
+                project = project.split('/', 1)[1]
                 user = payload['repository']['owner']['name']
                 repo = payload['repository']['name']
-                if user != self._options.get('user', user) or \
-                    repo != self._options.get('repository', repo) or \
-                    request.args.get('key', [None])[0] != \
-                        self._options.get('key'):
+                category = request.args.get('category', [project])[0]
+                key = request.args.get('key', [None])[0]
+
+                allowed_users = self._options.get('user', user)
+                allowed_repos = self._options.get('repository', repo)
+                allowed_keys = self._options.get('key')
+                if not isinstance(allowed_users, list):
+                    allowed_users = [allowed_users]
+                if not isinstance(allowed_repos, list):
+                    allowed_repos = [allowed_repos]
+                if not isinstance(allowed_keys, list):
+                    allowed_keys = [allowed_keys]
+
+                if (user not in allowed_users) or \
+                    (repo not in allowed_repos) or \
+                    (key not in allowed_keys):
                     log.msg("Refused change request "
                             "from %s/%s.git" % (user, repo))
                     return
+
                 repo_url = payload['repository']['url']
                 # This field is unused:
                 #private = payload['repository']['private']
