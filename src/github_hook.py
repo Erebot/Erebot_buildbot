@@ -35,21 +35,33 @@ class GithubChangeHook(object):
                 category = request.args.get('category', [project])[0]
                 key = request.args.get('key', [None])[0]
 
+                # Check user whitelist.
                 allowed_users = self._options.get('user', user)
-                allowed_repos = self._options.get('repository', repo)
-                allowed_keys = self._options.get('key')
                 if not isinstance(allowed_users, list):
                     allowed_users = [allowed_users]
+                if (user not in allowed_users):
+                    log.msg("Refused change request "
+                            "from %s/%s (user not in %s)" %
+                            (user, repo, ','.join(allowed_users)))
+                    return
+
+                # Check repository whitelist.
+                allowed_repos = self._options.get('repository', repo)
                 if not isinstance(allowed_repos, list):
                     allowed_repos = [allowed_repos]
+                if (repo not in allowed_repos):
+                    log.msg("Refused change request "
+                            "from %s/%s (repository not in %s)" %
+                            (user, repo, ','.join(allowed_repos)))
+                    return
+
+                # Check key whitelist.
+                allowed_keys = self._options.get('key')
                 if not isinstance(allowed_keys, list):
                     allowed_keys = [allowed_keys]
-
-                if (user not in allowed_users) or \
-                    (repo not in allowed_repos) or \
-                    (key not in allowed_keys):
+                if (key not in allowed_keys):
                     log.msg("Refused change request "
-                            "from %s/%s.git" % (user, repo))
+                            "from %s/%s (invalid key)" % (user, repo))
                     return
 
                 repo_url = payload['repository']['url']
