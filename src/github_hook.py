@@ -36,7 +36,6 @@ class GithubChangeHook(object):
                 user = payload['repository']['owner']['name']
                 repo = payload['repository']['name']
                 project = request.args.get('project', [project])[0]
-                category = request.args.get('category', [project])[0]
                 key = request.args.get('key', [None])[0]
                 repo_url = payload['repository']['url']
 
@@ -74,7 +73,6 @@ class GithubChangeHook(object):
                 if process_change.func_code.co_argcount == 4:
                     changes = process_change(payload, user, repo, repo_url)
                     for change in changes:
-                        change.category = category
                         change.project = project
                     log.msg("Received %s changes from github" % len(changes))
                     return changes
@@ -82,8 +80,6 @@ class GithubChangeHook(object):
                 # Newer versions take 5 args, and must return a tuple
                 # with (list of dicts of change properties, VCS name).
                 changes = process_change(payload, user, repo, repo_url, project)
-                for change in changes:
-                    change['category'] = category
                 log.msg("Received %s changes from github" % len(changes))
                 return (changes, 'git')
             except Exception:

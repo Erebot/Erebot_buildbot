@@ -50,7 +50,7 @@ SCHEDULERS = [
                     p in (
                         'Erebot/Erebot',
                         'Erebot/Plop',
-                        'fpoirotte/xrl',
+                        'fpoirotte/XRL',
                     )
             ],
             branch_fn=_exclude_gh_pages,
@@ -73,7 +73,7 @@ SCHEDULERS = [
                     p in (
                         'Erebot/Erebot',
                         'Erebot/Plop',
-                        'fpoirotte/xrl',
+                        'fpoirotte/XRL',
                     )
             ],
             branch_fn=_exclude_gh_pages,
@@ -98,7 +98,7 @@ SCHEDULERS = [
                         'Erebot/Erebot',
                         'Erebot/Plop',
                         'Erebot/Erebot_API',
-                        'fpoirotte/xrl',
+                        'fpoirotte/XRL',
                     )
             ],
             branch_fn=_exclude_gh_pages,
