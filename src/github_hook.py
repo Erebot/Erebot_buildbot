@@ -21,9 +21,9 @@ class GithubChangeHook(object):
             options = {}
         self._options = options
 
-    def getChanges(self, request):
+    def getChanges(self, request, options=None):
             """
-            Reponds only to POST events and starts the build process
+            Responds only to POST events and starts the build process
 
             :arguments:
                 request
@@ -35,8 +35,10 @@ class GithubChangeHook(object):
                 project = project.split('/', 1)[1]
                 user = payload['repository']['owner']['name']
                 repo = payload['repository']['name']
+                project = request.args.get('project', [project])[0]
                 category = request.args.get('category', [project])[0]
                 key = request.args.get('key', [None])[0]
+                repo_url = payload['repository']['url']
 
                 # Check user whitelist.
                 allowed_users = self._options.get('user', user)
@@ -67,15 +69,23 @@ class GithubChangeHook(object):
                             "from %s/%s (invalid key)" % (user, repo))
                     return
 
-                repo_url = payload['repository']['url']
-                # This field is unused:
-                #private = payload['repository']['private']
-                changes = process_change(payload, user, repo, repo_url)
+                # Older versions only accepted 4 args
+                # and returned a list of Change objects.
+                if process_change.func_code.co_argcount == 4:
+                    changes = process_change(payload, user, repo, repo_url)
+                    for change in changes:
+                        change.category = category
+                        change.project = project
+                    log.msg("Received %s changes from github" % len(changes))
+                    return changes
+
+                # Newer versions take 5 args, and must return a tuple
+                # with (list of dicts of change properties, VCS name).
+                changes = process_change(payload, user, repo, repo_url, project)
                 for change in changes:
-                    change.category = category
-                    change.project = project
+                    change['category'] = category
                 log.msg("Received %s changes from github" % len(changes))
-                return changes
+                return (changes, 'git')
             except Exception:
                 logging.error("Encountered an exception:")
                 for msg in traceback.format_exception(*sys.exc_info()):
