@@ -32,7 +32,7 @@ COMPONENTS = (
     'Erebot/Erebot_Module_WebGetter',
     'Erebot/Erebot_Module_Wordlists',
     'Erebot/Plop',
-    'fpoirotte/xrl',
+    'fpoirotte/XRL',
 )
 
 BUILDBOT_URL = "https://buildbot.erebot.net/"
