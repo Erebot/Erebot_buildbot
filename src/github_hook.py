@@ -12,6 +12,9 @@ try:
 except ImportError:
     import simplejson as json
 
+def isiterable(v):
+    return hasattr(v, '__iter__')
+
 class GithubChangeHook(object):
     def __init__(self, options=None):
         if not isinstance(options, dict):
@@ -37,7 +40,7 @@ class GithubChangeHook(object):
 
                 # Check user whitelist.
                 allowed_users = self._options.get('user', user)
-                if not isinstance(allowed_users, list):
+                if not isiterable(allowed_users):
                     allowed_users = [allowed_users]
                 if (user not in allowed_users):
                     log.msg("Refused change request "
@@ -47,7 +50,7 @@ class GithubChangeHook(object):
 
                 # Check repository whitelist.
                 allowed_repos = self._options.get('repository', repo)
-                if not isinstance(allowed_repos, list):
+                if not isiterable(allowed_repos):
                     allowed_repos = [allowed_repos]
                 if (repo not in allowed_repos):
                     log.msg("Refused change request "
@@ -57,7 +60,7 @@ class GithubChangeHook(object):
 
                 # Check key whitelist.
                 allowed_keys = self._options.get('key')
-                if not isinstance(allowed_keys, list):
+                if not isiterable(allowed_keys):
                     allowed_keys = [allowed_keys]
                 if (key not in allowed_keys):
                     log.msg("Refused change request "
