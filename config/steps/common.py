@@ -6,36 +6,42 @@ from Erebot_buildbot.src.steps import MorphProperties, SetPropertiesFromEnv
 from Erebot_buildbot.config import misc
 
 def _fill_props(properties):
-    if properties.getProperty('project') and \
-        not properties.getProperty('repository'):
+    project = properties.getProperty('project')
+    if project and not properties.getProperty('repository'):
+        # Deduce the repository from a project name (w/ account name).
         properties.setProperty(
             'repository',
             "%s/%s" % (misc.GITHUB_BASE.rstrip('/'), properties['project']),
             'MorphProperties'
         )
-    elif properties.getProperty('repository') and \
-        not properties.getProperty('project'):
+    elif properties.getProperty('repository') and not project:
+        # Deduce the project name (w/ account name) from a repository URL.
         repo = properties['repository'].rstrip('/')
         project = '/'.join(repo.split('/')[-2:])
         if project.endswith('.git'):
             project = project[:-4]
         if project:
             properties.setProperty('project', project, 'MorphProperties')
+
+    # GitHub account hosting the repository.
     properties.setProperty(
         'ghUser',
         project.partition('/')[0],
         'MorphProperties'
     )
+    # GitHub project (repository) to use (w/o account name).
     properties.setProperty(
         'shortProject',
         project.rpartition('/')[2],
         'MorphProperties'
     )
+    # Read-only URL to repository.
     properties.setProperty(
         'ro_repository',
         convert_repourl(0)(properties['repository']),
         'Repositories'
     )
+    # Read/write URL to repository.
     properties.setProperty(
         'rw_repository',
         convert_repourl(1)(properties['repository']),
