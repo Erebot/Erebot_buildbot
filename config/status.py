@@ -45,7 +45,7 @@ STATUS.append(status.WebStatus(
 
             # Refs to issues in other projects.
             (
-                r"([0-9a-zA-Z-]+/[0-9a-zA-Z_-]+)#(\d+)",
+                r"([0-9a-zA-Z-]+\/[0-9a-zA-Z_-]+)#(\d+)",
                 "%s/\\1/issues/\\2" % misc.GITHUB_BASE,
                 r"Issue \g<2> in \g<1>"
             ),
@@ -54,7 +54,7 @@ STATUS.append(status.WebStatus(
             # Eg. "foo/bar@1234567".
             # 7 to 40 hexadecimal digits may be used.
             (
-                r"([0-9a-zA-Z-]+/[0-9a-zA-Z_-]+)@([0-9a-fA-F]{7,40})(?![0-9a-fA-F])",
+                r"([0-9a-zA-Z-]+\/[0-9a-zA-Z_-]+)@([0-9a-fA-F]{7,40})(?![0-9a-fA-F])",
                 "%s/\\1/commit/\\2" % misc.GITHUB_BASE,
                 r"Commit \g<2> in \g<1>"
             ),
