@@ -8,29 +8,30 @@ from Erebot_buildbot.src.steps import MorphProperties
 from Erebot_buildbot.config.steps import common
 import secrets
 
-
-def _get_vm_name(properties):
-    buildslave = properties.getProperty("slavename")
-    vm = secrets.BUILDSLAVES[buildslave].get("vm")
-    if vm:
-        properties.setProperty("VM", vm, "VirtualMachine")
-
 VM_TESTS = factory.BuildFactory()
 VM_TESTS.addStep(common.fill_properties)
-VM_TESTS.addStep(MorphProperties(morph_fn=_get_vm_name))
-VM_TESTS.addStep(master.MasterShellCommand(
-    command=WithProperties("/usr/bin/sudo /root/vm/start.sh '%(VM)s'"),
-    description=["Starting", "VM"],
-    descriptionDone=["Start", "VM"],
-))
-VM_TESTS.addStep(trigger.Trigger(
-    schedulerNames=[WithProperties("Tests - %(slavename)s")],
-    waitForFinish=True,
-    copy_properties=['project', 'repository', 'branch', 'revision'],
-))
-VM_TESTS.addStep(master.MasterShellCommand(
-    command=WithProperties("/usr/bin/sudo /root/vm/stop.sh '%(VM)s'"),
-    description=["Stopping", "VM"],
-    descriptionDone=["Stop", "VM"],
-))
+
+for buildslave in secrets.BUILDSLAVES:
+    vm = secrets.BUILDSLAVES[buildslave].get("vm")
+    # No VM, that means the tests are probably run
+    # on the server itself (or a contributed machine)
+    # and we don't to trigger the tests manually.
+    if not vm:
+        continue
+
+    VM_TESTS.addStep(master.MasterShellCommand(
+        command=WithProperties("/usr/bin/sudo /root/vm/start.sh '%s'" % vm),
+        description=["Starting", "VM"],
+        descriptionDone=["Start", "VM"],
+    ))
+    VM_TESTS.addStep(trigger.Trigger(
+        schedulerNames=["Tests - %s" % buildslave],
+        waitForFinish=True,
+        copy_properties=['project', 'repository', 'branch', 'revision'],
+    ))
+    VM_TESTS.addStep(master.MasterShellCommand(
+        command=WithProperties("/usr/bin/sudo /root/vm/stop.sh '%s'" % vm),
+        description=["Stopping", "VM"],
+        descriptionDone=["Stop", "VM"],
+    ))
 
