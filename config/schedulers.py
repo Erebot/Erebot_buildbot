@@ -35,17 +35,15 @@ def _exclude_if_only_doc(change):
 
 
 SCHEDULERS = [
-    # Runs the tests for Erebot (core), modules & PLOP.
+    # Main scheduler for the tests, that will trigger
+    # a series of tests for each distrob.
+    # The tests are run for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages or if the changeset
     # only deals with the documentation.
     SingleBranchScheduler(
         name="Tests",
         treeStableTimer=3 * 60,
-        builderNames=["Tests"] + [
-            "Tests - %s" % buildslave
-            for buildslave in secrets.BUILDSLAVES
-            if not secrets.BUILDSLAVES[buildslave].get("vm")
-        ],
+        builderNames=['Tests'],
         change_filter=ChangeFilter(
             project=[
                 p for p in misc.COMPONENTS if
@@ -68,7 +66,6 @@ SCHEDULERS = [
         builderNames=["Tests - %s" % buildslave],
     )
     for buildslave in secrets.BUILDSLAVES
-    if secrets.BUILDSLAVES[buildslave].get("vm")
 ] + [
     # Builds the doc for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages.
@@ -125,9 +122,7 @@ SCHEDULERS = [
     SingleBranchScheduler(
         name="Live",
         treeStableTimer=10 * 60,
-        builderNames=[
-            'Live',
-        ],
+        builderNames=['Live'],
         change_filter=ChangeFilter(
             project=[
                 'Erebot/Erebot',

@@ -8,17 +8,19 @@ import secrets
 vm_lock = locks.MasterLock("VM")
 
 BUILDERS = [
-    # The "Tests" builder triggers the different "Tests - *" schedulers
-    # that require a VM to work properly.
-    # Those in turn trigger a build on the various "Tests - *" builders.
+    # The "Tests" builder triggers the different "Tests - *" schedulers.
+    # Those in turn trigger a build on each "Tests - *" builder.
     BuilderConfig(
         name='Tests',
         slavenames=['Debian 6'],
         factory=steps.VM_TESTS,
         category='Tests',
+        # Serialize execution of tests. This aims at reducing
+        # the load on both the CPU and RAM on the Debian host.
         locks=[vm_lock.access("exclusive")],
     )
 ] + [
+    # Create a "Tests - *" builder for each distro we support.
     BuilderConfig(
         name='Tests - %s' % buildslave,
         slavenames=[buildslave],
