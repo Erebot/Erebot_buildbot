@@ -9,10 +9,10 @@ from Erebot_buildbot.config.steps import common
 
 
 def _get_vm_name(properties):
-    buildslave = properties.get("slavename")
+    buildslave = properties.getProperty("slavename")
     vm = secrets.BUILDSLAVES[buildslave].get("vm")
     if vm:
-        properties.set("VM", vm, "VirtualMachine")
+        properties.setProperty("VM", vm, "VirtualMachine")
 
 VM_TESTS = factory.BuildFactory()
 VM_TESTS.addStep(common.fill_properties)
