@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from buildbot.schedulers import timed
+from buildbot.schedulers import timed, triggerable
 from buildbot.schedulers.filter import ChangeFilter
 from Erebot_buildbot.config import misc, builders
+import secrets
 
 try:
     from buildbot.schedulers.basic import SingleBranchScheduler
@@ -32,6 +33,7 @@ def _exclude_if_only_doc(change):
             return True
     return False
 
+
 SCHEDULERS = [
     # Runs the tests for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages or if the changeset
@@ -39,9 +41,10 @@ SCHEDULERS = [
     SingleBranchScheduler(
         name="Tests",
         treeStableTimer=3 * 60,
-        builderNames=[
-            'Tests - Debian 6',
-            'Tests - WinXP',
+        builderNames=["Tests"] + [
+            "Tests - %s" % buildslave
+            for buildslave in secrets.BUILDSLAVES
+            if not secrets.BUILDSLAVES[buildslave].get("vm")
         ],
         change_filter=ChangeFilter(
             project=[
@@ -57,7 +60,16 @@ SCHEDULERS = [
             filter_fn=_exclude_if_only_doc,
         ),
     ),
-
+] + [
+    # Create triggerable schedulers for tests
+    # that require a VM to run.
+    triggerable.Triggerable(
+        name="Tests - %s" % buildslave,
+        builderNames=["Tests - %s" % buildslave],
+    )
+    for buildslave in secrets.BUILDSLAVES
+    if secrets.BUILDSLAVES[buildslave].get("vm")
+] + [
     # Builds the doc for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages.
     SingleBranchScheduler(

@@ -21,31 +21,31 @@ def _fill_props(properties):
         if project.endswith('.git'):
             project = project[:-4]
         if project:
-            properties.setProperty('project', project, 'MorphProperties')
+            properties.setProperty('project', project, 'FillProperties')
 
     # GitHub account hosting the repository.
     properties.setProperty(
         'ghUser',
         project.partition('/')[0],
-        'MorphProperties'
+        'FillProperties'
     )
     # GitHub project (repository) to use (w/o account name).
     properties.setProperty(
         'shortProject',
         project.rpartition('/')[2],
-        'MorphProperties'
+        'FillProperties'
     )
     # Read-only URL to repository.
     properties.setProperty(
         'ro_repository',
         convert_repourl(0)(properties['repository']),
-        'Repositories'
+        'FillProperties'
     )
     # Read/write URL to repository.
     properties.setProperty(
         'rw_repository',
         convert_repourl(1)(properties['repository']),
-        'Repositories'
+        'FillProperties'
     )
 
 def convert_repourl(rw):
