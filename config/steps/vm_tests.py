@@ -6,6 +6,7 @@ from buildbot.steps import trigger
 from Erebot_buildbot.src import master
 from Erebot_buildbot.src.steps import MorphProperties
 from Erebot_buildbot.config.steps import common
+import secrets
 
 
 def _get_vm_name(properties):
