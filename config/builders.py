@@ -16,6 +16,7 @@ BUILDERS = [
         slavenames=['Debian 6'],
         factory=steps.VM_TESTS,
         category='Tests',
+        locks=[vm_lock.access("exclusive")],
     )
 ] + [
     BuilderConfig(
@@ -23,11 +24,6 @@ BUILDERS = [
         slavenames=[buildslave],
         factory=steps.TESTS,
         category='Tests',
-        locks=(
-            [vm_lock.access("exclusive")]
-            if secrets.BUILDSLAVES[buildslave].get("vm")
-            else []
-        ),
     )
     for buildslave in secrets.BUILDSLAVES
 ] + [
