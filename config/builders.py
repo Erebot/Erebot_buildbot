@@ -6,6 +6,10 @@ from Erebot_buildbot.src.factory import MultiProjectBuildFactory
 import secrets
 
 vm_lock = locks.MasterLock("VM")
+qa_lock = locks.SlaveLock("QA", maxCount=2)
+doc_lock = locks.SlaveLock("doc", maxCount=2)
+packaging_lock = locks.SlaveLock("packaging", maxCount=2)
+live_lock = locks.SlaveLock("live", maxCount=1)
 
 BUILDERS = [
     # The "Tests" builder triggers the different "Tests - *" schedulers.
@@ -34,18 +38,21 @@ BUILDERS = [
         slavenames=['Debian 6'],
         factory=steps.DOC,
         category='API',
+        locks=[doc_lock.access("counting")]
     ),
     BuilderConfig(
         name='Packaging',
         slavenames=['Debian 6'],
         factory=steps.PACKAGE,
         category='Packaging',
+        locks=[packaging_lock.access("counting")]
     ),
     BuilderConfig(
         name='Quality Assurance',
         slavenames=['Debian 6'],
         factory=steps.QA,
         category='QA',
+        locks=[qa_lock.access("counting")]
     ),
     BuilderConfig(
         name='Live',
@@ -55,6 +62,7 @@ BUILDERS = [
             'Erebot/www.erebot.net': steps.LIVE_WWW,
         }),
         category='Live',
+        locks=[live_lock.access("exclusive")]
     ),
 ]
 
