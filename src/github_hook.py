@@ -5,6 +5,7 @@ import logging
 import sys
 import traceback
 from twisted.python import log
+from buildbot.master import BuildMaster
 
 try:
     import json
@@ -80,6 +81,20 @@ class GithubChangeHook(object):
                 # Newer versions take 5 args, and must return a tuple
                 # with (list of dicts of change properties, VCS name).
                 changes = process_change(payload, user, repo, repo_url, project)
+
+                # Starting with buildbot 0.8.5, "who" and "when" have been
+                # deprecated (replaced by "author" and "when_timestamp", resp.).
+                # Unfortunely, an UnicodeEncodeError is raised when displaying
+                # the deprecation warning if they contain non-ASCII characters.
+                # So, we rename the properties to avoid the warning altogether.
+                code_obj = BuildMaster.addChange.im_func.func_code
+                sig = code_obj.co_varnames[ : code_obj.co_argcount]
+                if 'author' in sig and 'when_timestamp' in sig:
+                    for change in changes:
+                        change['author'] = change['who']
+                        change['when_timestamp'] = change['when']
+                        del change['who']
+                        del change['when']
                 log.msg("Received %s changes from github" % len(changes))
                 return (changes, 'git')
             except Exception:
