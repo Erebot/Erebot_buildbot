@@ -2,9 +2,12 @@
 # ex: set syntax=python:
 
 import tarfile
+from twisted.python import log
+from twisted.internet import defer
 from buildbot.steps import transfer
 from buildbot.process.buildstep import BuildStep, SUCCESS, FAILURE, SKIPPED
 from buildbot.status.web import authz
+
 try:
     from buildbot.process.users import users
 except ImportError:
@@ -70,7 +73,7 @@ def createUserObject(master, author, src=None):
         log.msg("No vcs information found, unable to create User Object")
         return defer.succeed(None)
 
-    if src in srcs:
+    if src in users.srcs:
         log.msg("checking for User Object from %s Change for: %s" %
                 (src, author.encode("ascii", "replace")))
         usdict = dict(identifier=author, attr_type=src, attr_data=author)
