@@ -47,8 +47,8 @@ for component in misc.COMPONENTS:
 
 LIVE.addStep(common.clone)
 LIVE.addStep(MorphProperties(
-    morph_fn=_got_revision('got_revision', 'got_revision[Erebot]'))
-)
+    morph_fn=_got_revision('got_revision', 'got_revision[Erebot]')
+))
 LIVE.addStep(shell.Compile(
     command="phing",
     env={
@@ -71,12 +71,12 @@ for component in misc.COMPONENTS:
             progress=True,
             alwaysUseLatest=True,   # Would fail otherwise.
         ))
-        LIVE.addStep(
+        LIVE.addStep(MorphProperties(
             morph_fn=_got_revision(
                 'got_revision',
                 'got_revision[%s]' % (component, )
             )
-        )
+        ))
 
         LIVE.addStep(shell.Compile(
             command=(
@@ -174,5 +174,5 @@ LIVE.addStep(shell.ShellCommand(
 
 # Copy the revision back.
 LIVE.addStep(MorphProperties(
-    morph_fn=_got_revision('got_revision[Erebot]', 'got_revision'))
-)
+    morph_fn=_got_revision('got_revision[Erebot]', 'got_revision')
+))
