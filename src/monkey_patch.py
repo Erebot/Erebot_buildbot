@@ -5,6 +5,10 @@ import tarfile
 from buildbot.steps import transfer
 from buildbot.process.buildstep import BuildStep, SUCCESS, FAILURE, SKIPPED
 from buildbot.status.web import authz
+try:
+    from buildbot.process.users import users
+except ImportError:
+    users = None
 
 def _TarFile__enter__(self):
     self._check()
@@ -44,4 +48,41 @@ def finished(self, result):
         return BuildStep.finished(self, SUCCESS)
     return BuildStep.finished(self, FAILURE)
 transfer.DirectoryUpload.finished = finished
+
+
+def createUserObject(master, author, src=None):
+    """
+    Take a Change author and source and translate them into a User Object,
+    storing the user in master.db, or returning None if the src is not
+    specified.
+
+    @param master: link to Buildmaster for database operations
+    @type master: master.Buildmaster instance
+
+    @param authors: Change author if string or Authz instance
+    @type authors: string or status.web.authz instance
+
+    @param src: source from which the User Object will be created
+    @type src: string
+    """
+
+    if not src:
+        log.msg("No vcs information found, unable to create User Object")
+        return defer.succeed(None)
+
+    if src in srcs:
+        log.msg("checking for User Object from %s Change for: %s" %
+                (src, author.encode("ascii", "replace")))
+        usdict = dict(identifier=author, attr_type=src, attr_data=author)
+    else:
+        log.msg("Unrecognized source argument: %s" % src)
+        return defer.succeed(None)
+
+    return master.db.users.findUserByAttr(
+            identifier=usdict['identifier'],
+            attr_type=usdict['attr_type'],
+            attr_data=usdict['attr_data'])
+
+if users:
+    users.createUserObject = createUserObject
 
