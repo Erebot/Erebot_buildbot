@@ -177,9 +177,14 @@ for ext in (
 
 PACKAGE.addStep(master.MasterShellCommand(
     command=" && ".join([
-        "/var/www/clean-pear.sh",
-        "php /home/qa/master/buildenv/git/Pirum/pirum build /var/www/pear",
+        # update-pear.sh takes care of removing old packages
+        # from and adding new ones to the PEAR repository.
+        "/var/www/update-pear.sh",
         "/bin/rm -rf /tmp/pirum_*",
+
+        # Update permissions:
+        # - all files should be readable by anybody
+        # - anybody may browse through any directory
         "/bin/chmod -R a+r /var/www/pear/rest/",
         "/usr/bin/find /var/www/pear/rest -type d -exec chmod a+x '{}' '+'"
     ]),
