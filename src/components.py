@@ -68,10 +68,8 @@ class ComponentsResource(HtmlResource):
                 breqs.results
 
             FROM sourcestamps sstamps
-            JOIN sourcestampsets ssets
-                ON ssets.id = sstamps.sourcestampsetid
             JOIN buildsets bsets
-                ON bsets.sourcestampsetid = ssets.id
+                ON bsets.sourcestampid = sstamps.id
             JOIN buildrequests breqs
                 ON breqs.buildsetid = bsets.id
             JOIN builds b
