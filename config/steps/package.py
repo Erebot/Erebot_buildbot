@@ -150,9 +150,9 @@ for ext in (
         maxsize = 50 * (1 << 20) # 50 MB
 
     PACKAGE.addStep(transfer.FileUpload(
-        slavesrc=WithProperties("%%(pkg%s)s" % ext),
+        slavesrc=WithProperties("%%(pkg%s:-)s" % ext),
         masterdest=WithProperties(
-            "/var/www/pear/get/%%(pkg%s)s" % ext
+            "/var/www/pear/get/%%(pkg%s:-)s" % ext
         ),
         mode=0644,
         doStepIf=helpers.get_package(ext),
@@ -169,7 +169,7 @@ for ext in (
     PACKAGE.addStep(Link(
         label=label,
         href=WithProperties(
-            "%%(pear)s/get/%%(pkg%s)s" % ext,
+            "%%(pear)s/get/%%(pkg%s:-)s" % ext,
             pear=lambda _: misc.PEAR_URL.rstrip('/'),
         ),
         doStepIf=helpers.get_package(ext),
