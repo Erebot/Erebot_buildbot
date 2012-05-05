@@ -11,8 +11,8 @@ from Erebot_buildbot.src.steps import MorphProperties
 def _got_revision(src, dest):
     def _inner(properties):
         try:
-            rev = properties.getProperty(src)
-            properties.setProperty(dest, res, 'UpdateRevision')
+            revision = properties.getProperty(src)
+            properties.setProperty(dest, revision, 'UpdateRevision')
         except KeyError:
             pass
     return _inner
