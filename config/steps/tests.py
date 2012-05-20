@@ -41,7 +41,7 @@ def _path_checker(i):
 
 for i in xrange(1, common.nb_versions + 1):
     TESTS.addStep(PHPUnit(
-        command="phing -logger phing.listener.DefaultLogger test",
+        command="phing -logger phing.listener.DefaultLogger bare_test",
         description=[WithProperties("PHP  %%(PHP%d_DESC:-)s" % i)],
         descriptionDone=[WithProperties("PHP  %%(PHP%d_DESC:-)s" % i)],
         warnOnWarnings=True,
