@@ -85,7 +85,7 @@ PACKAGE.addStep(shell.ShellCommand(
     description="snapshot",
     descriptionDone="snapshot",
     haltOnFailure=True,
-    maxTime=10*60,
+    maxTime=10 * 60,
 ))
 
 PACKAGE.addStep(shell.ShellCommand(
@@ -96,6 +96,7 @@ PACKAGE.addStep(shell.ShellCommand(
     description=["buildenv", "cleanup"],
     descriptionDone=["buildenv", "cleanup"],
     haltOnFailure=True,
+    alwaysRun=True,
 ))
 
 PACKAGE.addStep(shell.ShellCommand(

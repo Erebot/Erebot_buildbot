@@ -2,7 +2,7 @@
 
 from buildbot.process import factory
 from buildbot.process.properties import WithProperties
-from buildbot.steps import shell
+from buildbot.steps import shell, transfer
 from Erebot_buildbot.config.steps import common
 from Erebot_buildbot.src.steps import Link
 
@@ -20,18 +20,33 @@ I18N.addStep(shell.ShellCommand(
     description=['Preparing', 'locale'],
     descriptionDone=['Prepare', 'locale'],
 ))
+# Copy API credentials.
+I18N.addStep(transfer.FileDownload(
+    mastersrc="netrc",
+    slavedest=WithProperties(".netrc"),
+))
 # Download the reviewed .PO into that directory.
 I18N.addStep(shell.ShellCommand(
     command=[
         '/usr/bin/wget', '-O',
         WithProperties('data/i18n/%(locale)s/LC_MESSAGES/%(shortProject)s.po'),
         WithProperties(
-            'https://www.transifex.net/projects/p/%(ghUser)s/resource/'
-                '%(shortProject)s/l/%(locale)s/download/reviewed/'
+            'https://www.transifex.net/api/2/project/%(ghUser)s/resource/'
+                '%(shortProject)s/translation/%(locale)s/?file=1&mode=reviewed'
         ),
     ],
+    env={
+        'HOME': WithProperties('%(workdir)s'),
+    },
     description=['D/Ling', 'translations'],
     descriptionDone=['D/L', 'translations'],
+))
+# Remove API credentials.
+I18N.addStep(shell.ShellCommand(
+    command=['/bin/rm', '.netrc'],
+    description=['Cleaning', 'up'],
+    descriptionDone=['Cleanup'],
+    alwaysRun=True,
 ))
 # Commit the new translations.
 I18N.addStep(shell.ShellCommand(

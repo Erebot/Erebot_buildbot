@@ -90,9 +90,10 @@ STATUS.append(status.WebStatus(
     },
 ))
 
-STATUS.append(words.IRC(
-    host="irc.iiens.net",
-    nick="Ere-build-bot",
-    channels=["#Erebot"],
-))
+if getattr(secrets, 'IRC', True):
+    STATUS.append(words.IRC(
+        host="irc.iiens.net",
+        nick="Ere-build-bot",
+        channels=["#Erebot"],
+    ))
 
