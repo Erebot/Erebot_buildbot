@@ -2,5 +2,4 @@
     xmlns="http://www.erebot.net/xmlns/erebot"
     name="Erebot_Module_Wordlists"
 >
-    <param name="policy" value="pkmn* haddock !*"/>
 </module>
