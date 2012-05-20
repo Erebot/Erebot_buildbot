@@ -11,10 +11,11 @@ TESTS.addStep(common.fill_properties)
 TESTS.addStep(common.erebot_path)
 TESTS.addStep(common.clone)
 
-# The Core's unittests require the translations be available
-# and pther modules do some additional work (eg. generate a parser).
+# Prepare for the tests. Eg. the Core's unittests require
+# the translations be available and other modules also do
+# some additional work (eg. generate a parser).
 TESTS.addStep(shell.Compile(
-    command="phing -logger phing.listener.DefaultLogger",
+    command="phing -logger phing.listener.DefaultLogger prepare_test",
     env={
         # Ensures the output doesn't use
         # some locale-specific formatting.
@@ -29,7 +30,7 @@ TESTS.addStep(shell.Compile(
     maxTime=10 * 60,
 ))
 
-# Skip tests with there is no PHPn_PATH or PHPn_DESC.
+# Skip tests when there is no PHPn_PATH or PHPn_DESC.
 def _path_checker(i):
     def _inner(s):
         return (

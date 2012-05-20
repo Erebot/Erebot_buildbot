@@ -15,7 +15,7 @@ PACKAGE.addStep(common.erebot_path)
 PACKAGE.addStep(common.clone)
 
 PACKAGE.addStep(shell.Compile(
-    command="phing",
+    command="phing -logger phing.listener.DefaultLogger",
     env={
         # Ensures the output doesn't use
         # some locale-specific formatting.
@@ -24,7 +24,7 @@ PACKAGE.addStep(shell.Compile(
     },
     warnOnWarnings=True,
     warnOnFailure=True,
-    warningPattern="^\\[i18nStats\\] (.*?):([0-9]+): [Ww]arning: (.*)$",
+    warningPattern="^\\s*\\[i18nStats\\] (.*?):([0-9]+): [Ww]arning: (.*)$",
     warningExtractor=
         shell.WarningCountingShellCommand.warnExtractFromRegexpGroups,
     maxTime=10 * 60,
