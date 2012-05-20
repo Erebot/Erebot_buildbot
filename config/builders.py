@@ -24,7 +24,7 @@ BUILDERS = [
         locks=[vm_lock.access("exclusive")],
     )
 ] + [
-    # Create a "Tests - *" builder for each distro we support.
+    # Create a "Tests - *" scheduler for each distro we support.
     BuilderConfig(
         name='Tests - %s' % buildslave,
         slavenames=[buildslave],
@@ -40,6 +40,7 @@ BUILDERS = [
         category='API',
         locks=[doc_lock.access("counting")]
     ),
+
     BuilderConfig(
         name='Packaging',
         slavenames=['Debian 6'],
@@ -47,6 +48,7 @@ BUILDERS = [
         category='Packaging',
         locks=[packaging_lock.access("counting")]
     ),
+
     BuilderConfig(
         name='Quality Assurance',
         slavenames=['Debian 6'],
@@ -54,6 +56,14 @@ BUILDERS = [
         category='QA',
         locks=[qa_lock.access("counting")]
     ),
+
+    BuilderConfig(
+        name='I18N',
+        slavenames=['Debian 6'],
+        factory=steps.I18N,
+        category='I18N',
+    ),
+
     BuilderConfig(
         name='Live',
         slavenames=['Debian 6'],

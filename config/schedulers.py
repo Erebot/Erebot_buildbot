@@ -15,12 +15,16 @@ try:
 except ImportError:
     ForceScheduler = None
 
-def _exclude_gh_pages(branch):
-    """
-    Returns C{True} if the C{branch} to be built
-    is not "gh-pages" which serves a special role.
-    """
-    return branch != 'gh-pages'
+def _exclude_values(branches):
+    if not isinstance(branches, (list, set)):
+        branches = [branches]
+    def _inner(branch):
+        """
+        Returns C{True} if the C{branch} to be built
+        is not one of the excluded branches.
+        """
+        return (branch not in branches)
+    return _inner
 
 def _exclude_if_only_doc(change):
     """
@@ -54,8 +58,9 @@ SCHEDULERS = [
                         'fpoirotte/XRL',
                     )
             ],
-            branch_fn=_exclude_gh_pages,
+            branch_fn=_exclude_values('gh-pages'),
             filter_fn=_exclude_if_only_doc,
+            category_fn=_exclude_values('transifex'),
         ),
     ),
 ] + [
@@ -85,7 +90,8 @@ SCHEDULERS = [
                         'fpoirotte/XRL',
                     )
             ],
-            branch_fn=_exclude_gh_pages,
+            branch_fn=_exclude_values('gh-pages'),
+            category_fn=_exclude_values('transifex'),
         ),
     ),
 
@@ -110,8 +116,21 @@ SCHEDULERS = [
                         'fpoirotte/XRL',
                     )
             ],
-            branch_fn=_exclude_gh_pages,
+            branch_fn=_exclude_values('gh-pages'),
             filter_fn=_exclude_if_only_doc,
+            category_fn=_exclude_values('transifex'),
+        ),
+    ),
+
+    # This scheduler is triggered by translation updates
+    # in Transifex. It is used to push the new translations
+    # to the git repository for the appropriate component.
+    SingleBranchScheduler(
+        name="I18N",
+        treeStableTimer=3 * 60,
+        builderNames=['I18N'],
+        change_filter=ChangeFilter(
+            category=['transifex'],
         ),
     ),
 
@@ -128,8 +147,9 @@ SCHEDULERS = [
                 'Erebot/Erebot',
                 'Erebot/www.erebot.net',
             ],
-            branch_fn=_exclude_gh_pages,
+            branch_fn=_exclude_values('gh-pages'),
             filter_fn=_exclude_if_only_doc,
+            category_fn=_exclude_values('transifex'),
         ),
     ),
 ]
@@ -142,7 +162,7 @@ if ForceScheduler:
         StringParameter,
     )
     SCHEDULERS.append(ForceScheduler(
-        name="force",
+        name="Force",
         branch=FixedParameter(name="branch", default="master"),
         repository=BaseParameter(None),
         project=ChoiceStringParameter(
