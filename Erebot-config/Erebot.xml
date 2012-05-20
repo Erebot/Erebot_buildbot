@@ -5,7 +5,6 @@
     xmlns="http://www.erebot.net/xmlns/erebot"
     xmlns:xi="http://www.w3.org/2001/XInclude"
     version="0.5.0"
-    language="fr-FR"
     timezone="Europe/Paris">
 
     <xi:include href="xglob://conf.d/logging/logging.xml" />
