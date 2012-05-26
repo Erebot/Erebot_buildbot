@@ -40,8 +40,8 @@ class CallableChangeHookResource(ChangeHookResource):
             msg("Note: if dialect is 'base' then it's possible your URL is malformed and we didn't regex it properly")
             raise ValueError(m)
 
-        res = list(res)
         if res:
+            res = list(res)
             # 0.8.4p1 <= buildmaster < 0.8.6rc1
             # res is a list of dicts of change properties.
             if isinstance(res[0], dict):
@@ -57,7 +57,7 @@ class CallableChangeHookResource(ChangeHookResource):
             else:
                 res, src = res
         else:
-            # res could also be None, which may cause errors later on,
+            # res could be None, which would cause errors later on,
             # so we force it to be an empty list instead.
             res = []
 
