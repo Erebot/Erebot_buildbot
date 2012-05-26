@@ -40,24 +40,20 @@ class CallableChangeHookResource(ChangeHookResource):
             msg("Note: if dialect is 'base' then it's possible your URL is malformed and we didn't regex it properly")
             raise ValueError(m)
 
-
-        # buildmaster >= 0.8.4p1
-        # res is a list of dicts of change properties.
-        # buildmaster >= 0.8.6rc1
-        # res is a tuple with 2 items:
-        # - a list of dicts of change properties (see above)
-        # - the name of a VCS source (eg. "git")
-        # Older buildmasters:
-        # res is a list of Change objects.
         res = list(res)
         if res:
             # 0.8.4p1 <= buildmaster < 0.8.6rc1
+            # res is a list of dicts of change properties.
             if isinstance(res[0], dict):
                 pass
             # buildmaster < 0.8.4p1
-            elif:
+            # res is a list of Change objects.
+            elif not hasattr(res[0], '__iter__'):
                 pass
             # 0.8.6rc1 <= buildmaster
+            # res is a tuple with 2 items:
+            # - a list of dicts of change properties (see above)
+            # - the name of a VCS source (eg. "git")
             else:
                 res, src = res
         else:
