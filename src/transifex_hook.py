@@ -47,58 +47,59 @@ class TransifexChangeHook(object):
         self._language_re = re.compile('^[a-z_-]+$', re.I)
 
     def getChanges(self, request, options=None):
-            """
-            Responds only to POST events and starts the build process
+        """
+        Responds only to POST events and starts the build process
 
-            :arguments:
-                request
-                    the http request object
-            """
-            try:
-                project = request.args.get('project')[0]
-                resource = request.args.get('resource')[0]
-                language = request.args.get('language')[0]
-                percent = request.args.get('percent')[0]
+        :arguments:
+            request
+                the http request object
+        """
+        try:
+            project = request.args['project'][0]
+            resource = request.args['resource'][0]
+            language = request.args['language'][0]
+            percent = request.args['percent'][0]
 
-                # Check project & resource against whitelist.
-                ghProject = '%s/%s' % (project, resource)
-                allowed_projects = self._options.get('project', [ghProject])
-                if ghProject not in allowed_projects:
-                    log.msg("Refused change request from %s "
-                            "(invalid project/resource)" %
-                            ghProject)
-                    return
+            # Check the project & resource against our whitelist.
+            ghProject = '%s/%s' % (project, resource)
+            allowed_projects = self._options.get('project', [ghProject])
+            if ghProject not in allowed_projects:
+                log.msg("Refused change request from %s "
+                        "(invalid project/resource)" %
+                        ghProject)
+                return
 
-                # Check key whitelist.
-                key = request.args.get('key', [None])[0]
-                allowed_keys = self._options.get('key')
-                if not isiterable(allowed_keys):
-                    allowed_keys = [allowed_keys]
-                if (key not in allowed_keys):
-                    log.msg("Refused change request "
-                            "from %s (invalid key)" % ghProject)
-                    return
+            # Check the key against our whitelist.
+            key = request.args['key'][0]
+            allowed_keys = self._options.get('key')
+            if not isiterable(allowed_keys):
+                allowed_keys = [allowed_keys]
+            if (key not in allowed_keys):
+                log.msg("Refused change request "
+                        "from %s (invalid key)" % ghProject)
+                return
 
-                # Check that the language is well-formed.
-                if not self._language_re.match(language):
-                    log.msg("Refused change request "
-                            "from %s (invalid language: %s)" %
-                            (ghProject, language))
-                    return
+            # Check that the language is well-formed.
+            if not self._language_re.match(language):
+                log.msg("Refused change request "
+                        "from %s (invalid language: %s)" %
+                        (ghProject, language))
+                return
 
-                # URL to the repository.
-                repo_url = "%s/%s" % (
-                    self._options.get('url_base').rstrip('/'),
-                    ghProject,
-                )
+            # URL to the repository.
+            repo_url = "%s/%s" % (
+                self._options.get('url_base').rstrip('/'),
+                ghProject,
+            )
 
-                # What Transifex calls a "resource"
-                # is actually a project name for us.
-                changes = process_change(project, resource, repo_url,
-                                         language, percent)
-                return (changes, 'git')
-            except Exception:
-                logging.error("Encountered an exception:")
-                for msg in traceback.format_exception(*sys.exc_info()):
-                    logging.error(msg.strip())
+            # What Transifex calls a "resource" is actually
+            # a project name for us, while its "project"
+            # is simply a repository prefix in our case.
+            changes = process_change(project, resource, repo_url,
+                                     language, percent)
+            return (changes, 'git')
+        except Exception:
+            logging.error("Encountered an exception:")
+            for msg in traceback.format_exception(*sys.exc_info()):
+                logging.error(msg.strip())
 
