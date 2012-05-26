@@ -36,7 +36,7 @@ I18N.addStep(shell.ShellCommand(
         ),
     ],
     env={
-        'HOME': WithProperties('%(workdir)s'),
+        'HOME': WithProperties('%(workdir)s/build'),
     },
     description=['D/Ling', 'translations'],
     descriptionDone=['D/L', 'translations'],
