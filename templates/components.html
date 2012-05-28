@@ -13,7 +13,7 @@
   </tr>
 {% for c in components %}
   <tr>
-  <td class="box Component">{{ c|e }}</td>
+  <td class="box Component"><a href="console?project={{ c|e }}">{{ c|e }}</a></td>
   {% for b in builders %}
     {% if b.name in results and c in results[b.name] %}
       <td class="LastBuild box {{ results[b.name][c][2] }}">
