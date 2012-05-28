@@ -17,7 +17,7 @@ I18N.addStep(transfer.FileDownload(
     slavedest=WithProperties(".netrc"),
 ))
 # Download the reviewed .PO files.
-I18n.addStep(FetchI18n(
+I18N.addStep(FetchI18n(
     env={
         'HOME': WithProperties('%(workdir)s/build'),
     },
