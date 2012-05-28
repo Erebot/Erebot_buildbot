@@ -95,5 +95,6 @@ if getattr(secrets, 'IRC', True):
         host="irc.iiens.net",
         nick="Ere-build-bot",
         channels=["#Erebot"],
+        allowForce=False,
     ))
 
