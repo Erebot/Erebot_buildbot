@@ -413,7 +413,7 @@ class SetPropertiesFromEnv(BuildStep):
         self.finished(SUCCESS)
 
 
-def FetchI18n(ShellCommand):
+class FetchI18n(ShellCommand):
     name = 'Fetch'
 
     def start(self):
@@ -442,7 +442,7 @@ def FetchI18n(ShellCommand):
         ShellCommand.start(self)
 
 
-def CommitI18n(ShellCommand):
+class CommitI18n(ShellCommand):
     name = 'Commit'
 
     def start(self):
