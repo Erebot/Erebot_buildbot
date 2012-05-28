@@ -442,8 +442,8 @@ class FetchI18n(ShellCommand):
         ShellCommand.start(self)
 
 
-class CommitI18n(ShellCommand):
-    name = 'Commit'
+class AddI18n(ShellCommand):
+    name = 'Add'
 
     def start(self):
         cmd = [
@@ -452,18 +452,33 @@ class CommitI18n(ShellCommand):
         ]
 
         files = set()
-        locales = {}
         for c in self.build.allChanges():
             for f in c.files:
-                files.add(f)
+                if f.startswith('data/i18n/'):
+                    files.add(f)
+        cmd.extend(files)
+        self.command = cmd
+        ShellCommand.start(self)
+
+
+class CommitI18n(ShellCommand):
+    name = 'Commit'
+
+    def start(self):
+        cmd = [
+            '/usr/bin/git',
+            'commit',
+            '-m',
+        ]
+
+        locales = {}
+        for c in self.build.allChanges():
             locales[c.properties.getProperty('locale')] = \
                 c.properties.getProperty('percent')
-        cmd.extend(files)
-
-        cmd.extend(['&&', '/usr/bin/git', 'commit', '-m'])
-        commit_message = ['i18n update\n\n']
         sorted_locales = locales.keys()
         sorted_locales.sort()
+
+        commit_message = ['i18n update\n\n']
         for locale in sorted_locales:
             commit_message.append( "%s: %s%%\n" % (locale, locales[locale]) )
         cmd.append("".join(commit_message).rstrip())

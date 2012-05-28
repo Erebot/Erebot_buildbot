@@ -4,7 +4,7 @@ from buildbot.process import factory
 from buildbot.process.properties import WithProperties
 from buildbot.steps import shell, transfer
 from Erebot_buildbot.config.steps import common
-from Erebot_buildbot.src.steps import CommitI18n, FetchI18n
+from Erebot_buildbot.src.steps import FetchI18n, AddI18n, CommitI18n
 
 I18N = factory.BuildFactory()
 I18N.addStep(common.fill_properties)
@@ -31,9 +31,14 @@ I18N.addStep(shell.ShellCommand(
     descriptionDone=['Cleanup'],
     alwaysRun=True,
 ))
-# Commit the new translations.
+# Add the new translations.
+I18N.addStep(AddI18n(
+    description=['Adding', 'translations'],
+    descriptionDone=['git add'],
+))
+# Commit them.
 I18N.addStep(CommitI18n(
-    description=['Committing'],
+    description=['Committing', 'translations'],
     descriptionDone=['git commit'],
 ))
 # Push the result to GitHub.
