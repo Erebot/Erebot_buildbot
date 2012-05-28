@@ -56,7 +56,7 @@ BUILDERS = [
         slavenames=['Debian 6'],
         factory=steps.DOC,
         category='API',
-        locks=[doc_lock.access("counting")]
+        locks=[doc_lock.access("counting")],
         mergeRequests=_merge_project,
     ),
 
@@ -65,7 +65,7 @@ BUILDERS = [
         slavenames=['Debian 6'],
         factory=steps.PACKAGE,
         category='Packaging',
-        locks=[packaging_lock.access("counting")]
+        locks=[packaging_lock.access("counting")],
         mergeRequests=_merge_project,
     ),
 
@@ -74,7 +74,7 @@ BUILDERS = [
         slavenames=['Debian 6'],
         factory=steps.QA,
         category='QA',
-        locks=[qa_lock.access("counting")]
+        locks=[qa_lock.access("counting")],
         mergeRequests=_merge_project,
     ),
 
@@ -94,7 +94,7 @@ BUILDERS = [
             'Erebot/www.erebot.net': steps.LIVE_WWW,
         }),
         category='Live',
-        locks=[live_lock.access("exclusive")]
+        locks=[live_lock.access("exclusive")],
         mergeRequests=_merge_project,
     ),
 ]
