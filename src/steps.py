@@ -448,8 +448,7 @@ class CommitI18n(ShellCommand):
     def start(self):
         cmd = [
             '/usr/bin/git',
-            'commit',
-            '-m',
+            'add',
         ]
 
         files = set()
@@ -459,15 +458,15 @@ class CommitI18n(ShellCommand):
                 files.add(f)
             locales[c.properties.getProperty('locale')] = \
                 c.properties.getProperty('percent')
+        cmd.extend(files)
 
+        cmd.extend(['&&', '/usr/bin/git', 'commit', '-m'])
         commit_message = ['i18n update\n\n']
         sorted_locales = locales.keys()
         sorted_locales.sort()
         for locale in sorted_locales:
             commit_message.append( "%s: %s%%\n" % (locale, locales[locale]) )
-
         cmd.append("".join(commit_message).rstrip())
-        cmd.extend(files)
         self.command = cmd
         ShellCommand.start(self)
 
