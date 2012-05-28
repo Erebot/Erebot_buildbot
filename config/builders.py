@@ -62,6 +62,7 @@ BUILDERS = [
         slavenames=['Debian 6'],
         factory=steps.I18N,
         category='I18N',
+        mergeRequests=True,
     ),
 
     BuilderConfig(

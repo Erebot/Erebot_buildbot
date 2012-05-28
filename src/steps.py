@@ -120,75 +120,6 @@ class PHPUnit(ShellCommand, LogLineObserver):
         return SUCCESS
 
 
-#class Xslt(BuildStep):
-#    name = "xslt"
-
-#    def __init__(self, infile, outfile, xslt_file, **kwargs):
-#        BuildStep.__init__(self, **kwargs)
-#        self.addFactoryArguments(infile=infile)
-#        self.addFactoryArguments(outfile=outfile)
-#        self.addFactoryArguments(xslt_file=xslt_file)
-#        self.infile = infile
-#        self.outfile = outfile
-#        self.xslt_file = xslt_file
-
-#    def start(self):
-#        properties = self.build.getProperties()
-#        infile = properties.render(self.infile)
-#        outfile = properties.render(self.outfile)
-#        xslt_file = properties.render(self.xslt_file)
-
-#        try:
-#            infile_desc = file(infile, 'r')
-#        except:
-#            return self.finished(FAILURE)
-
-#        try:
-#            infile_tree = etree.parse(infile_desc.read())
-#        except:
-#            return self.finished(FAILURE)
-#        finally:
-#            infile_desc.close()
-
-#        try:
-#            xslt_desc = file(xslt_file, 'r')
-#        except:
-#            del infile_tree
-#            return self.finished(FAILURE)
-
-#        try:
-#            xslt = etree.XSLT(etree.parse(xslt_desc.read()))
-#        except:
-#            del infile_tree
-#            return self.finished(FAILURE)
-#        finally:
-#            xslt_desc.close()
-
-#        try:
-#            outfile_tree = xslt(infile_tree)
-#        except:
-#            return self.finished(FAILURE)
-#        finally:
-#            del xslt
-#            del infile_tree
-
-#        try:
-#            outfile_desc = file(outfile, 'w')
-#        except:
-#            del outfile_tree
-#            return self.finished(FAILURE)
-
-#        try:
-#            outfile_desc.write(etree.tostring(outfile_tree))
-#        except:
-#            del outfile_tree
-#            return self.finished(FAILURE)
-#        finally:
-#            outfile_desc.close()
-
-#        self.finished(SUCCESS)
-
-
 class CountingShellCommand(ShellCommand):
     errorCount = 0
     errorPattern = '.*error[: ].*'
@@ -440,6 +371,7 @@ class MorphProperties(BuildStep):
         self.morph_fn(self.build.getProperties())
         self.finished(SUCCESS)
 
+
 class SetPropertiesFromEnv(BuildStep):
     """
     Sets properties from envirionment variables on the slave.
@@ -479,4 +411,63 @@ class SetPropertiesFromEnv(BuildStep):
                 properties.setProperty(variable, value, self.source,
                                        runtime=True)
         self.finished(SUCCESS)
+
+
+def FetchI18n(ShellCommand):
+    name = 'Fetch'
+
+    def start(self):
+        cmd = []
+        files = set()
+        for c in self.build.allChanges():
+            locale = c.properties.getProperty('locale')
+            txProject = c.properties.getProperty('txProject')
+            txResource = c.properties.getProperty('txResource')
+            files.add( (txProject, txResource, locale) )
+
+        for txProject, txResource, locale in files:
+            cmd.append(
+                '/bin/mkdir -p data/i18n/%(locale)s/LC_MESSAGES/ && '
+                '/usr/bin/wget -O '
+                'data/i18n/%(locale)s/LC_MESSAGES/%(project)s.po '
+                'https://www.transifex.net/api/2/project/%(project)s/resource/'
+                '%(resource)s/translation/%(locale)s/?file=1&mode=reviewed' % {
+                    'project': txProject,
+                    'resource': txResource,
+                    'locale': locale,
+                }
+            )
+
+        self.command = " && ".join(cmd)
+        ShellCommand.start(self)
+
+
+def CommitI18n(ShellCommand):
+    name = 'Commit'
+
+    def start(self):
+        cmd = [
+            '/usr/bin/git',
+            'commit',
+            '-m',
+        ]
+
+        files = set()
+        locales = {}
+        for c in self.build.allChanges():
+            for f in c.files:
+                files.add(f)
+            locales[c.properties.getProperty('locale')] = \
+                c.properties.getProperty('percent')
+
+        commit_message = ['i18n update\n\n']
+        sorted_locales = locales.keys()
+        sorted_locales.sort()
+        for locale in sorted_locales:
+            commit_message.append( "%s: %s%%\n" % (locale, locales[locale]) )
+
+        cmd.append("".join(commit_message).rstrip())
+        cmd.extend(files)
+        self.command = cmd
+        ShellCommand.start(self)
 
