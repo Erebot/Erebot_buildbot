@@ -11,6 +11,22 @@ doc_lock = locks.SlaveLock("doc", maxCount=2)
 packaging_lock = locks.SlaveLock("packaging", maxCount=2)
 live_lock = locks.SlaveLock("live", maxCount=1)
 
+def _merge_project(builder, req1, req2):
+    if not req1.source.canBeMergedWith(req2.source):
+        return False
+    source = req1.source
+    for s in req1.sources[1:]:
+        if not source.canBeMergedWith(s):
+            return False
+        if source.project != s.project:
+            return False
+    for s in req2.sources:
+        if not source.canBeMergedWith(s):
+            return False
+        if source.project != s.project:
+            return False
+    return True
+
 BUILDERS = [
     # The "Tests" builder triggers the different "Tests - *" schedulers.
     # Those in turn trigger a build on each "Tests - *" builder.
@@ -22,6 +38,7 @@ BUILDERS = [
         # Serialize execution of tests. This aims at reducing
         # the load on both the CPU and RAM on the Debian host.
         locks=[vm_lock.access("exclusive")],
+        mergeRequests=_merge_project,
     )
 ] + [
     # Create a "Tests - *" scheduler for each distro we support.
@@ -30,6 +47,7 @@ BUILDERS = [
         slavenames=[buildslave],
         factory=steps.TESTS,
         category='Tests',
+        mergeRequests=_merge_project,
     )
     for buildslave in secrets.BUILDSLAVES
 ] + [
@@ -39,6 +57,7 @@ BUILDERS = [
         factory=steps.DOC,
         category='API',
         locks=[doc_lock.access("counting")]
+        mergeRequests=_merge_project,
     ),
 
     BuilderConfig(
@@ -47,6 +66,7 @@ BUILDERS = [
         factory=steps.PACKAGE,
         category='Packaging',
         locks=[packaging_lock.access("counting")]
+        mergeRequests=_merge_project,
     ),
 
     BuilderConfig(
@@ -55,6 +75,7 @@ BUILDERS = [
         factory=steps.QA,
         category='QA',
         locks=[qa_lock.access("counting")]
+        mergeRequests=_merge_project,
     ),
 
     BuilderConfig(
@@ -62,7 +83,7 @@ BUILDERS = [
         slavenames=['Debian 6'],
         factory=steps.I18N,
         category='I18N',
-        mergeRequests=True,
+        mergeRequests=_merge_project,
     ),
 
     BuilderConfig(
@@ -74,6 +95,7 @@ BUILDERS = [
         }),
         category='Live',
         locks=[live_lock.access("exclusive")]
+        mergeRequests=_merge_project,
     ),
 ]
 
