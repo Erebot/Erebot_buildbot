@@ -427,11 +427,11 @@ class FetchI18n(ShellCommand):
 
         for txProject, txResource, locale in files:
             cmd.append(
-                '/bin/mkdir -p data/i18n/%(locale)s/LC_MESSAGES/ && '
-                '/usr/bin/wget -O '
-                'data/i18n/%(locale)s/LC_MESSAGES/%(resource)s.po '
-                'https://www.transifex.net/api/2/project/%(project)s/resource/'
-                '%(resource)s/translation/%(locale)s/?file=1&mode=reviewed' % {
+                "/bin/mkdir -p data/i18n/%(locale)s/LC_MESSAGES/ && "
+                "/usr/bin/wget -O "
+                "data/i18n/%(locale)s/LC_MESSAGES/%(resource)s.po "
+                "'https://www.transifex.net/api/2/project/%(project)s/resource/"
+                "%(resource)s/translation/%(locale)s/?file=1&mode=reviewed'" % {
                     'project': txProject,
                     'resource': txResource,
                     'locale': locale,
