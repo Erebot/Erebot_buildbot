@@ -15,7 +15,7 @@ def process_change(project, resource, repo_url, language, percent):
     files = [u"data/i18n/%s/LC_MESSAGES/%s.po" % (language, resource)]
     when = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
     chdict = dict(
-        who         = u"Transifex",
+        who         = u"Transifex <https://www.transifex.net/projects/p/Erebot/>",
         files       = files,
         comments    = u'i18n for %s (%s)\n\nProgress: %s%%' %
                             (resource, language, percent),
