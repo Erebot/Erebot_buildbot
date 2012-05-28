@@ -22,7 +22,7 @@ TESTS.addStep(shell.Compile(
         'LANG': "en_US.UTF-8",
         'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
-    flunkOnWarnings=True,
+    warnOnWarnings=True,
     flunkOnFailure=True,
     warningPattern="^\\s*\\[i18nStats\\] (.*?):([0-9]+): [Ww]arning: (.*)$",
     warningExtractor=
