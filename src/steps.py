@@ -481,6 +481,7 @@ class CommitI18n(ShellCommand):
         commit_message = ['i18n update\n\n']
         for locale in sorted_locales:
             commit_message.append( "%s: %s%%\n" % (locale, locales[locale]) )
+        commit_message.append("[ci skip]\n") # Skip travis-ci build.
         cmd.append("".join(commit_message).rstrip())
         self.command = cmd
         ShellCommand.start(self)
