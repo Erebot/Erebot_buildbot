@@ -59,6 +59,7 @@ class TransifexChangeHook(object):
             resource = request.args['resource'][0]
             language = request.args['language'][0]
             percent = request.args['percent'][0]
+            key = request.args['key'][0]
 
             # Check the project & resource against our whitelist.
             ghProject = '%s/%s' % (project, resource)
@@ -70,7 +71,6 @@ class TransifexChangeHook(object):
                 return
 
             # Check the key against our whitelist.
-            key = request.args['key'][0]
             allowed_keys = self._options.get('key')
             if not isiterable(allowed_keys):
                 allowed_keys = [allowed_keys]

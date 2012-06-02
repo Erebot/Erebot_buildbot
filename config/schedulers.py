@@ -3,12 +3,8 @@
 from buildbot.schedulers import timed, triggerable
 from buildbot.schedulers.filter import ChangeFilter
 from Erebot_buildbot.config import misc, builders
+from Erebot_buildbot.src.schedulers import PerProjectAndBranchScheduler
 import secrets
-
-try:
-    from buildbot.schedulers.basic import SingleBranchScheduler
-except:
-    from buildbot.schedulers.basic import Scheduler as SingleBranchScheduler
 
 try:
     from buildbot.schedulers.forcesched import ForceScheduler
@@ -44,7 +40,7 @@ SCHEDULERS = [
     # The tests are run for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages or if the changeset
     # only deals with the documentation.
-    SingleBranchScheduler(
+    PerProjectAndBranchScheduler(
         name="Tests",
         treeStableTimer=3 * 60,
         builderNames=['Tests'],
@@ -74,7 +70,7 @@ SCHEDULERS = [
 ] + [
     # Builds the doc for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages.
-    SingleBranchScheduler(
+    PerProjectAndBranchScheduler(
         name="Documentation",
         treeStableTimer=3 * 60,
         builderNames=[
@@ -98,7 +94,7 @@ SCHEDULERS = [
     # Runs for Erebot (core), modules, PLOP & Erebot_API
     # Not triggered for GitHub Pages or if the changeset
     # only deals with the documentation.
-    SingleBranchScheduler(
+    PerProjectAndBranchScheduler(
         name="Common",
         treeStableTimer=3 * 60,
         builderNames=[
@@ -125,7 +121,7 @@ SCHEDULERS = [
     # This scheduler is triggered by translation updates
     # in Transifex. It is used to push the new translations
     # to the git repository for the appropriate component.
-    SingleBranchScheduler(
+    PerProjectAndBranchScheduler(
         name="I18N",
         treeStableTimer=3 * 60,
         builderNames=['I18N'],
@@ -138,7 +134,7 @@ SCHEDULERS = [
     # and updates the Live instance of the bot.
     # Not triggered for GitHub Pages or if the changeset
     # only deals with the documentation.
-    SingleBranchScheduler(
+    PerProjectAndBranchScheduler(
         name="Live",
         treeStableTimer=10 * 60,
         builderNames=['Live'],
