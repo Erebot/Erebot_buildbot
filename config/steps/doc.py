@@ -156,11 +156,18 @@ DOC.addStep(shell.ShellCommand(
                 "-f %(shortProject)s-enduser.tgz",
             "/usr/bin/touch .nojekyll",
             "/bin/rm -f %(shortProject)s-enduser.tgz",
-            "/usr/bin/git add "
-                "'*.html' '*.js' objects.inv "
-                "_static/ _sources/ .buildinfo "
-                ".nojekyll",
-            "/usr/bin/git commit -a -m "
+            "(" +
+            "; ".join([
+                "/usr/bin/git add '*.html'",
+                "/usr/bin/git add  '*.js'",
+                "/usr/bin/git add  objects.inv",
+                "/usr/bin/git add  _static/",
+                "/usr/bin/git add  _sources/",
+                "/usr/bin/git add  .buildinfo",
+                "/usr/bin/git add  .nojekyll",
+            ]) +
+            "; :)",
+            "/usr/bin/git commit -m "
                 "'Rebuild end-user doc for "
                 "%(got_revision)s [%(buildnumber)d]'",
             "/usr/bin/git push",
