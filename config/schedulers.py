@@ -82,6 +82,7 @@ SCHEDULERS = [
                     p.startswith('Erebot/Erebot_Module_') or
                     p in (
                         'Erebot/Erebot',
+                        'Erebot/Erebot_API',
                         'Erebot/Plop',
                         'fpoirotte/XRL',
                     )
