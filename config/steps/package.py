@@ -32,15 +32,30 @@ PACKAGE.addStep(shell.Compile(
 
 # This does not really belong to this builder,
 # but still, it's quite convenient to put it here.
+PACKAGE.addStep(shell.SetProperty(
+    command=WithProperties(
+        "/usr/bin/git diff -U0 data/i18n/%(shortProject)s.pot | "
+        "/bin/grep -E '^[-+](\"(?!POT-Creation-Date:)|msgid)'"
+    ),
+    extract_fn=lambda rc, stdout, stderr: {'i18n update': not rc},
+    description=["Checking", "i18n", "template"],
+    descriptionDone=["Check", "i18n", "template"],
+))
+
+# This does not really belong to this builder,
+# but still, it's quite convenient to put it here.
 PACKAGE.addStep(shell.ShellCommand(
     command=WithProperties(
-        " && ".join([
-            "/usr/bin/git commit -m 'Update i18n template using "
-                "%(got_revision)s [%(buildnumber)d]\n\n[ci skip]' "
-                "data/i18n/%(shortProject)s.po",
-            "/usr/bin/git push %(rw_repository)s %(branch)s"
-        ])
+        "/usr/bin/git commit -m 'Update i18n template using "
+            "%(got_revision)s [%(buildnumber)d]\n\n[ci skip]' "
+            "data/i18n/%(shortProject)s.pot && "
+        "/usr/bin/git push %(rw_repository)s %(branch)s"
     ),
+    # Push a new version of the translation template,
+    # but only if there are real changes (ignoring
+    # changes that only affect comments or the POT's
+    # creation date).
+    doStepIf=lambda step: step.getProperty('i18n update'),
     description=["Updating", "i18n", "template"],
     descriptionDone=["Update", "i18n", "template"],
 ))
