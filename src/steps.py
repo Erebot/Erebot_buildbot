@@ -430,7 +430,7 @@ class FetchI18n(ShellCommand):
                 "/bin/mkdir -p data/i18n/%(locale)s/LC_MESSAGES/ && "
                 "/usr/bin/wget -O "
                 "data/i18n/%(locale)s/LC_MESSAGES/%(resource)s.po "
-                "'https://www.transifex.net/api/2/project/%(project)s/resource/"
+                "'https://www.transifex.com/api/2/project/%(project)s/resource/"
                 "%(resource)s/translation/%(locale)s/?file=1&mode=reviewed'" % {
                     'project': txProject,
                     'resource': txResource,
