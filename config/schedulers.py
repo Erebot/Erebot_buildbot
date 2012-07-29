@@ -22,6 +22,26 @@ def _exclude_values(branches):
         return (branch not in branches)
     return _inner
 
+def _has_doc_change(change):
+    """
+    Returns C{True} if the C{change} contains modifications
+    that may impact the documentation.
+
+    You may also force a build by adding the text "[buildbot force]"
+    anywhere in the commit message.
+    """
+    if change.comments is not None and "[buildbot force]" in change.comments:
+        return True
+    for f in change.files:
+        # Ignore changes made to translations.
+        if f.startswith(u'data/i18n/'):
+            continue
+        # Ignore changes made to tests.
+        if f.startswith(u'tests/'):
+            continue
+        return True
+    return False
+
 def _has_code_change(change):
     """
     Returns C{True} if the C{change} contains modifications
@@ -34,13 +54,13 @@ def _has_code_change(change):
     if change.comments is not None and "[buildbot force]" in change.comments:
         return True
     for f in change.files:
-        # Ignore changes made in the documentation.
+        # Ignore changes made to the documentation.
         if f.startswith(u'docs/'):
             continue
-        # Ignore changes made in code examples.
+        # Ignore changes made to code examples.
         if f.startswith(u'examples/'):
             continue
-        # Ignore changes made in translations.
+        # Ignore changes made to translations.
         if f.startswith(u'data/i18n/'):
             continue
         return True
@@ -101,6 +121,7 @@ SCHEDULERS = [
                     )
             ],
             branch_fn=_exclude_values('gh-pages'),
+            filter_fn=_has_doc_change,
             category_fn=_exclude_values('transifex'),
         ),
     ),
