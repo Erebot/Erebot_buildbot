@@ -100,7 +100,7 @@ DOC.addStep(transfer.FileUpload(
     masterdest=WithProperties(
         "public_html/tagfiles/%(shortProject)s.tagfile.xml"
     ),
-    maxsize=1 * (1 << 20), # 1 MiB
+    maxsize=5 * (1 << 20), # 5 MiB
     locks=[TAGFILES_LOCK.access('exclusive')],
 ))
 
