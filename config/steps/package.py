@@ -40,6 +40,10 @@ PACKAGE.addStep(shell.SetProperty(
     extract_fn=lambda rc, stdout, stderr: {'i18n update': not rc},
     description=["Checking", "i18n", "template"],
     descriptionDone=["Check", "i18n", "template"],
+    warnOnWarnings=False,
+    warnOnFailure=False,
+    flunkOnWarnings=False,
+    flunkOnFailure=False,
 ))
 
 # This does not really belong to this builder,
