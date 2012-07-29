@@ -15,7 +15,7 @@ PACKAGE.addStep(common.erebot_path)
 PACKAGE.addStep(common.clone)
 
 PACKAGE.addStep(shell.Compile(
-    command="phing -logger phing.listener.DefaultLogger",
+    command="phing -logger phing.listener.DefaultLogger -Dskip.update_catalog=false",
     env={
         # Ensures the output doesn't use
         # some locale-specific formatting.
@@ -28,6 +28,21 @@ PACKAGE.addStep(shell.Compile(
     warningExtractor=
         shell.WarningCountingShellCommand.warnExtractFromRegexpGroups,
     maxTime=10 * 60,
+))
+
+# This does not really belong to this builder,
+# but still, it's quite convenient to put it here.
+PACKAGE.addStep(shell.ShellCommand(
+    command=WithProperties(
+        " && ".join([
+            "/usr/bin/git commit -m 'Update i18n template using "
+                "%(got_revision)s [%(buildnumber)d]\n\n[ci skip]' "
+                "data/i18n/%(shortProject)s.po",
+            "/usr/bin/git push %(rw_repository)s %(branch)s"
+        ])
+    ),
+    description=["Updating", "i18n", "template"],
+    descriptionDone=["Update", "i18n", "template"],
 ))
 
 PACKAGE.addStep(shell.ShellCommand(

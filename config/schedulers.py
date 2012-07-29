@@ -22,15 +22,23 @@ def _exclude_values(branches):
         return (branch not in branches)
     return _inner
 
-def _exclude_if_only_doc(change):
+def _exclude_if_no_code_change(change):
     """
-    Returns C{True} if the C{change} contains
-    modifications to something other than the
-    documentation.
+    Returns C{True} if the C{change} contains modifications
+    to something that is not related to the code (such as
+    documentation, examples or translations).
     """
     for f in change.files:
-        if not f.startswith(u'docs/'):
-            return True
+        # Ignore changes made in the documentation.
+        if f.startswith(u'docs/'):
+            continue
+        # Ignore changes made in code examples.
+        if f.startswith(u'examples/'):
+            continue
+        # Ignore changes made in translations.
+        if f.startswith(u'data/i18n/'):
+            continue
+        return True
     return False
 
 
@@ -55,7 +63,7 @@ SCHEDULERS = [
                     )
             ],
             branch_fn=_exclude_values('gh-pages'),
-            filter_fn=_exclude_if_only_doc,
+            filter_fn=_exclude_if_no_code_change,
             category_fn=_exclude_values('transifex'),
         ),
     ),
@@ -114,7 +122,7 @@ SCHEDULERS = [
                     )
             ],
             branch_fn=_exclude_values('gh-pages'),
-            filter_fn=_exclude_if_only_doc,
+            filter_fn=_exclude_if_no_code_change,
             category_fn=_exclude_values('transifex'),
         ),
     ),
@@ -145,7 +153,7 @@ SCHEDULERS = [
                 'Erebot/www.erebot.net',
             ],
             branch_fn=_exclude_values('gh-pages'),
-            filter_fn=_exclude_if_only_doc,
+            filter_fn=_exclude_if_no_code_change,
             category_fn=_exclude_values('transifex'),
         ),
     ),
