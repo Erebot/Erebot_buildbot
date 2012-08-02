@@ -14,7 +14,7 @@
     {% endif %}
     <title>{{ title|e }}</title>
     <link rel="stylesheet" href="{{ stylesheet }}" type="text/css" />
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ path_to_root }}rss">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ path_to_root }}rss" />
     {% endblock %}
   </head>
   <body class="interface">
@@ -84,7 +84,6 @@
       Page built: <b>{{ time }}</b> ({{ tz }})
     </div>
     {% endblock -%}
-  </body>
 <!-- Piwik -->
 <script type="text/javascript">
 var pkBaseURL = (("https:" == document.location.protocol) ? "https://stats.erebot.net:943/" : "http://stats.erebot.net:943/");
@@ -97,5 +96,6 @@ piwikTracker.enableLinkTracking();
 } catch( err ) {}
 </script><noscript><p><img src="http://stats.erebot.net:943/piwik.php?idsite=2" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Tracking Code -->
+  </body>
 </html>
 
