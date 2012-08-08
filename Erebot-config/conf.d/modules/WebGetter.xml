@@ -174,5 +174,21 @@
     <!-- Public price -->
     <param name="12.vars.6" value="//p[@id='public_price']/strong/text()"/>
     <param name="12.format" value="QoQa: $(vars.2)s (par $(vars.1)s) pour $(vars.3)s ($(vars.4)s) au lieu de $(vars.6)s -- Stocks : $(vars.5)s [http://www.qoqa.fr pour commander]"/>
+
+    <!-- CVE -->
+    <param name="13.trigger" value="cve"/>
+    <param name="13.url" value="http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-$(1)s"/>
+    <param name="12.description" value="NIST CVE database"/>
+    <!-- Overview -->
+    <param name="13.vars.1" value="//*[@id='vulnDetailDisplay']/div/p[1]/text()"/>
+    <!-- Base score -->
+    <param name="13.vars.2" value=".//*[@id='vulnDetailDisplay']/div/div[4]/a[1]/text()"/>
+    <!-- Impact subscore -->
+    <param name="13.vars.3" value=".//*[@id='vulnDetailDisplay']/div/div[5]/text()"/>
+    <!-- Exploitability subscore -->
+    <param name="13.vars.4" value=".//*[@id='vulnDetailDisplay']/div/div[6]/text()"/>
+    <!-- Impact type -->
+    <param name="13.vars.5" value=".//*[@id='vulnDetailDisplay']/div/div[10]/text()"/>
+    <param name="13.format" value="CVE-$(1)s [BS=$(vars.2)s/IS=$(vars.3)s/ES=$(vars.4)s]: $(vars.1)s -- $(vars.5)s"/>
 </module>
 
