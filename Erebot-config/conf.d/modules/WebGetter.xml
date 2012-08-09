@@ -177,7 +177,9 @@
 
     <!-- CVE -->
     <param name="13.trigger" value="cve"/>
-    <param name="13.url" value="http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-$(1)s"/>
+    <param name="13.url" value="http://web.nvd.nist.gov/view/vuln/detail"/>
+    <param name="13.get.1.name" value="vulnId"/>
+    <param name="13.get.1.value" value="CVE-$(1)s"/>
     <param name="12.description" value="NIST CVE database"/>
     <!-- Overview -->
     <param name="13.vars.1" value="//*[@id='vulnDetailDisplay']/div/p[1]/text()"/>
