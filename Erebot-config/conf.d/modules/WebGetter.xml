@@ -61,34 +61,26 @@
 
     <!-- TV Shows -->
     <param name="6.trigger" value="tvshow"/>
-    <param name="6.url" value="http://www.tv.com/search.php"/>
-    <param name="6.get.1.name" value="type"/>
-    <param name="6.get.1.value" value="Search"/>
-    <param name="6.get.2.name" value="stype"/>
-    <param name="6.get.2.value" value="ajax_search"/>
-    <param name="6.get.3.name" value="qs"/>
-    <param name="6.get.3.value" value="$(0)s"/>
-    <param name="6.get.4.name" value="search_type"/>
-    <param name="6.get.4.value" value="program"/>
-    <param name="6.get.5.name" value="pg_results"/>
-    <param name="6.get.5.value" value="0"/>
-    <param name="6.get.6.name" value="sort"/>
-    <param name="6.get.6.value" value=""/>
+    <param name="6.user-agent" value="Mozilla/5.0 (Windows NT 6.0; rv:14.0) Gecko/20100101 Firefox/14.0.1"/>
+    <param name="6.url" value="http://www.tv.com/search"/>
+    <param name="6.get.1.name" value="q"/>
+    <param name="6.get.1.value" value="$(0)s"/>
     <param name="6.description" value="Schedule for TV Shows"/>
     <!-- Show -->
-    <param name="6.vars.1" value="//ul/li[1]/div/h2/a/text()"/>
+    <param name="6.vars.1" value="//li[@class='result show'][1]/div/h4/a/text()"/>
     <!-- TV Channel / air time -->
-    <param name="6.vars.2" value="//ul/li[1]/div/p/text()"/>
+    <param name="6.vars.2" value="//li[@class='result show'][1]/div/div[1]"/>
     <!-- Next episode: title -->
-    <param name="6.vars.3" value="//div[@class='deck']/div/div[2]/ul/li[2]/span[1]/a/text()"/>
+    <param name="6.vars.3" value="//li[@class='result show'][1]/div/div[2]/ul[1]/li/a/text()"/>
     <!-- Next episode: air date -->
-    <param name="6.vars.4" value="//div[@class='deck']/div/div[2]/ul/li[2]/span[3]/text()"/>
-    <param name="6.format" value="Latest episode of '$(vars.1)s' (airing $(vars.2)s): &quot;$(vars.3)s&quot; ($(vars.4)s)"/>
+    <param name="6.vars.4" value="//li[@class='result show'][1]/div/div[2]/ul[1]/li/div[@class='airdate']"/>
+    <param name="6.format" value="'$(vars.1)s' (airing $(vars.2)s): &quot;$(vars.3)s&quot; ($(vars.4)s)"/>
 
 
     <!-- RATP (RER) -->
     <param name="7.trigger" value="ratp-rer"/>
     <param name="7.url" value="http://wap.ratp.fr/siv/schedule"/>
+    <param name="7.user-agent" value="Mozilla/5.0 (Windows NT 6.0; rv:14.0) Gecko/20100101 Firefox/14.0.1"/>
     <param name="7.get.1.name" value="service"/>
     <param name="7.get.1.value" value="next"/>
     <param name="7.get.2.name" value="reseau"/>
@@ -101,14 +93,14 @@
     <param name="7.get.5.value" value="$(3)s"/>
     <param name="7.description" value="Next RER to pass at a given train station (RATP)"/>
     <!-- Mission -->
-    <param name="7.vars.1" value="//div[9]/a/text()"/>
+    <param name="7.vars.1" value="//div[@class='schmsg1' or @class='schmsg3']/a/text()"/>
     <!-- Destination -->
-    <param name="7.vars.2" value="normalize-space(translate(string(//div[8]/text()),'&gt;&#xA0;',''))"/>
+    <param name="7.vars.2" value="//div[@class='bg1' or @class='bg3']/text()"/>
     <!-- Heure d'entrée en gare -->
-    <param name="7.vars.3" value="//div[10]/b/text()"/>
+    <param name="7.vars.3" value="//div[@class='schmsg1' or @class='schmsg3']/b/text()"/>
     <!-- Heure courante -->
-    <param name="7.vars.4" value="//div[5]/text()"/>
-    <param name="7.format" value="Prochain train en gare de '$(3)s' : $(vars.1)s à destination de '$(vars.2)s' -- Entrée en gare : $(vars.3)s [heure courante : $(vars.4)s]"/>
+    <param name="7.vars.4" value="//div[@class='bg2']/text()"/>
+    <param name="7.format" value="Nous sommes $(vars.4)s -- Prochain train à faire $(3)s -$(vars.2)s : $(vars.1)s à $(vars.3)s"/>
 
 
     <!-- Lyrics -->
@@ -126,26 +118,24 @@
     <param name="9.description" value="Dans Ton Chat"/>
     <param name="9.vars.1" value="//p[@class='item-content'][1]/a[1]/span/text()"/>
     <param name="9.vars.2" value="//p[@class='item-content'][1]/a[1]/text()"/>
-    <param name="9.format" value="$(vars.1)s $(vars.2)s"/>
+    <param name="9.format" value="$(vars.1)s$(vars.2)s"/>
 
 
     <!-- AllMusic -->
-    <param name="10.trigger" value="song"/>
-    <param name="10.url" value="http://www.allmusic.com/search/track/$(0)s/order:default-asc"/>
+    <param name="10.trigger" value="album"/>
+    <param name="10.url" value="http://www.allmusic.com/-/search/albums/$(0)s"/>
     <param name="10.description" value="AllMusic search plugin"/>
     <!-- URL -->
-    <param name="10.vars.1" value="//table[@class='search-results']//tr[2]/td[3]/a/@href"/>
-    <!-- Song title -->
-    <param name="10.vars.2" value="//*[@id='titlebar']/h1/text()"/>
+    <param name="10.vars.1" value=".//*[@id='content']/table//tr[1]/td/div[3]/div[1]/a/@href"/>
     <!-- Year -->
-    <param name="10.vars.3" value="//table[@class='search-results']//tr[2]/td[4]/text()"/>
+    <param name="10.vars.2" value=".//*[@id='content']/table//tr[1]/td/div[4]"/>
     <!-- Genre -->
-    <param name="10.vars.4" value="//table[@class='search-results']//tr[2]/td[5]/text()"/>
+    <param name="10.vars.3" value=".//*[@id='content']/table//tr[1]/td/div[5]"/>
     <!-- Performer -->
-    <param name="10.vars.5" value="//table[@class='search-results']//tr[2]/td[6]/ul/li/text()"/>
+    <param name="10.vars.4" value=".//*[@id='content']/table//tr[1]/td/div[3]/div[2]/a"/>
     <!-- Album -->
-    <param name="10.vars.6" value="//table[@class='search-results']//tr[2]/td[3]/a/text()"/>
-    <param name="10.format" value="AllMusic: &quot;$(vars.2)s&quot; from &quot;$(vars.6)s&quot; (year $(vars.3)s — $(vars.4)s), performed by $(vars.5)s — More information at $(vars.1)s"/>
+    <param name="10.vars.5" value=".//*[@id='content']/table//tr[1]/td/div[3]/div[1]/a/text()"/>
+    <param name="10.format" value="AllMusic: &quot;$(vars.5)s&quot; (year $(vars.2)s — $(vars.3)s), performed by $(vars.4)s — More information at $(vars.1)s"/>
 
 
     <!-- Manuel de civilité -->
@@ -192,5 +182,12 @@
     <!-- Impact type -->
     <param name="13.vars.5" value=".//*[@id='vulnDetailDisplay']/div/div[10]/text()"/>
     <param name="13.format" value="CVE-$(1)s [BS=$(vars.2)s/IS=$(vars.3)s/ES=$(vars.4)s]: $(vars.1)s -- $(vars.5)s"/>
-</module>
 
+    <!-- PHP -->
+    <param name="14.trigger" value="php"/>
+    <param name="14.url" value="http://darkside.hubpages.com/hub/ascii"/>
+    <param name="14.description" value="PHP"/>
+    <param name="14.pre" value="true"/>
+    <param name="14.vars.1" value=".//*[@id='txtd_3369768']/pre/strong/strong"/>
+    <param name="14.format" value="&lt;color fg='blue'&gt;$(vars.1)s&lt;/color&gt;"/>
+</module>
