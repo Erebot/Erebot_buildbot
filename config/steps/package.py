@@ -34,7 +34,7 @@ PACKAGE.addStep(shell.Compile(
 # but still, it's quite convenient to put it here.
 PACKAGE.addStep(shell.SetProperty(
     command=WithProperties(
-        "/usr/bin/git diff -U0 data/i18n/%(shortProject)s.pot | "
+        "/usr/bin/git diff -U0 -- data/i18n/%(shortProject)s.pot | "
         "/bin/grep -E '^[-+](\"(?!POT-Creation-Date:)|msgid)'"
     ),
     extract_fn=lambda rc, stdout, stderr: {'i18n update': not rc},
