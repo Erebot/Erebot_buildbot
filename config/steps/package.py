@@ -177,9 +177,8 @@ for ext in (
     '.tgz', '.tgz.pubkey',
     '.tar', '.tar.pubkey',
     '.phar', '.phar.pubkey',
-    '.pem',
     ):
-    if ext == '.pem' or ext.endswith('.pubkey'):
+    if ext.endswith('.pubkey'):
         maxsize = 20 * (1 << 10) # 20 KB
     else:
         maxsize = 50 * (1 << 20) # 50 MB
@@ -194,9 +193,7 @@ for ext in (
         maxsize=maxsize
     ))
 
-    if ext == '.pem':
-        label = "Release certificate"
-    elif ext.endswith('.pubkey'):
+    if ext.endswith('.pubkey'):
         label = "Signature (%s)" % ext
     else:
         label = "Package (%s)" % ext
@@ -209,6 +206,24 @@ for ext in (
         ),
         doStepIf=helpers.get_package(ext),
     ))
+
+PACKAGE.addStep(master.MasterShellCommand(
+    command=WithProperties(
+        "/bin/ln -sf '../certificate.pem' '/var/www/pear/get/%(pkg.pem:-)s'"
+    ),
+    description=['Linking', 'to', 'certificate'],
+    descriptionDone=['Link', 'to', 'certificate'],
+    doStepIf=helpers.get_package('.pem'),
+))
+
+PACKAGE.addStep(Link(
+    label="Release certificate",
+    href=WithProperties(
+        "%(pear)s/get/%(pkg.pem:-)s",
+        pear=lambda _: misc.PEAR_URL.rstrip('/'),
+    ),
+    doStepIf=helpers.get_package('.pem'),
+))
 
 PACKAGE.addStep(master.MasterShellCommand(
     command=" && ".join([
