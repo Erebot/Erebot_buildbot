@@ -145,6 +145,7 @@ SCHEDULERS = [
                         'Erebot/Plop',
                         'Erebot/Erebot_API',
                         'fpoirotte/XRL',
+                        'Erebot/DependencyInjection'
                     )
             ],
             branch_fn=_exclude_values('gh-pages'),
