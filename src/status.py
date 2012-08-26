@@ -3,6 +3,7 @@
 from buildbot.status.web.baseweb import WebStatus as OrigWebStatus
 from Erebot_buildbot.src.components import ComponentsResource
 from Erebot_buildbot.src.change_hook import CallableChangeHookResource
+from Erebot_buildbot.src.status_json import JsonStatusResource
 
 class WebStatus(OrigWebStatus):
     def __init__(self, *args, **kwargs):
@@ -32,3 +33,13 @@ class WebStatus(OrigWebStatus):
         OrigWebStatus.setupUsualPages(self, *args, **kwargs)
         self.putChild("components", ComponentsResource())
 
+    def setupSite(self):
+        provide_feeds = list(self.provide_feeds)
+        try:
+            provide_feeds.remove('json')
+        except ValueError:
+            pass
+        OrigWebStatus.setupSite(self)
+        if 'json' in self.provide_feeds:
+            status = self.getStatus()
+            self.site.resource.putChild("json", JsonStatusResource(status))
