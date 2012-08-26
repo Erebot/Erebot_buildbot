@@ -4,6 +4,7 @@ from twisted.internet import defer
 from buildbot.status import builder
 from buildbot.status.web.base import HtmlResource, path_to_root
 from Erebot_buildbot.config import misc
+from sqlalchemy import exc
 
 try:
     from buildbot.db.base import DBConnectorComponent
@@ -83,8 +84,37 @@ class ComponentsResource(HtmlResource):
             ORDER BY b.number DESC;
         """
 
+        # Accomodate changes made in buildbot 0.8.6
+        q2 = """
+            SELECT
+                b.number,
+                breqs.buildername,
+                sstamps.project,
+                breqs.results
+
+            FROM sourcestamps sstamps
+            JOIN sourcestampsets ssets
+                ON ssets.id = sstamps.sourcestampsetid
+            JOIN buildsets bsets
+                ON bsets.sourcestampsetid = ssets.id
+            JOIN buildrequests breqs
+                ON breqs.buildsetid = bsets.id
+            JOIN builds b
+                ON b.brid = breqs.id
+
+            WHERE project != ''
+            AND project IS NOT NULL
+
+            GROUP BY breqs.buildername, sstamps.project
+
+            ORDER BY b.number DESC;
+        """
+
         def _exec(txn):
-            res = txn.execute(q)
+            try:
+                res = txn.execute(q2)
+            except exc.OperationalError:
+                res = txn.execute(q)
             return self._get_results(res, root)
 
         try:
@@ -106,12 +136,12 @@ class ComponentsResource(HtmlResource):
                 status.db,
                 base_builders_url
             )
-        else:
+        else: # starting with buildbot 0.8.5.
             master = self.getBuildmaster(req)
             wfd = defer.waitForDeferred(
                 master.db.pool.do_with_engine(
                     self._engine_txn,
-                    base_builders_url
+                    base_builders_url,
                 )
             )
             yield wfd
