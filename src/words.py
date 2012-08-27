@@ -22,12 +22,25 @@ except ImportError:
 
 class IRCContact(words.IRCContact):
     implements(IStatusReceiver)
+    muted = False
 
     def send(self, message):
-        self.channel.msgOrNotice(self.dest, message.encode("utf-8", "replace"))
+        if self.muted:
+            return
+        if hasattr(self, 'channel'): # buildbot < 0.8.6
+            self.channel.msgOrNotice(self.dest,
+                message.encode("utf-8", "replace"))
+        else:
+            self.bot.msgOrNotice(self.dest,
+                message.encode("utf-8", "replace"))
 
     def act(self, action):
-        self.channel.me(self.dest, action.encode("utf-8", "replace"))
+        if self.muted:
+            return
+        if hasattr(self, 'channel'): # buildbot < 0.8.6
+            self.channel.me(self.dest, action.encode("utf-8", "replace"))
+        else:
+            self.bot.describe(self.dest, action.encode("utf-8", "replace"))
 
 
 class IrcStatusBot(words.IrcStatusBot):
