@@ -67,9 +67,9 @@ LIVE.addStep(shell.ShellCommand(
     command=(
         "/usr/bin/curl -q --remote-time --tlsv1 --location --remote-name-all "
         + ' '.join(
-            '%(pear)s/get/%(component)s-latest.phar'
-            '%(pear)s/get/%(component)s-latest.phar.pubkey'
-            '%(pear)s/get/%(component)s-latest.pem' % {
+            "%(pear)s/get/%(component)s-latest.phar "
+            "%(pear)s/get/%(component)s-latest.phar.pubkey "
+            "%(pear)s/get/%(component)s-latest.pem" % {
                 'pear': misc.PEAR_URL.rstrip('/'),
                 'component': c.partition('/')[2]
             }
