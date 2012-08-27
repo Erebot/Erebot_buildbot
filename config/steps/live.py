@@ -60,7 +60,7 @@ LIVE.addStep(shell.ShellCommand(
         "/usr/bin/curl -q --remote-time --silent --tlsv1 "
         "--remote-name-all %s" % ' '.join(
             '%s/get/%s-latest.phar' % (
-                misc.PEAR_URL.rstrip('/')
+                misc.PEAR_URL.rstrip('/'),
                 c.partition('/')[2]
             )
             for c in misc.COMPONENTS
