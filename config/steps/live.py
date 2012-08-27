@@ -69,10 +69,10 @@ LIVE.addStep(shell.ShellCommand(
         + ' '.join(
             '%(pear)s/get/%(component)s-latest.phar'
             '%(pear)s/get/%(component)s-latest.phar.pubkey'
-            '%(pear)s/get/%(component)s-latest.pem' % (
-                misc.PEAR_URL.rstrip('/'),
-                c.partition('/')[2]
-            )
+            '%(pear)s/get/%(component)s-latest.pem' % {
+                'pear': misc.PEAR_URL.rstrip('/'),
+                'component': c.partition('/')[2]
+            }
             for c in misc.COMPONENTS
             if c.startswith('Erebot/Erebot_Module_')
         )
