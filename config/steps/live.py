@@ -45,9 +45,17 @@ LIVE.addStep(shell.ShellCommand(
 
 # Download latest phar archive of Erebot.
 LIVE.addStep(shell.ShellCommand(
-    command="/usr/bin/curl -q --remote-time --silent --tlsv1 --remote-name-all "
-            "%s/get/Erebot-latest.phar" % misc.PEAR_URL.rstrip('/'),
+    command=(
+        "/usr/bin/curl -q --remote-time --tlsv1 --location --remote-name-all "
+        "%(pear)s/get/Erebot-latest.phar "
+        "%(pear)s/get/Erebot-latest.phar.pubkey "
+        "%(pear)s/get/Erebot-latest.pem" % {
+            'pear': misc.PEAR_URL.rstrip('/'),
+        }
+    ),
     maxTime=5 * 60,
+    description=["Getting", 'Erebot-latest.phar'],
+    descriptionDone=["Get", 'Erebot-latest.phar'],
 ))
 
 LIVE.addStep(shell.ShellCommand(
@@ -57,9 +65,11 @@ LIVE.addStep(shell.ShellCommand(
 # Download latest phar archives for modules.
 LIVE.addStep(shell.ShellCommand(
     command=(
-        "/usr/bin/curl -q --remote-time --silent --tlsv1 "
-        "--remote-name-all %s" % ' '.join(
-            '%s/get/%s-latest.phar' % (
+        "/usr/bin/curl -q --remote-time --tlsv1 --location --remote-name-all "
+        + ' '.join(
+            '%(pear)s/get/%(component)s-latest.phar'
+            '%(pear)s/get/%(component)s-latest.phar.pubkey'
+            '%(pear)s/get/%(component)s-latest.pem' % (
                 misc.PEAR_URL.rstrip('/'),
                 c.partition('/')[2]
             )
@@ -67,6 +77,8 @@ LIVE.addStep(shell.ShellCommand(
             if c.startswith('Erebot/Erebot_Module_')
         )
     ),
+    description=["Getting", "modules'", '.phar'],
+    descriptionDone=["Get", "modules'", '.phar'],
     workdir='build/modules/',
     maxTime=5 * 60,
 ))
