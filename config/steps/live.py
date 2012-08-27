@@ -37,61 +37,39 @@ fi
     descriptionDone=["Stop", "previous"],
 ))
 
-for component in misc.COMPONENTS:
-    if component.startswith('Erebot/Erebot_Module_'):
-        LIVE.addStep(shell.ShellCommand(
-            command='/bin/rm -rf build/vendor/%s' % component.partition('/')[2],
-            description=["Cleanup:", component],
-            descriptionDone=["Cleanup:", component],
-        ))
-
-LIVE.addStep(common.clone)
-LIVE.addStep(MorphProperties(
-    morph_fn=_got_revision('got_revision', 'got_revision[Erebot]')
+LIVE.addStep(shell.ShellCommand(
+    command='/bin/rm -rf *',
+    description=["Cleanup"],
+    descriptionDone=["Cleanup"],
 ))
-LIVE.addStep(shell.Compile(
-    command="phing",
-    env={
-        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
-    },
-    warnOnWarnings=True,
-    warnOnFailure=True,
+
+# Download latest phar archive of Erebot.
+LIVE.addStep(shell.ShellCommand(
+    command="/usr/bin/curl -q --remote-time --silent --tlsv1 --remote-name-all "
+            "%s/get/Erebot-latest.phar" % misc.PEAR_URL.rstrip('/'),
     maxTime=5 * 60,
 ))
 
-for component in misc.COMPONENTS:
-    if component.startswith('Erebot/Erebot_Module_'):
-        LIVE.addStep(source.Git(
-            workdir='build/vendor/%s' % component.partition('/')[2],
-            mode='clobber',
-            repourl=common.convert_repourl(0)(
-                '%s/%s' % (misc.GITHUB_BASE.rstrip('/'), component)
-            ),
-            submodules=True,
-            progress=True,
-            alwaysUseLatest=True,   # Would fail otherwise.
-        ))
-        LIVE.addStep(MorphProperties(
-            morph_fn=_got_revision(
-                'got_revision',
-                'got_revision[%s]' % (component, )
+LIVE.addStep(shell.ShellCommand(
+    command="/bin/mkdir modules",
+))
+
+# Download latest phar archives for modules.
+LIVE.addStep(shell.ShellCommand(
+    command=(
+        "/usr/bin/curl -q --remote-time --silent --tlsv1 "
+        "--remote-name-all %s" % ' '.join(
+            '%s/get/%s-latest.phar' % (
+                misc.PEAR_URL.rstrip('/')
+                c.partition('/')[2]
             )
-        ))
-
-        LIVE.addStep(shell.Compile(
-            command=(
-                "cd vendor/%s && "
-                # Build the translations.
-                "phing"
-            ) % component.partition('/')[2],
-            env={
-                'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
-            },
-            warnOnWarnings=True,
-            warnOnFailure=True,
-            maxTime=5 * 60,
-        ))
-
+            for c in misc.COMPONENTS
+            if c.startswith('Erebot/Erebot_Module_')
+        )
+    ),
+    workdir='build/modules/',
+    maxTime=5 * 60,
+))
 
 LIVE.addStep(master.MasterShellCommand(
     command=" && ".join([
@@ -118,21 +96,6 @@ LIVE.addStep(shell.ShellCommand(
     maxTime=5 * 60,
 ))
 
-LIVE.addStep(shell.ShellCommand(
-    command="; ".join([
-        "pear channel-update pear.php.net", # Update protocols if needed.
-        "pear i pear/Console_CommandLine",
-        "pear i pear/File_Gettext",
-        ":",                                # Never fail.
-    ]),
-    env={
-        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
-    },
-    description=["PEAR", 'deps'],
-    descriptionDone=["PEAR", 'deps'],
-    maxTime=5 * 60,
-))
-
 # Start new instance.
 LIVE.addStep(shell.ShellCommand(
     command=
@@ -140,7 +103,7 @@ LIVE.addStep(shell.ShellCommand(
             "-d error_log=syslog "
             "-d log_errors=On "
             "-d ignore_repeated_errors=On "
-        "scripts/Erebot "
+        "-f Erebot-latest.phar -- "
             "--daemon "
             "--pidfile /tmp/Erebot.pid "
             "< /dev/null "
@@ -172,9 +135,4 @@ LIVE.addStep(shell.ShellCommand(
     command="/bin/kill -0 `cat /tmp/Erebot.pid`",
     description=["Check", "instance"],
     descriptionDone=["Check", "instance"],
-))
-
-# Copy the revision back.
-LIVE.addStep(MorphProperties(
-    morph_fn=_got_revision('got_revision[Erebot]', 'got_revision')
 ))
