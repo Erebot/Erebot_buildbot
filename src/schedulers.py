@@ -18,18 +18,28 @@ class PerProjectAndBranchScheduler(BaseBasicScheduler):
     def getChangeClassificationsForTimer(self, schedulerid, timer_name):
         project, branch = timer_name # set in getTimerNameForChange
         def thd(conn):
-            scheduler_changes_tbl = self.master.db.model.scheduler_changes
-            changes_tbl = self.master.db.model.changes
+            sch_ch_tbl = self.master.db.model.scheduler_changes
+            ch_tbl = self.master.db.model.changes
 
-            wc = (
-                (scheduler_changes_tbl.c.schedulerid == schedulerid) &
-                (scheduler_changes_tbl.c.changeid == changes_tbl.c.changeid) &
-                (changes_tbl.c.project == project) &
-                (changes_tbl.c.branch == branch)
-            )
+            if hasattr(sch_ch_tbl.c, 'schedulerid'): # buildbot < 0.8.6
+                wc = (
+                    (sch_ch_tbl.c.schedulerid == schedulerid) &
+                    (sch_ch_tbl.c.changeid == ch_tbl.c.changeid) &
+                    (ch_tbl.c.project == project) &
+                    (ch_tbl.c.branch == branch)
+                )
+            else:
+                wc = (
+                    (sch_ch_tbl.c.objectid == schedulerid) &
+                    (sch_ch_tbl.c.changeid == ch_tbl.c.changeid) &
+                    (ch_tbl.c.project == project) &
+                    (ch_tbl.c.branch == branch)
+                )
+
             q = sa.select(
-                [ scheduler_changes_tbl.c.changeid, scheduler_changes_tbl.c.important ],
+                [ sch_ch_tbl.c.changeid, sch_ch_tbl.c.important ],
                 whereclause=wc)
-            return dict([ (r.changeid, [False,True][r.important]) for r in conn.execute(q) ])
+            return dict([ (r.changeid, [False,True][r.important])
+                          for r in conn.execute(q) ])
         return self.master.db.pool.do(thd)
 
