@@ -11,17 +11,6 @@ QA.addStep(common.fill_properties)
 QA.addStep(common.erebot_path)
 QA.addStep(common.clone)
 
-QA.addStep(shell.ShellCommand(
-    command="phing qa_lint",
-    description="lint",
-    descriptionDone="lint",
-    warnOnWarnings=True,
-    env={
-        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
-    },
-    maxTime=5 * 60,
-))
-
 QA.addStep(CountingShellCommand(
     command="phing qa_codesniffer",
     description="CodeSniffer",

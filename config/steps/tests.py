@@ -40,6 +40,19 @@ def _path_checker(i):
     return _inner
 
 for i in xrange(1, common.nb_versions + 1):
+    # Lint the code with each version of PHP installed.
+    TESTS.addStep(shell.ShellCommand(
+        command="phing -logger phing.listener.DefaultLogger qa_lint",
+        description=[WithProperties("lint  %%(PHP%d_DESC:-)s" % i)],
+        descriptionDone=[WithProperties("lint  %%(PHP%d_DESC:-)s" % i)],
+        warnOnWarnings=True,
+        env={
+            'PATH': WithProperties("${PHP%d_PATH}" % i),
+        },
+        doStepIf=_path_checker(i),
+        maxTime=5 * 60,
+    ))
+
     TESTS.addStep(PHPUnit(
         command="phing -logger phing.listener.DefaultLogger bare_test",
         description=[WithProperties("PHP  %%(PHP%d_DESC:-)s" % i)],
