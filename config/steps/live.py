@@ -46,7 +46,8 @@ LIVE.addStep(shell.ShellCommand(
 # Download latest phar archive of Erebot.
 LIVE.addStep(shell.ShellCommand(
     command=(
-        "/usr/bin/curl -q --remote-time --tlsv1 --location --remote-name-all "
+        "/usr/bin/curl '-#' -q --remote-time "
+        "--tlsv1 --location --remote-name-all "
         "%(pear)s/get/Erebot-latest.phar "
         "%(pear)s/get/Erebot-latest.phar.pubkey "
         "%(pear)s/get/Erebot-latest.pem" % {
@@ -65,7 +66,8 @@ LIVE.addStep(shell.ShellCommand(
 # Download latest phar archives for modules.
 LIVE.addStep(shell.ShellCommand(
     command=(
-        "/usr/bin/curl -q --remote-time --tlsv1 --location --remote-name-all "
+        "/usr/bin/curl '-#' -q --remote-time "
+        "--tlsv1 --location --remote-name-all "
         + ' '.join(
             "%(pear)s/get/%(component)s-latest.phar "
             "%(pear)s/get/%(component)s-latest.phar.pubkey "
