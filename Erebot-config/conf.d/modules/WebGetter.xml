@@ -184,10 +184,12 @@
     <param name="13.format" value="CVE-$(1)s [BS=$(vars.2)s/IS=$(vars.3)s/ES=$(vars.4)s]: $(vars.1)s -- $(vars.5)s"/>
 
     <!-- PHP -->
+<!--
     <param name="14.trigger" value="php"/>
     <param name="14.url" value="http://darkside.hubpages.com/hub/ascii"/>
     <param name="14.description" value="PHP"/>
     <param name="14.pre" value="true"/>
     <param name="14.vars.1" value=".//*[@id='txtd_3369768']/pre/strong/strong"/>
     <param name="14.format" value="&lt;color fg='blue'&gt;$(vars.1)s&lt;/color&gt;"/>
+-->
 </module>
