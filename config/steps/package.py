@@ -69,7 +69,7 @@ PACKAGE.addStep(shell.ShellCommand(
         """
         for f in `ls -1 RELEASE-*`;
         do
-            /bin/mv -v ${f} ${f}snapshot%(buildnumber)d;
+            /bin/mv -v ${f} ${f}dev%(buildnumber)d;
         done
         """
         ),
@@ -102,7 +102,7 @@ PACKAGE.addStep(shell.ShellCommand(
             "pyrus.phar /tmp/release-%(buildnumber)d "
                 "set openssl_cert /tmp/buildbot.p12.%(buildnumber)d",
             "phing release "
-                " -Dstability=snapshot "
+                " -Dstability=devel "
                 " -Drelease.tmp=/tmp/release-%(buildnumber)d "
                 " -Dpassfile=/tmp/buildbot.sign.%(buildnumber)d",
         ]) + "; " + " && ".join([
@@ -138,7 +138,7 @@ PACKAGE.addStep(shell.ShellCommand(
     """
     for f in `ls -1 RELEASE-*`;
     do
-        /bin/mv -v ${f} ${f%%snapshot%(buildnumber)d};
+        /bin/mv -v ${f} ${f%%dev%(buildnumber)d};
     done
     """
     ),
