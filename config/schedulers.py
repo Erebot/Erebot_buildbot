@@ -195,7 +195,7 @@ if ForceScheduler:
     )
     SCHEDULERS.append(ForceScheduler(
         name="Force",
-        branch=FixedParameter(name="branch", default="master"),
+        branch=StringParameter(name="branch", default="master"),
         repository=BaseParameter(None),
         project=ChoiceStringParameter(
             name="project", choices=list(misc.COMPONENTS)),
