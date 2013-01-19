@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from buildbot.config import BuilderConfig
 from buildbot import locks
-from Erebot_buildbot.config import steps
+from Erebot_buildbot.config import steps, misc
 from Erebot_buildbot.src.factory import MultiProjectBuildFactory
 import secrets
 
@@ -24,7 +24,7 @@ BUILDERS = [
         locks=[vm_lock.access("exclusive")],
     )
 ] + [
-    # Create a "Tests - *" scheduler for each distro we support.
+    # Create a "Tests - *" builder for each distro we support.
     BuilderConfig(
         name='Tests - %s' % buildslave,
         slavenames=[buildslave],
@@ -32,6 +32,16 @@ BUILDERS = [
         category='Tests',
     )
     for buildslave in secrets.BUILDSLAVES
+] + [
+    # Create an "Install - *" builder for each
+    # installation method we support.
+    BuilderConfig(
+        name='Install - %s' % method,
+        slavenames=['Debian 6'],
+        factory=getattr(steps, 'INSTALL_%s' % method.upper()),
+        category='Install',
+    )
+    for method in misc.INSTALLATION_METHODS
 ] + [
     BuilderConfig(
         name='Documentation',

@@ -101,6 +101,14 @@ SCHEDULERS = [
     )
     for buildslave in secrets.BUILDSLAVES
 ] + [
+    # Create triggerable schedulers for the
+    # different installation methods.
+    triggerable.Triggerable(
+        name="Install - %s" % method,
+        builderNames=["Install - %s" % method],
+    )
+    for method in misc.INSTALLATION_METHODS
+] + [
     # Builds the doc for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages.
     PerProjectAndBranchScheduler(
@@ -187,20 +195,15 @@ SCHEDULERS = [
 ]
 
 if ForceScheduler:
-    from buildbot.schedulers.forcesched import (
-        FixedParameter,
-        ChoiceStringParameter,
-        BaseParameter,
-        StringParameter,
-    )
+    from buildbot.schedulers import forcesched
     SCHEDULERS.append(ForceScheduler(
         name="Force",
-        branch=StringParameter(name="branch", default="master"),
-        repository=BaseParameter(None),
-        project=ChoiceStringParameter(
-            name="project", choices=list(misc.COMPONENTS)),
-        reason=StringParameter(name="reason", default="Forced build", size=50),
-        revision=StringParameter(name="revision", size=45),
+        branch=forcesched.StringParameter(name="branch", default="master"),
+        repository=forcesched.BaseParameter(None),
+        project=forcesched.ChoiceStringParameter(
+            name="project", choices=list(misc.COMPONENTS), required=True),
+        reason=forcesched.StringParameter(name="reason", default="Forced build", size=50),
+        revision=forcesched.StringParameter(name="revision", size=45),
         properties=[],
         builderNames=[b.name for b in builders.BUILDERS],
     ))

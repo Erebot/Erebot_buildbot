@@ -1,9 +1,15 @@
-from Erebot_buildbot.config.steps.doc import DOC
-from Erebot_buildbot.config.steps.i18n import I18N
-from Erebot_buildbot.config.steps.live import LIVE
-from Erebot_buildbot.config.steps.live_www import LIVE_WWW
-from Erebot_buildbot.config.steps.package import PACKAGE
-from Erebot_buildbot.config.steps.qa import QA
-from Erebot_buildbot.config.steps.tests import TESTS
-from Erebot_buildbot.config.steps.vm_tests import VM_TESTS
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+
+from .doc import DOC
+from .i18n import I18N
+from .live import LIVE
+from .live_www import LIVE_WWW
+from .package import PACKAGE
+from .qa import QA
+from .tests import TESTS
+from .vm_tests import VM_TESTS
+from .install_pear import INSTALL_PEAR
+from .install_pyrus import INSTALL_PYRUS
+from .install_phar import INSTALL_PHAR
 

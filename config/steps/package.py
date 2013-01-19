@@ -2,7 +2,7 @@
 
 from buildbot.process import factory
 from buildbot.process.properties import WithProperties
-from buildbot.steps import shell, transfer
+from buildbot.steps import shell, transfer, trigger
 from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.config.locks import PIRUM_LOCK
 from Erebot_buildbot.config import misc
@@ -248,4 +248,38 @@ PACKAGE.addStep(master.MasterShellCommand(
     descriptionDone=['PEAR', 'repos.', 'update'],
     locks=[PIRUM_LOCK.access('exclusive')],
 ))
+
+PACKAGE.addStep(shell.SetProperty(
+    command=WithProperties("php buildenv/get_version.php -v RELEASE"),
+    property='release',
+    env={
+        # Ensures the output doesn't use
+        # some locale-specific formatting.
+        'LANG': "en_US.UTF-8",
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
+    },
+    maxTime=60,
+))
+
+PACKAGE.addStep(shell.SetProperty(
+    command=WithProperties("/usr/bin/printf '%%d' %(buildnumber)s"),
+    property='pkgBuildnumber',
+    maxTime=60,
+))
+
+for method in misc.INSTALLATION_METHODS:
+    PACKAGE.addStep(trigger.Trigger(
+        schedulerNames=["Install - %s" % method],
+        copy_properties=[
+            'project',
+            'repository',
+            'branch',
+            'revision',
+            'release',
+            'pkgBuildnumber',
+        ],
+        doStepIf=helpers.negate(helpers.if_component([
+            'Erebot/www.erebot.net',
+        ])),
+    ))
 

@@ -41,8 +41,10 @@ def get_package(ext):
     return _getter
 
 def if_component(component):
+    if not isinstance(component, (list, tuple, set)):
+        component = (component, )
     def _inner(step):
-        return component == step.getProperty('project')
+        return step.getProperty('project') in component
     return _inner
 
 def if_buildslave(buildslave):

@@ -37,5 +37,13 @@ COMPONENTS = (
 )
 
 BUILDBOT_URL = "https://buildbot.erebot.net/"
-PEAR_URL = "https://pear.erebot.net/"
+PEAR_CHANNEL = "pear.erebot.net"
+PEAR_URL = "https://%s/" % PEAR_CHANNEL
 
+INSTALLATION_METHODS = (
+    'pear',
+    'pyrus',
+    'phar',
+#    'sources',
+#    'composer',
+)
