@@ -19,6 +19,7 @@ INSTALL_PEAR.addStep(shell.ShellCommand(
             "/bin/mkdir -pv pear/bin",
             "pear -c .pearrc config-set bin_dir `readlink -e pear/bin`",
             "pear -c .pearrc config-set preferred_state devel",
+            "pear -c .pearrc config-set auto_discover 1",
             "pear -c .pearrc channel-update pear.php.net",
             "pear -c .pearrc install -o PEAR",
             "pear -c .pearrc channel-discover %(channel)s",
@@ -41,7 +42,8 @@ INSTALL_PEAR.addStep(CountingShellCommand(
             "%(channel)s/%(shortProject)s-%(release)sdev%(pkgBuildnumber)s",
         channel=lambda _dummy: misc.PEAR_CHANNEL,
     ),
-    errorPattern="^[Ff]ailed.*$",
+    errorPattern="^([Ff]ailed|[Uu]nknown|ERROR:).*$",
+    warningPattern="^WARNING:.*$",
     warnOnWarnings=True,
     flunkOnFailure=True,
     env={
