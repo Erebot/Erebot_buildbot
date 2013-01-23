@@ -22,7 +22,7 @@ INSTALL_PEAR.addStep(shell.ShellCommand(
             "pear -c .pearrc config-set auto_discover 1",
             "pear -c .pearrc channel-update pear.php.net",
             "pear -c .pearrc install -o PEAR",
-            "pear -c .pearrc channel-discover %(channel)s",
+            "pear/bin/pear -c .pearrc channel-discover %(channel)s",
         ]),
         channel=lambda _dummy: misc.PEAR_CHANNEL,
     ),
@@ -38,7 +38,7 @@ INSTALL_PEAR.addStep(shell.ShellCommand(
 
 INSTALL_PEAR.addStep(CountingShellCommand(
     command=WithProperties(
-        "pear -c .pearrc install --onlyreqdeps "
+        "pear/bin/pear -c .pearrc install --onlyreqdeps "
             "%(channel)s/%(shortProject)s-%(release)sdev%(pkgBuildnumber)s",
         channel=lambda _dummy: misc.PEAR_CHANNEL,
     ),
