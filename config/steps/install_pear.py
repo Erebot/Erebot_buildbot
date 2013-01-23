@@ -42,8 +42,8 @@ INSTALL_PEAR.addStep(CountingShellCommand(
             "%(channel)s/%(shortProject)s-%(release)sdev%(pkgBuildnumber)s",
         channel=lambda _dummy: misc.PEAR_CHANNEL,
     ),
-    errorPattern="^([Ff]ailed|[Uu]nknown|ERROR:).*$",
-    warningPattern="^WARNING:.*$",
+    errorPattern=".*([Ff][Aa][Ii][Ll][Ee][Dd]|[Uu][Nn][Kk][Nn][Oo][Ww][Nn]|[Ee][Rr][Rr][Oo][Rr]).*",
+    warningPattern=".*[Ww][Aa][Rr][Nn][Ii][Nn][Gg].*",
     warnOnWarnings=True,
     flunkOnFailure=True,
     env={
