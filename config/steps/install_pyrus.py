@@ -17,7 +17,7 @@ INSTALL_PYRUS.addStep(shell.ShellCommand(
             "/bin/rm -vrf pyrus",
             "/bin/mkdir -pv pyrus/bin",
             "pyrus.phar pyrus/ di %(channel)s",
-            "pyrus.phar pyrus/ set bin_dir `readlink -e ./bin`",
+            "pyrus.phar pyrus/ set bin_dir `readlink -e pyrus/bin`",
             "pyrus.phar pyrus/ set preferred_state devel",
             "pyrus.phar pyrus/ set auto_discover 1",
         ]),
