@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.status import words
+from buildbot.status.results import SUCCESS
 from zope.interface import implements
 from twisted.python import log, failure
 from twisted.application import internet
