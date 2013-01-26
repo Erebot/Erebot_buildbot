@@ -47,7 +47,7 @@ I18N.addStep(shell.ShellCommand(
         '/usr/bin/git',
         'push',
         WithProperties('%(rw_repository)s'),
-        WithProperties('%(branch)s'),
+        WithProperties('%(branch:~master)s'),
     ],
     description=['Pushing'],
     descriptionDone=['git push'],

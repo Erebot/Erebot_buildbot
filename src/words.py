@@ -13,6 +13,11 @@ try:
 except:
     IChannel = None
 
+try:
+    from buildbot.status.words import maybeColorize
+except:
+    maybeColorize = lambda text, color, useColors: text
+
 # twisted.internet.ssl requires PyOpenSSL, so be resilient if it's missing
 try:
     from twisted.internet import ssl
@@ -41,6 +46,67 @@ class IRCContact(words.IRCContact):
             self.channel.me(self.dest, action.encode("utf-8", "replace"))
         else:
             self.bot.describe(self.dest, action.encode("utf-8", "replace"))
+
+    def buildStarted(self, builderName, build):
+        builder = build.getBuilder()
+        log.msg('[Contact] Builder %r in category %s started' % (builder, builder.category))
+
+        # only notify about builders we are interested in
+
+        if (self.bot.categories != None and
+           builder.category not in self.bot.categories):
+            log.msg('Not notifying for a build in the wrong category')
+            return
+
+        if not self.notify_for('started'):
+            return
+
+        if self.useRevisions:
+            r = "build containing revision(s) [%s] on %s started for %s" % \
+                (build.getRevisions(), builder.getName(), build.getProperty('project'))
+        else:
+            r = "build #%d of %s started for %s, including [%s]" % \
+                (build.getNumber(),
+                 builder.getName(),
+                 build.getProperty('project'),
+                 ", ".join([str(c.revision) for c in build.getChanges()])
+                 )
+
+        self.send(r)
+
+    def buildFinished(self, builderName, build, results):
+        builder = build.getBuilder()
+
+        if (self.bot.categories != None and
+            builder.category not in self.bot.categories):
+            return
+
+        if not self.notify_for_finished(build):
+            return
+
+        builder_name = builder.getName()
+        buildnum = build.getNumber()
+        buildrevs = build.getRevisions()
+        project = build.getProperty('project')
+
+        results = self.getResultsDescriptionAndColor(build.getResults())
+        if self.reportBuild(builder_name, buildnum):
+            if self.useRevisions:
+                r = "build containing revision(s) [%s] on %s for %s is complete: %s" % \
+                    (buildrevs, builder_name, project, results[0])
+            else:
+                r = "build #%d of %s for %s is complete: %s" % \
+                    (buildnum, builder_name, project, results[0])
+
+            r += ' [%s]' % maybeColorize(" ".join(build.getText()), results[1], self.useColors)
+            buildurl = self.bot.status.getURLForThing(build)
+            if buildurl:
+                r += "  Build details are at %s" % buildurl
+
+            if self.bot.showBlameList and build.getResults() != SUCCESS and len(build.changes) != 0:
+                r += '  blamelist: ' + ', '.join(list(set([c.who for c in build.changes])))
+
+            self.send(r)
 
 
 class IrcStatusBot(words.IrcStatusBot):
