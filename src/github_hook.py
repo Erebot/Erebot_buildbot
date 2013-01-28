@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from buildbot.status.web.hooks.github import process_change
 
+import hmac
+import hashlib
 import logging
 import sys
 import traceback
 from twisted.python import log
 from buildbot.master import BuildMaster
+
 
 try:
     import json
@@ -31,13 +34,12 @@ class GithubChangeHook(object):
                 the http request object
         """
         try:
-            payload = json.loads(request.args['payload'][0])
+            body = request.content.read()
+            payload = json.loads(body)
             project = payload['repository']['url'].partition('://')[2]
             project = project.split('/', 1)[1]
             user = payload['repository']['owner']['name']
             repo = payload['repository']['name']
-            project = request.args.get('project', [project])[0]
-            key = request.args.get('key', [None])[0]
             repo_url = payload['repository']['url']
 
             # Check user whitelist.
@@ -60,13 +62,10 @@ class GithubChangeHook(object):
                         (user, repo, ','.join(allowed_repos)))
                 return
 
-            # Check key whitelist.
-            allowed_keys = self._options.get('key')
-            if not isiterable(allowed_keys):
-                allowed_keys = [allowed_keys]
-            if (key not in allowed_keys):
-                log.msg("Refused change request "
-                        "from %s/%s (invalid key)" % (user, repo))
+            # Check integrity/origin.
+            body_hash = hmac.new(self._options.get('key'), body, hashlib.sha1)
+            if body_hash.hexdigest() != request.getHeader('X-Hub-Signature'):
+                log.msg("HMAC mismatch between header and actual payload")
                 return
 
             # Older versions only accepted 4 args (no project).
