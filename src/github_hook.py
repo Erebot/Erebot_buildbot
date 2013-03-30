@@ -63,9 +63,13 @@ class GithubChangeHook(object):
                 return
 
             # Check integrity/origin.
-            body_hash = hmac.new(self._options.get('key'), body, hashlib.sha1)
-            if body_hash.hexdigest() != request.getHeader('X-Hub-Signature'):
-                log.msg("HMAC mismatch between header and actual payload")
+            body_hash = "sha1" + hmac.new(self._options.get('key'),
+                                          body, hashlib.sha1).hexdigest()
+            if body_hash != request.getHeader('X-Hub-Signature'):
+                log.msg("HMAC mismatch between header (%s) and actual payload (%s)" % (
+                    request.getHeader('X-Hub-Signature'),
+                    body_hash,
+                ))
                 return
 
             # Older versions only accepted 4 args (no project).
