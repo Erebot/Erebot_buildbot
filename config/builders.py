@@ -27,11 +27,11 @@ BUILDERS = [
     # Create a "Tests - *" builder for each distro we support.
     BuilderConfig(
         name='Tests - %s' % buildslave,
-        slavenames=[buildslave],
+        slavenames=[conf.get('login', buildslave)],
         factory=steps.TESTS,
         category='Tests',
     )
-    for buildslave in secrets.BUILDSLAVES
+    for buildslave, conf in secrets.BUILDSLAVES.iteritems()
 ] + [
     # Create an "Install - *" builder for each
     # installation method we support.
