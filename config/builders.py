@@ -16,7 +16,7 @@ BUILDERS = [
     # Those in turn trigger a build on each "Tests - *" builder.
     BuilderConfig(
         name='Tests',
-        slavenames=['Debian 6'],
+        slavenames=['Debian (x64)'],
         factory=steps.VM_TESTS,
         category='Tests',
         # Serialize execution of tests. This aims at reducing
@@ -37,7 +37,7 @@ BUILDERS = [
     # installation method we support.
     BuilderConfig(
         name='Install - %s' % method,
-        slavenames=['Debian 6'],
+        slavenames=['Debian (x64)'],
         factory=getattr(steps, 'INSTALL_%s' % method.upper()),
         category='Install',
     )
@@ -45,7 +45,7 @@ BUILDERS = [
 ] + [
     BuilderConfig(
         name='Documentation',
-        slavenames=['Debian 6'],
+        slavenames=['Debian (x64)'],
         factory=steps.DOC,
         category='API',
         locks=[doc_lock.access("counting")],
@@ -53,7 +53,7 @@ BUILDERS = [
 
     BuilderConfig(
         name='Packaging',
-        slavenames=['Debian 6'],
+        slavenames=['Debian (x64)'],
         factory=steps.PACKAGE,
         category='Packaging',
         locks=[packaging_lock.access("counting")],
@@ -61,7 +61,7 @@ BUILDERS = [
 
     BuilderConfig(
         name='Quality Assurance',
-        slavenames=['Debian 6'],
+        slavenames=['Debian (x64)'],
         factory=steps.QA,
         category='QA',
         locks=[qa_lock.access("counting")],
@@ -69,14 +69,14 @@ BUILDERS = [
 
     BuilderConfig(
         name='I18N',
-        slavenames=['Debian 6'],
+        slavenames=['Debian (x64)'],
         factory=steps.I18N,
         category='I18N',
     ),
 
     BuilderConfig(
         name='Live',
-        slavenames=['Debian 6'],
+        slavenames=['Debian (x64)'],
         factory=MultiProjectBuildFactory({
             'Erebot/Erebot': steps.LIVE,
             'Erebot/www.erebot.net': steps.LIVE_WWW,
