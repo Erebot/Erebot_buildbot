@@ -94,7 +94,6 @@ SCHEDULERS = [
     ),
 ] + [
     # Create triggerable schedulers for tests
-    # that require a VM to run.
     triggerable.Triggerable(
         name="Tests - %s" % buildslave,
         builderNames=["Tests - %s" % buildslave],
