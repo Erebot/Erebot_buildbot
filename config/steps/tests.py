@@ -13,6 +13,22 @@ TESTS.addStep(common.clone)
 TESTS.addStep(common.composer_install)
 TESTS.addStep(common.dependencies_install)
 
+TESTS.addStep(shell.ShellCommand(
+    command="""
+        php composer.phar require
+            'phpunit/phpunit=*'
+        """,
+    description=["installing", "additional", "dependencies"],
+    descriptionDone=["install", "additional", "dependencies"],
+    env={
+        # Ensures the output doesn't use
+        # some locale-specific formatting.
+        'LANG': "en_US.UTF-8",
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
+    },
+    maxTime=10*60,
+))
+
 # Prepare for the tests. Eg. the Core's unittests require
 # the translations be available and other modules also do
 # some additional work (eg. generate a parser).

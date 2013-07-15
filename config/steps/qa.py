@@ -13,6 +13,24 @@ QA.addStep(common.clone)
 QA.addStep(common.composer_install)
 QA.addStep(common.dependencies_install)
 
+QA.addStep(shell.ShellCommand(
+    command="""
+        php composer.phar require
+            'squizlabs/php_codesniffer>=1.2.2'
+            'sebastian/phpcpd=*'
+            'phpmd/phpmd=*'
+        """,
+    description=["installing", "additional", "dependencies"],
+    descriptionDone=["install", "additional", "dependencies"],
+    env={
+        # Ensures the output doesn't use
+        # some locale-specific formatting.
+        'LANG': "en_US.UTF-8",
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
+    },
+    maxTime=10*60,
+))
+
 QA.addStep(CountingShellCommand(
     command="vendor/bin/phing qa_codesniffer",
     description="CodeSniffer",
