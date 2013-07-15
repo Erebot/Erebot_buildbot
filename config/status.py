@@ -95,7 +95,7 @@ STATUS.append(status.WebStatus(
     },
 ))
 
-STATUS.append(status_github.GitHubStatus(secrets.GITHUB_API_TOKEN))
+STATUS.append(status_github.GithubStatus(secrets.GITHUB_API_TOKEN))
 
 if getattr(secrets, 'IRC', True):
     STATUS.append(words.IRC(
