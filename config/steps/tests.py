@@ -14,10 +14,9 @@ TESTS.addStep(common.composer_install)
 TESTS.addStep(common.dependencies_install)
 
 TESTS.addStep(shell.ShellCommand(
-    command="""
-        php composer.phar require
-            'phpunit/phpunit=*'
-        """,
+    command="php composer.phar require '%s'" % "' '".join([
+            'phpunit/phpunit=*',
+    ]),
     description=["installing", "additional", "dependencies"],
     descriptionDone=["install", "additional", "dependencies"],
     env={

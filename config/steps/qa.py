@@ -14,12 +14,11 @@ QA.addStep(common.composer_install)
 QA.addStep(common.dependencies_install)
 
 QA.addStep(shell.ShellCommand(
-    command="""
-        php composer.phar require
-            'squizlabs/php_codesniffer>=1.2.2'
-            'sebastian/phpcpd=*'
-            'phpmd/phpmd=*'
-        """,
+    command="php composer.phar require '%s'" % "' '".join([
+        'squizlabs/php_codesniffer>=1.2.2',
+        'sebastian/phpcpd=*',
+        'phpmd/phpmd=*',
+    ]),
     description=["installing", "additional", "dependencies"],
     descriptionDone=["install", "additional", "dependencies"],
     env={
