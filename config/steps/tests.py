@@ -65,7 +65,7 @@ for i in xrange(1, common.nb_versions + 1):
         descriptionDone=[WithProperties("lint  %%(PHP%d_DESC:-)s" % i)],
         warnOnWarnings=True,
         env={
-            'PATH': WithProperties("${PHP%d_PATH}" % i),
+            'PATH': WithProperties("${PHP%d_PATH}:${PATH}" % i),
         },
         doStepIf=_path_checker(i),
         maxTime=5 * 60,
@@ -77,7 +77,7 @@ for i in xrange(1, common.nb_versions + 1):
         descriptionDone=[WithProperties("PHP  %%(PHP%d_DESC:-)s" % i)],
         warnOnWarnings=True,
         env={
-            'PATH': WithProperties("${PHP%d_PATH}" % i),
+            'PATH': WithProperties("${PHP%d_PATH}:${PATH}" % i),
         },
         maxTime=10 * 60,
         doStepIf=_path_checker(i),
