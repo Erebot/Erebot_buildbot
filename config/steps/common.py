@@ -137,16 +137,16 @@ composer_deps = shell.ShellCommand(
 
 composer_cleanup_posix = shell.ShellCommand(
     command="/bin/rm -rf composer.phar vendor/",
-    description=["cleaning", "environment"],
-    descriptionDone=["clean", "environment"],
+    description=["cleaning", "environment", "(POSIX)"],
+    descriptionDone=["clean", "environment", "(POSIX)"],
     maxTime=5*60,
     flunkOnFailure=False,
 )
 
 composer_cleanup_win = shell.ShellCommand(
     command="rem foo && del /F /S /Q composer.phar vendor/ && rd /S /Q vendor/",
-    description=["cleaning", "environment"],
-    descriptionDone=["clean", "environment"],
+    description=["cleaning", "environment", "(Windows)"],
+    descriptionDone=["clean", "environment", "(Windows)"],
     maxTime=5*60,
     flunkOnFailure=False,
 )

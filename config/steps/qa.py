@@ -16,7 +16,7 @@ QA.addStep(common.composer_install)
 QA.addStep(common.composer_deps)
 
 QA.addStep(shell.ShellCommand(
-    command="php composer.phar require '%s'" % "' '".join([
+    command="php composer.phar require %s" % ' '.join([
         'squizlabs/php_codesniffer=*',
         'sebastian/phpcpd=*',
         'phpmd/phpmd=*',

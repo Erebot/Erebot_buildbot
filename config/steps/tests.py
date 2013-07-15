@@ -16,7 +16,7 @@ TESTS.addStep(common.composer_install)
 TESTS.addStep(common.composer_deps)
 
 TESTS.addStep(shell.ShellCommand(
-    command="php composer.phar require '%s'" % "' '".join([
+    command="php composer.phar require %s" % ' '.join([
             'phpunit/phpunit=*',
     ]),
     description=["installing", "additional", "dependencies"],
