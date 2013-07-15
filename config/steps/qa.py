@@ -10,9 +10,11 @@ QA = factory.BuildFactory()
 QA.addStep(common.fill_properties)
 QA.addStep(common.erebot_path)
 QA.addStep(common.clone)
+QA.addStep(common.composer_install)
+QA.addStep(common.dependencies_install)
 
 QA.addStep(CountingShellCommand(
-    command="phing qa_codesniffer",
+    command="vendor/bin/phing qa_codesniffer",
     description="CodeSniffer",
     descriptionDone="CodeSniffer",
     warnOnWarnings=True,
@@ -28,7 +30,7 @@ QA.addStep(CountingShellCommand(
 ))
 
 QA.addStep(shell.ShellCommand(
-    command="phing qa_duplicates",
+    command="vendor/bin/phing qa_duplicates",
     description="Duplicates",
     descriptionDone="Duplicates",
     warnOnWarnings=True,
@@ -39,7 +41,7 @@ QA.addStep(shell.ShellCommand(
 ))
 
 QA.addStep(shell.WarningCountingShellCommand(
-    command="phing qa_mess",
+    command="vendor/bin/phing qa_mess",
     description="Mess",
     descriptionDone="Mess",
     warnOnWarnings=True,

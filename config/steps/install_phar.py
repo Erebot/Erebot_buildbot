@@ -25,7 +25,7 @@ INSTALL_PHAR.addStep(shell.ShellCommand(
                 "'%(repos)s/get/%(shortProject)s-%(release)sdev%(pkgBuildnumber)s.phar.pubkey' "
                 "'%(repos)s/get/%(shortProject)s-%(release)sdev%(pkgBuildnumber)s.pem' ",
         ]),
-        repos=lambda _dummy: misc.PEAR_URL,
+        repos=lambda _dummy: misc.PACKAGE_URL,
     ),
     description="Preparing",
     descriptionDone="Prepare",

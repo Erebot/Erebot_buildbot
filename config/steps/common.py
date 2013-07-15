@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.process.properties import WithProperties
+from buildbot.steps import shell
 from buildbot.steps.source import Git
 from Erebot_buildbot.src.steps import MorphProperties, SetPropertiesFromEnv
 from Erebot_buildbot.config import misc
@@ -104,4 +105,31 @@ for _i in xrange(1, nb_versions + 1):
 #    _slaves_props.append('PHP%d_PATH' % _i)
     _slaves_props.append('PHP%d_DESC' % _i)
 erebot_path = SetPropertiesFromEnv(variables=['PHP_MAIN'] + _slaves_props)
+
+composer_install = shell.ShellCommand(
+    command="""
+    php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
+    """,
+    description=["installing", "composer"],
+    descriptionDone=["install", "composer"],
+    env={
+        # Ensures the output doesn't use
+        # some locale-specific formatting.
+        'LANG': "en_US.UTF-8",
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
+    },
+    maxTime=10*60,
+)
+dependencies_install = shell.ShellCommand(
+    command="php composer.phar update",
+    description=["installing", "dependencies"],
+    descriptionDone=["install", "dependencies"],
+    env={
+        # Ensures the output doesn't use
+        # some locale-specific formatting.
+        'LANG': "en_US.UTF-8",
+        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
+    },
+    maxTime=10*60,
+)
 

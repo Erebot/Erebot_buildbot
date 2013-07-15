@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-GITHUB_BASE = "https://github.com/"
-
 COMPONENTS = (
     'Erebot/DependencyInjection',
     'Erebot/Erebot',
@@ -36,14 +34,11 @@ COMPONENTS = (
     'fpoirotte/XRL',
 )
 
-BUILDBOT_URL = "https://buildbot.erebot.net/"
-PEAR_CHANNEL = "pear.erebot.net"
-PEAR_URL = "https://%s/" % PEAR_CHANNEL
+GITHUB_BASE = "https://github.com/"
+BUILDBOT_URL = "https://ci.erebot.net/"
+PACKAGE_URL = "https://packages.erebot.net/"
 
 INSTALLATION_METHODS = (
-    'pear',
-    'pyrus',
+    'composer',
     'phar',
-#    'sources',
-#    'composer',
 )

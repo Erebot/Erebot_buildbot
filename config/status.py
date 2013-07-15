@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from Erebot_buildbot.config import auth, misc
-from Erebot_buildbot.src import github_hook, transifex_hook, status, words
+from Erebot_buildbot.src import (
+    status_github,
+    github_hook,
+    transifex_hook,
+    status,
+    words,
+)
 import secrets
 
 STATUS = []
@@ -79,7 +85,6 @@ STATUS.append(status.WebStatus(
 
     change_hook_dialects={
         'erebot_github': github_hook.GithubChangeHook({
-            'user': ('Erebot', 'fpoirotte'),
             'key': secrets.GITHUB_KEY,
         }),
         'transifex': transifex_hook.TransifexChangeHook({
@@ -89,6 +94,8 @@ STATUS.append(status.WebStatus(
         }),
     },
 ))
+
+STATUS.append(status_github.GitHubStatus(secrets.GITHUB_API_TOKEN))
 
 if getattr(secrets, 'IRC', True):
     STATUS.append(words.IRC(

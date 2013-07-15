@@ -48,10 +48,10 @@ LIVE.addStep(shell.ShellCommand(
     command=(
         "/usr/bin/curl '-#' -q --remote-time "
         "--tlsv1 --location --remote-name-all "
-        "%(pear)s/get/Erebot-latest.phar "
-        "%(pear)s/get/Erebot-latest.phar.pubkey "
-        "%(pear)s/get/Erebot-latest.pem" % {
-            'pear': misc.PEAR_URL.rstrip('/'),
+        "%(repos)s/get/Erebot-latest.phar "
+        "%(repos)s/get/Erebot-latest.phar.pubkey "
+        "%(repos)s/get/Erebot-latest.pem" % {
+            'repos': misc.PACKAGE_URL.rstrip('/'),
         }
     ),
     maxTime=5 * 60,
@@ -69,10 +69,10 @@ LIVE.addStep(shell.ShellCommand(
         "/usr/bin/curl '-#' -q --remote-time "
         "--tlsv1 --location --remote-name-all "
         + ' '.join(
-            "%(pear)s/get/%(component)s-latest.phar "
-            "%(pear)s/get/%(component)s-latest.phar.pubkey "
-            "%(pear)s/get/%(component)s-latest.pem" % {
-                'pear': misc.PEAR_URL.rstrip('/'),
+            "%(repos)s/get/%(component)s-latest.phar "
+            "%(repos)s/get/%(component)s-latest.phar.pubkey "
+            "%(repos)s/get/%(component)s-latest.pem" % {
+                'repos': misc.PACKAGE_URL.rstrip('/'),
                 'component': c.partition('/')[2]
             }
             for c in misc.COMPONENTS

@@ -10,12 +10,14 @@ TESTS = factory.BuildFactory()
 TESTS.addStep(common.fill_properties)
 TESTS.addStep(common.erebot_path)
 TESTS.addStep(common.clone)
+TESTS.addStep(common.composer_install)
+TESTS.addStep(common.dependencies_install)
 
 # Prepare for the tests. Eg. the Core's unittests require
 # the translations be available and other modules also do
 # some additional work (eg. generate a parser).
 TESTS.addStep(shell.Compile(
-    command="phing -logger phing.listener.DefaultLogger prepare_test",
+    command="vendor/bin/phing -logger phing.listener.DefaultLogger prepare_test",
     env={
         # Ensures the output doesn't use
         # some locale-specific formatting.
@@ -42,7 +44,7 @@ def _path_checker(i):
 for i in xrange(1, common.nb_versions + 1):
     # Lint the code with each version of PHP installed.
     TESTS.addStep(shell.ShellCommand(
-        command="phing -logger phing.listener.DefaultLogger qa_lint",
+        command="vendor/bin/phing -logger phing.listener.DefaultLogger qa_lint",
         description=[WithProperties("lint  %%(PHP%d_DESC:-)s" % i)],
         descriptionDone=[WithProperties("lint  %%(PHP%d_DESC:-)s" % i)],
         warnOnWarnings=True,
@@ -54,7 +56,7 @@ for i in xrange(1, common.nb_versions + 1):
     ))
 
     TESTS.addStep(PHPUnit(
-        command="phing -logger phing.listener.DefaultLogger bare_test",
+        command="vendor/bin/phing -logger phing.listener.DefaultLogger bare_test",
         description=[WithProperties("PHP  %%(PHP%d_DESC:-)s" % i)],
         descriptionDone=[WithProperties("PHP  %%(PHP%d_DESC:-)s" % i)],
         warnOnWarnings=True,
@@ -69,10 +71,7 @@ for i in xrange(1, common.nb_versions + 1):
 # Also, only upload code coverage reports when all tests pass.
 def _must_transfer_coverage(s):
     slaves = ('Debian (x64)', )
-    try:
-        passed = s.getProperty('Passed')
-    except KeyError:
-        passed = None
+    passed = s.getProperty('Passed', None)
     return s.getSlaveName() in slaves and passed
 
 TESTS.addStep(transfer.DirectoryUpload(

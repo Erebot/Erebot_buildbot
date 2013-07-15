@@ -9,7 +9,6 @@ from .package import PACKAGE
 from .qa import QA
 from .tests import TESTS
 from .vm_tests import VM_TESTS
-from .install_pear import INSTALL_PEAR
-from .install_pyrus import INSTALL_PYRUS
+from .install_composer import INSTALL_COMPOSER
 from .install_phar import INSTALL_PHAR
 

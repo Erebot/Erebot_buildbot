@@ -14,6 +14,8 @@ DOC = factory.BuildFactory()
 DOC.addStep(common.fill_properties)
 DOC.addStep(common.erebot_path)
 DOC.addStep(common.clone_rw)
+DOC.addStep(common.composer_install)
+DOC.addStep(common.dependencies_install)
 
 DOC.addStep(master.MasterShellCommand(
     command=" && ".join([
@@ -46,7 +48,7 @@ DOC.addStep(shell.ShellCommand(
 
 DOC.addStep(shell.WarningCountingShellCommand(
     command=WithProperties(
-        "phing doc_html"
+        "vendor/bin/phing doc_html"
             " -Dtagfiles.reference=-"
             " -Ddoc_release=dev%(buildnumber)d"
     ),

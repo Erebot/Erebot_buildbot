@@ -3,6 +3,6 @@
 from buildbot import locks
 
 CHECKOUT_LOCK = locks.SlaveLock("checkout")
-PIRUM_LOCK = locks.MasterLock("pirum")
+PACKAGE_LOCK = locks.MasterLock("package")
 TAGFILES_LOCK = locks.MasterLock("tagfiles")
 
