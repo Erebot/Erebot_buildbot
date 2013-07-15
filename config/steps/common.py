@@ -119,6 +119,7 @@ composer_install = shell.ShellCommand(
         'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     maxTime=10*60,
+    haltOnFailure=True,
 )
 composer_deps = shell.ShellCommand(
     command="php composer.phar update",
@@ -131,12 +132,22 @@ composer_deps = shell.ShellCommand(
         'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     maxTime=10*60,
+    haltOnFailure=True,
 )
 
-composer_cleanup = shell.ShellCommand(
+composer_cleanup_posix = shell.ShellCommand(
     command="/bin/rm -rf composer.phar vendor/",
     description=["cleaning", "environment"],
     descriptionDone=["clean", "environment"],
     maxTime=5*60,
+    flunkOnFailure=False,
+)
+
+composer_cleanup_win = shell.ShellCommand(
+    command="rem foo && del /F /S /Q composer.phar vendor/ && rd /S /Q vendor/",
+    description=["cleaning", "environment"],
+    descriptionDone=["clean", "environment"],
+    maxTime=5*60,
+    flunkOnFailure=False,
 )
 
