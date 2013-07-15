@@ -12,8 +12,7 @@ class WebStatus(OrigWebStatus):
                  order_console_by_time=False, changecommentlink=None,
                  revlink=None, projects=None, repositories=None,
                  authz=None, logRotateLength=None, maxRotatedFiles=None,
-                 change_hook_dialects = None, provide_feeds=None, jinja_loaders=None,
-                 change_hook_auth=None):
+                 change_hook_dialects = None, provide_feeds=None):
 
         if change_hook_dialects is None:
             change_hook_dialects = {}
@@ -26,8 +25,7 @@ class WebStatus(OrigWebStatus):
                                 order_console_by_time, changecommentlink,
                                 revlink, projects, repositories,
                                 authz, logRotateLength, maxRotatedFiles,
-                                {}, provide_feeds, jinja_loaders,
-                                change_hook_authh)
+                                {}, provide_feeds)
 
         if change_hook_dialects:
             self.change_hook_dialects = change_hook_dialects
