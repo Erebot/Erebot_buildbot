@@ -14,8 +14,9 @@ DOC = factory.BuildFactory()
 DOC.addStep(common.fill_properties)
 DOC.addStep(common.erebot_path)
 DOC.addStep(common.clone_rw)
+DOC.addStep(common.composer_cleanup)
 DOC.addStep(common.composer_install)
-DOC.addStep(common.dependencies_install)
+DOC.addStep(common.composer_deps)
 
 DOC.addStep(master.MasterShellCommand(
     command=" && ".join([

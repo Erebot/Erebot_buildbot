@@ -11,6 +11,7 @@ INSTALL_COMPOSER = factory.BuildFactory()
 INSTALL_COMPOSER.addStep(common.fill_properties)
 INSTALL_COMPOSER.addStep(common.erebot_path)
 INSTALL_COMPOSER.addStep(common.clone)
+INSTALL_COMPOSER.addStep(common.composer_cleanup)
 INSTALL_COMPOSER.addStep(common.composer_install)
-INSTALL_COMPOSER.addStep(common.dependencies_install)
+INSTALL_COMPOSER.addStep(common.composer_deps)
 

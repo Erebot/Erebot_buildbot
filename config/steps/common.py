@@ -120,7 +120,7 @@ composer_install = shell.ShellCommand(
     },
     maxTime=10*60,
 )
-dependencies_install = shell.ShellCommand(
+composer_deps = shell.ShellCommand(
     command="php composer.phar update",
     description=["installing", "dependencies"],
     descriptionDone=["install", "dependencies"],
@@ -131,5 +131,12 @@ dependencies_install = shell.ShellCommand(
         'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
     },
     maxTime=10*60,
+)
+
+composer_cleanup = shell.ShellCommand(
+    command="/bin/rm -rf composer.phar vendor/",
+    description=["cleaning", "environment"],
+    descriptionDone=["clean", "environment"],
+    maxTime=5*60,
 )
 

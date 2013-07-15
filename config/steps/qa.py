@@ -10,8 +10,9 @@ QA = factory.BuildFactory()
 QA.addStep(common.fill_properties)
 QA.addStep(common.erebot_path)
 QA.addStep(common.clone)
+QA.addStep(common.composer_cleanup)
 QA.addStep(common.composer_install)
-QA.addStep(common.dependencies_install)
+QA.addStep(common.composer_deps)
 
 QA.addStep(shell.ShellCommand(
     command="php composer.phar require '%s'" % "' '".join([

@@ -13,8 +13,9 @@ PACKAGE = factory.BuildFactory()
 PACKAGE.addStep(common.fill_properties)
 PACKAGE.addStep(common.erebot_path)
 PACKAGE.addStep(common.clone)
+PACKAGE.addStep(common.composer_cleanup)
 PACKAGE.addStep(common.composer_install)
-PACKAGE.addStep(common.dependencies_install)
+PACKAGE.addStep(common.composer_deps)
 
 PACKAGE.addStep(shell.Compile(
     command="vendor/bin/phing -logger phing.listener.DefaultLogger -Dskip.update_catalog=false",
