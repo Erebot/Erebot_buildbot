@@ -41,43 +41,14 @@ class CallableChangeHookResource(ChangeHookResource):
             raise ValueError(m)
 
         if res:
-            res = list(res)
-            # 0.8.4p1 <= buildmaster < 0.8.6rc1
-            # res is a list of dicts of change properties.
-            if isinstance(res[0], dict):
-                pass
-            # buildmaster < 0.8.4p1
-            # res is a list of Change objects.
-            elif not hasattr(res[0], '__iter__'):
-                pass
-            # 0.8.6rc1 <= buildmaster
             # res is a tuple with 2 items:
             # - a list of dicts of change properties (see above)
             # - the name of a VCS source (eg. "git")
-            else:
-                res, src = res
+            res, src = res
         else:
             # res could be None, which would cause errors later on,
             # so we force it to be an empty list instead.
             res = []
 
-        fcode = BuildMaster.addChange.im_func.func_code
-        fargs = fcode.co_varnames[:fcode.co_argcount]
-
-        # buildmaster < 0.8.4p1: we must pass Change objects directly.
-        if fcode.co_argcount == 2:
-            if not res: # No changes.
-                return res
-            # We have change properties, but we need Change objects.
-            if isinstance(res[0], dict):
-                return [Change(**r) for r in res]
-
-        # Starting with buildmaster 0.8.5rc1,
-        # the source can be passed to master.addChange().
-        if 'src' in fargs:
-            return (res, src)
-
-        # Otherwise, we only pass the raw result,
-        # without any source information.
-        return res
+        return (res, src)
 

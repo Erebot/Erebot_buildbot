@@ -2,9 +2,10 @@
 import urllib
 from twisted.internet import defer
 from buildbot.status import builder
-from buildbot.status.web.status_json import \
-    JsonResource, \
+from buildbot.status.web.status_json import (
+    JsonResource,
     JsonStatusResource as OrigJsonStatusResource
+)
 from Erebot_buildbot.config import misc
 from sqlalchemy import exc
 from twisted.python import log
@@ -23,25 +24,6 @@ class ComponentJsonResource(JsonResource):
         conn = engine.connect()
 
         q = """
-            SELECT
-                b.number,
-                breqs.buildername,
-                breqs.results
-
-            FROM sourcestamps sstamps
-            JOIN buildsets bsets
-                ON bsets.sourcestampid = sstamps.id
-            JOIN buildrequests breqs
-                ON breqs.buildsetid = bsets.id
-            JOIN builds b
-                ON b.brid = breqs.id
-
-            WHERE sstamps.project == '%s'
-            GROUP BY breqs.buildername
-            HAVING b.number = MAX(b.number);
-        """
-
-        q2 = """
             SELECT
                 b.number,
                 breqs.buildername,
@@ -72,10 +54,7 @@ class ComponentJsonResource(JsonResource):
                     'build': None,
                     'result': 'no build',
                 }
-            try:
-                query_res = txn.execute(q2 % self._project)
-            except exc.OperationalError:
-                query_res = txn.execute(q % self._project)
+            query_res = txn.execute(q % self._project)
             labels = dict(enumerate(builder.Results))
             for number, buildername, result in query_res.fetchall():
                 res['results'][buildername] = {
@@ -91,10 +70,6 @@ class ComponentJsonResource(JsonResource):
         return results
 
     def asDict(self, request):
-        # buildbot < 0.8.5 does not support the new DB API.
-        if getattr(self.status, 'db', None):
-            return defer.success({'error': 'dbapi'})
-
         whitelist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
                     'abcdefghijklmnopqrstuvwxyz' \
                     '1234567890_./'

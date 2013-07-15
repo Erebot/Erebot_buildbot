@@ -20,21 +20,12 @@ class PerProjectAndBranchScheduler(BaseBasicScheduler):
         def thd(conn):
             sch_ch_tbl = self.master.db.model.scheduler_changes
             ch_tbl = self.master.db.model.changes
-
-            if hasattr(sch_ch_tbl.c, 'schedulerid'): # buildbot < 0.8.6
-                wc = (
-                    (sch_ch_tbl.c.schedulerid == schedulerid) &
-                    (sch_ch_tbl.c.changeid == ch_tbl.c.changeid) &
-                    (ch_tbl.c.project == project) &
-                    (ch_tbl.c.branch == branch)
-                )
-            else:
-                wc = (
-                    (sch_ch_tbl.c.objectid == schedulerid) &
-                    (sch_ch_tbl.c.changeid == ch_tbl.c.changeid) &
-                    (ch_tbl.c.project == project) &
-                    (ch_tbl.c.branch == branch)
-                )
+            wc = (
+                (sch_ch_tbl.c.objectid == schedulerid) &
+                (sch_ch_tbl.c.changeid == ch_tbl.c.changeid) &
+                (ch_tbl.c.project == project) &
+                (ch_tbl.c.branch == branch)
+            )
 
             q = sa.select(
                 [ sch_ch_tbl.c.changeid, sch_ch_tbl.c.important ],

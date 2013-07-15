@@ -31,21 +31,11 @@ class IRCContact(words.IRCContact):
     muted = False
 
     def send(self, message):
-        if self.muted:
-            return
-        if hasattr(self, 'channel'): # buildbot < 0.8.6
-            self.channel.msgOrNotice(self.dest,
-                message.encode("utf-8", "replace"))
-        else:
-            self.bot.msgOrNotice(self.dest,
-                message.encode("utf-8", "replace"))
+        if not self.muted:
+            self.bot.msgOrNotice(self.dest, message.encode("utf-8", "replace"))
 
     def act(self, action):
-        if self.muted:
-            return
-        if hasattr(self, 'channel'): # buildbot < 0.8.6
-            self.channel.me(self.dest, action.encode("utf-8", "replace"))
-        else:
+        if not self.muted:
             self.bot.describe(self.dest, action.encode("utf-8", "replace"))
 
     def buildStarted(self, builderName, build):

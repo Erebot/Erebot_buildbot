@@ -87,12 +87,7 @@ class PHPUnit(ShellCommand, LogLineObserver):
 
     def createSummary(self, log):
         for metric, value in self.metrics.iteritems():
-            try:
-                old_value = self.getProperty("PHPUnit-%s" % metric)
-            except KeyError: # 0.8.3
-                old_value = 0
-            if old_value is None: # at least 0.8.5
-                old_value = 0
+            old_value = self.getProperty("PHPUnit-%s" % metric, 0)
             self.setProperty(
                 "PHPUnit-%s" % metric,
                 old_value + value,
@@ -100,12 +95,7 @@ class PHPUnit(ShellCommand, LogLineObserver):
             )
 
     def evaluateCommand(self, cmd):
-        try:
-            passed = self.getProperty("Passed")
-        except KeyError: # 0.8.3
-            passed = True
-        if passed is None: # at least 0.8.5
-            passed = True
+        passed = self.getProperty("Passed", True)
         self.setProperty('Passed', bool(passed))
         if cmd.rc != 0 or self.phpError or self.metrics['Failures']:
             self.setProperty('Passed', False)
@@ -321,12 +311,7 @@ class CountingShellCommand(ShellCommand):
             warnings_stat + self.warnCount
         )
 
-        try:
-            old_count = self.getProperty("warnings-count")
-        except KeyError: # 0.8.3
-            old_count = 0
-        if old_count is None: # at least 0.8.5
-            old_count = 0
+        old_count = self.getProperty("warnings-count", 0)
         self.setProperty(
             "warnings-count",
             old_count + self.warnCount,
@@ -336,12 +321,7 @@ class CountingShellCommand(ShellCommand):
         errors_stat = self.step_status.getStatistic('errors', 0)
         self.step_status.setStatistic('errors', errors_stat + self.errorCount)
 
-        try:
-            old_count = self.getProperty("errors-count")
-        except KeyError: # 0.8.3
-            old_count = 0
-        if old_count is None: # at least 0.8.5
-            old_count = 0
+        old_count = self.getProperty("errors-count", 0)
         self.setProperty(
             "errors-count",
             old_count + self.errorCount,

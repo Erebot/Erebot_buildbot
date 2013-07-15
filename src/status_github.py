@@ -38,9 +38,9 @@ class GithubStatus(StatusReceiverBase)
             self._token,
             {
                 "state": "pending",
-                "target_url": "%scomponents?buildset=%d" % (
+                "target_url": "%scomponents?revision=%d" % (
                     misc.BUILDBOT_URL,
-                    bss.id,
+                    last_ch['revision'],
                 ),
                 "description": "Buildbot is processing the change...",
             }
@@ -68,9 +68,9 @@ class GithubStatus(StatusReceiverBase)
             self._token,
             {
                 "state": states.get(bss.getResults(), 'error'),
-                "target_url": "%scomponents?buildset=%d" % (
+                "target_url": "%scomponents?revision=%d" % (
                     misc.BUILDBOT_URL,
-                    bss.id,
+                    last_ch['revision'],
                 ),
                 "description": desc,
             }

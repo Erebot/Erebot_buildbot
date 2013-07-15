@@ -6,21 +6,28 @@ from Erebot_buildbot.src.change_hook import CallableChangeHookResource
 from Erebot_buildbot.src.status_json import JsonStatusResource
 
 class WebStatus(OrigWebStatus):
-    def __init__(self, *args, **kwargs):
-        args = list(args)
-        try:
-            change_hook_dialects = args.pop(17)
-        except IndexError:
-            change_hook_dialects = None
-        if 'change_hook_dialects' in kwargs:
-            if change_hook_dialects is not None:
-                raise Exception("change_hook_dialects passed "
-                                "in both args and kwargs")
-            change_hook_dialects = kwargs.pop('change_hook_dialects')
+    def __init__(self, http_port=None, distrib_port=None, allowForce=None,
+                 public_html="public_html", site=None, numbuilds=20,
+                 num_events=200, num_events_max=None, auth=None,
+                 order_console_by_time=False, changecommentlink=None,
+                 revlink=None, projects=None, repositories=None,
+                 authz=None, logRotateLength=None, maxRotatedFiles=None,
+                 change_hook_dialects = None, provide_feeds=None, jinja_loaders=None,
+                 change_hook_auth=None):
+
+        if change_hook_dialects is None:
+            change_hook_dialects = {}
 
         # Call the original initializer without the
         # change_hook_dialects information.
-        OrigWebStatus.__init__(self, *args, **kwargs)
+        OrigWebStatus.__init__(self, http_port, distrib_port, allowForce,
+                                public_html, site, numbuilds,
+                                num_events, num_events_max, auth,
+                                order_console_by_time, changecommentlink,
+                                revlink, projects, repositories,
+                                authz, logRotateLength, maxRotatedFiles,
+                                {}, provide_feeds, jinja_loaders,
+                                change_hook_authh)
 
         if change_hook_dialects:
             self.change_hook_dialects = change_hook_dialects

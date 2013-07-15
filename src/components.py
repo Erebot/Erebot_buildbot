@@ -6,11 +6,6 @@ from buildbot.status.web.base import HtmlResource, path_to_root
 from Erebot_buildbot.config import misc
 from sqlalchemy import exc
 
-try:
-    from buildbot.db.base import DBConnectorComponent
-except ImportError:
-    DBConnectorComponent = None
-
 class ComponentsResource(HtmlResource):
     title = "Components"
     addSlash = True
@@ -30,92 +25,72 @@ class ComponentsResource(HtmlResource):
             )
         return results
 
-    def _txn(self, txn, conn, root):
-        q = """
-            SELECT
-                b.number,
-                breqs.buildername,
-                sstamps.project,
-                breqs.results
-
-            FROM sourcestamps sstamps
-            JOIN buildsets bsets
-                ON bsets.sourcestampid = sstamps.id
-            JOIN buildrequests breqs
-                ON breqs.buildsetid = bsets.id
-            JOIN builds b
-                ON b.brid = breqs.id
-
-            WHERE project != ''
-            AND project IS NOT NULL
-
-            GROUP BY breqs.buildername, sstamps.project
-
-            ORDER BY b.number DESC;
-        """
-        txn.execute(q, ())
-        results = self._get_results(txn, root)
-        return results
-
-    def _engine_txn(self, engine, root):
-        results = {}
+    def _engine_txn(self, engine, root, projects, revisions):
         conn = engine.connect()
 
-        q = """
-            SELECT
-                b.number,
-                breqs.buildername,
-                sstamps.project,
-                breqs.results
-
-            FROM sourcestamps sstamps
-            JOIN buildsets bsets
-                ON bsets.sourcestampid = sstamps.id
-            JOIN buildrequests breqs
-                ON breqs.buildsetid = bsets.id
-            JOIN builds b
-                ON b.brid = breqs.id
-
-            WHERE project != ''
-            AND project IS NOT NULL
-
-            GROUP BY breqs.buildername, sstamps.project
-
-            ORDER BY b.number DESC;
-        """
-
-        # Accomodate changes made in buildbot 0.8.6
-        q2 = """
-            SELECT
-                b.number,
-                breqs.buildername,
-                sstamps.project,
-                breqs.results
-
-            FROM sourcestamps sstamps
-            JOIN sourcestampsets ssets
-                ON ssets.id = sstamps.sourcestampsetid
-            JOIN buildsets bsets
-                ON bsets.sourcestampsetid = ssets.id
-            JOIN buildrequests breqs
-                ON breqs.buildsetid = bsets.id
-            JOIN builds b
-                ON b.brid = breqs.id
-
-            WHERE project != ''
-            AND project IS NOT NULL
-
-            GROUP BY breqs.buildername, sstamps.project
-
-            ORDER BY b.number DESC;
-        """
-
         def _exec(txn):
-            try:
-                res = txn.execute(q2)
-            except exc.OperationalError:
-                res = txn.execute(q)
-            return self._get_results(res, root)
+            q = """
+                SELECT
+                    b.number,
+                    breqs.buildername,
+                    sstamps.project,
+                    breqs.results
+
+                FROM sourcestamps sstamps
+                JOIN sourcestampsets ssets
+                    ON ssets.id = sstamps.sourcestampsetid
+                JOIN buildsets bsets
+                    ON bsets.sourcestampsetid = ssets.id
+                JOIN buildrequests breqs
+                    ON breqs.buildsetid = bsets.id
+                JOIN builds b
+                    ON b.brid = breqs.id
+                JOIN sourcestamp_changes srcch
+                    ON sstamps.id = srcch.sourcestampid
+
+                WHERE %(projects)
+                %(revisions)s
+
+                GROUP BY breqs.buildername, sstamps.project
+
+                ORDER BY b.number DESC;
+            """
+            rvs = []
+            for revision in revisions:
+                try:
+                    assert revision != ""
+                    revision = revision.tolower()
+                    assert revision.lstrip('1234567890abcdef') == ""
+                    rvs.append(revision)
+                except Exception:
+                    pass
+
+            pjs = []
+            for project in projects:
+                try:
+                    assert project != ""
+                    assert project.lstrip(
+                        '1234567890-_/.'
+                        'abcdefghijklmnopqrstuvwxyz'
+                        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                    ) == ""
+                    pjs.append(project)
+                except Exception:
+                    pass
+
+            args = {
+                "projects":
+                    "sstamps.project != '' "
+                    "AND sstamps.project IS NOT NULL",
+                "revisions": "",
+            }
+            if pjs:
+                args["projects"] = \
+                    "sstamps.project IN ('%s')" % "','".join(pjs)
+            if rvs:
+                args["revisions"] = \
+                    "AND sstamps.revision IN ('%s')" % "','".join(rvs)
+            return self._get_results(txn.execute(q % args), root)
 
         try:
             results = conn.transaction(_exec)
@@ -123,29 +98,21 @@ class ComponentsResource(HtmlResource):
             conn.close()
         return results
 
-    def _content(self, req, cxt):
+    @defer.inlineCallbacks
+    def content(self, req, cxt):
         status = self.getStatus(req)
         builders = req.args.get("builder", status.getBuilderNames())
         base_builders_url = path_to_root(req) + "builders/"
         bs = cxt['builders'] = []
         cxt['components'] = sorted(misc.COMPONENTS, key=lambda x: x.lower())
 
-        if getattr(status, 'db', None):
-            cxt['results'] = status.db.runInteractionNow(
-                self._txn,
-                status.db,
-                base_builders_url
-            )
-        else: # starting with buildbot 0.8.5.
-            master = self.getBuildmaster(req)
-            wfd = defer.waitForDeferred(
-                master.db.pool.do_with_engine(
-                    self._engine_txn,
-                    base_builders_url,
-                )
-            )
-            yield wfd
-            cxt['results'] = wfd.getResult()
+        master = self.getBuildmaster(req)
+        cxt['results'] = yield master.db.pool.do_with_engine(
+                                    self._engine_txn,
+                                    base_builders_url,
+                                    req.args.get("project", []),
+                                    req.args.get("revision", []),
+                                )
 
         for bn in builders:
             bld = { 'link': base_builders_url + urllib.quote(bn, safe=''),
@@ -153,13 +120,5 @@ class ComponentsResource(HtmlResource):
             bs.append(bld)
 
         template = req.site.buildbot_service.templates.get_template("components.html")
-        yield template.render(**cxt)
-
-    def _get_deferred_content(self, *args, **kwargs):
-        return self._content(*args, **kwargs).next()
-
-    if DBConnectorComponent:
-        content = defer.deferredGenerator(_content)
-    else:
-        content = _get_deferred_content
+        defer.returnValue(template.render(**cxt))
 
