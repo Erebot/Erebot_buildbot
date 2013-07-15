@@ -48,7 +48,7 @@ class ComponentsResource(HtmlResource):
                 JOIN sourcestamp_changes srcch
                     ON sstamps.id = srcch.sourcestampid
 
-                WHERE %(projects)
+                WHERE %(projects)s
                 %(revisions)s
 
                 GROUP BY breqs.buildername, sstamps.project
