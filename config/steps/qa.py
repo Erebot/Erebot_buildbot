@@ -19,6 +19,7 @@ QA.addStep(shell.ShellCommand(
         'sebastian/phpcpd=*',
         'phpmd/phpmd=*',
         'sebastian/finder-facade=dev-master',
+        'theseer/fdomdocument=dev-master',
     ]),
     description=["installing", "additional", "dependencies"],
     descriptionDone=["install", "additional", "dependencies"],
