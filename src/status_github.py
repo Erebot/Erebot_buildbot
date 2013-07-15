@@ -2,7 +2,7 @@
 
 from twisted.internet import defer, reactor
 
-from buildbot.status.base import StatusReceiverBase
+from buildbot.status.base import StatusReceiverService
 from buildbot.status.results import (
     Results,
     SUCCESS,
@@ -14,7 +14,7 @@ from buildbot.status.results import (
 )
 from Erebot_buildbot.src.github_hook import gh_api
 
-class GithubStatus(StatusReceiverBase):
+class GithubStatus(StatusReceiverService):
     api_base = "https://api.github.com"
 
     def __init__(self, token):
