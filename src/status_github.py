@@ -3,10 +3,18 @@
 from twisted.internet import defer, reactor
 
 from buildbot.status.base import StatusReceiverBase
-from buildbot.status.result import Results, SUCCESS, WARNINGS, FAILURE, SKIPPED, EXCEPTION, RETRY
+from buildbot.status.results import (
+    Results,
+    SUCCESS,
+    WARNINGS,
+    FAILURE,
+    SKIPPED,
+    EXCEPTION,
+    RETRY,
+)
 from Erebot_buildbot.src.github_hook import gh_api
 
-class GithubStatus(StatusReceiverBase)
+class GithubStatus(StatusReceiverBase):
     api_base = "https://api.github.com"
 
     def __init__(self, token):
@@ -15,7 +23,7 @@ class GithubStatus(StatusReceiverBase)
     @defer.inlineCallbacks
     def _get_last_change(self, bs):
         sssid = bs.bsdict['sourcestampsetid']
-        yield ss = bs.master.db.sourcestamps.getSourceStamps(sssid)
+        ss = yield bs.master.db.sourcestamps.getSourceStamps(sssid)
         when = None
         last_ch = None
         for sourcestamp in ss:
