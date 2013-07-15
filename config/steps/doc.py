@@ -50,7 +50,7 @@ DOC.addStep(shell.WarningCountingShellCommand(
     command=WithProperties(
         "vendor/bin/phing doc_html"
             " -Dtagfiles.reference=-"
-            " -Ddoc_release=dev%(buildnumber)d"
+            " -Ddoc_release=-%(buildnumber)d"
     ),
     description=["building", "doc"],
     descriptionDone=["build", "doc"],
