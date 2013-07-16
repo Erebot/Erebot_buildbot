@@ -45,8 +45,6 @@ class ComponentsResource(HtmlResource):
                     ON breqs.buildsetid = bsets.id
                 JOIN builds b
                     ON b.brid = breqs.id
-                JOIN sourcestamp_changes srcch
-                    ON sstamps.id = srcch.sourcestampid
 
                 WHERE %(projects)s
                 %(revisions)s
