@@ -104,7 +104,12 @@ _slaves_props = []
 for _i in xrange(1, nb_versions + 1):
 #    _slaves_props.append('PHP%d_PATH' % _i)
     _slaves_props.append('PHP%d_DESC' % _i)
-erebot_path = SetPropertiesFromEnv(variables=['PHP_MAIN'] + _slaves_props)
+erebot_path = SetPropertiesFromEnv(
+    [
+        'PHP_MAIN',
+        'APPDATA',
+    ] + _slaves_props
+)
 
 composer_install = shell.ShellCommand(
     command="""
@@ -130,6 +135,7 @@ composer_deps = shell.ShellCommand(
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
         'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
+        'APPDATA': WithProperties("%(APPDATA:-${USERPROFILE}\\Application Data\\)"),
     },
     maxTime=10*60,
     haltOnFailure=True,
