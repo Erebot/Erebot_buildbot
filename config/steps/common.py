@@ -135,7 +135,7 @@ composer_deps = shell.ShellCommand(
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
         'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
-        'APPDATA': WithProperties("%(APPDATA:-${USERPROFILE}\\Application Data\\)"),
+        'APPDATA': WithProperties("%(APPDATA:-${USERPROFILE}\\Application Data\\)s"),
     },
     maxTime=10*60,
     haltOnFailure=True,
