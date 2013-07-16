@@ -68,19 +68,6 @@ PACKAGE.addStep(shell.ShellCommand(
     descriptionDone=["Update", "i18n", "template"],
 ))
 
-PACKAGE.addStep(shell.ShellCommand(
-        command=WithProperties(
-        """
-        for f in `ls -1 RELEASE-*`;
-        do
-            /bin/mv -v ${f} ${f}dev%(buildnumber)d;
-        done
-        """
-        ),
-        description=["prepare", "build"],
-        descriptionDone=["prepare", "build"],
-))
-
 PACKAGE.addStep(transfer.FileDownload(
     mastersrc='/home/qa/master/buildenv/sign',
     slavedest=WithProperties('/tmp/buildbot.sign.%(buildnumber)d'),
@@ -130,19 +117,6 @@ PACKAGE.addStep(shell.ShellCommand(
     descriptionDone=["buildenv", "cleanup"],
     haltOnFailure=True,
     alwaysRun=True,
-))
-
-PACKAGE.addStep(shell.ShellCommand(
-    command=WithProperties(
-    """
-    for f in `ls -1 RELEASE-*`;
-    do
-        /bin/mv -v ${f} ${f%%dev%(buildnumber)d};
-    done
-    """
-    ),
-    description=["finalize", "build"],
-    descriptionDone=["finalize", "build"],
 ))
 
 PACKAGE.addStep(shell.SetProperty(
