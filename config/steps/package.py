@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from buildbot.process import factory
-from buildbot.process.properties import WithProperties
+from buildbot.process.properties import WithProperties, Property
 from buildbot.steps import shell, transfer, trigger
 from Erebot_buildbot.config.steps import common, helpers
 from Erebot_buildbot.config.locks import PACKAGE_LOCK
@@ -185,7 +185,7 @@ PACKAGE.addStep(Link(
     doStepIf=helpers.get_package('.pem'),
 ))
 
-PACKAGE.addStep(master.MasterShellCommand(
+PACKAGE.addStep(master.ShellCommand(
     command="php /var/www/php/satis/bin/satis build "
                 "/var/www/satis.json "
                 "/var/www/packages.erebot.net",
@@ -193,7 +193,7 @@ PACKAGE.addStep(master.MasterShellCommand(
         # Ensures the output doesn't use
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
-        'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
+        'PATH': "/home/qa/phpfarm/inst/current/bin/:${PATH}",
     },
     description=['updating', 'repository'],
     descriptionDone=['update', 'repository'],
@@ -212,25 +212,19 @@ PACKAGE.addStep(shell.SetProperty(
     maxTime=60,
 ))
 
-PACKAGE.addStep(shell.SetProperty(
-    command=WithProperties("/usr/bin/printf '%%d' %(buildnumber)s"),
-    property='pkgBuildnumber',
-    maxTime=60,
-))
-
-for method in misc.INSTALLATION_METHODS:
-    PACKAGE.addStep(trigger.Trigger(
-        schedulerNames=["Install - %s" % method],
-        copy_properties=[
-            'project',
-            'repository',
-            'branch',
-            'revision',
-            'release',
-            'pkgBuildnumber',
-        ],
-        doStepIf=helpers.negate(helpers.if_component([
-            'Erebot/www.erebot.net',
-        ])),
-    ))
+#for method in misc.INSTALLATION_METHODS:
+#    PACKAGE.addStep(trigger.Trigger(
+#        schedulerNames=["Install - %s" % method],
+#        set_properties={
+#            'project': Property('project'),
+#            'repository': Property('repository'),
+#            'branch': Property('branch'),
+#            'revision': Property('revision'),
+#            'release': Property('release'),
+#            'pkgBuildnumber': Property('buildnumber'),
+#        },
+#        doStepIf=helpers.negate(helpers.if_component([
+#            'Erebot/www.erebot.net',
+#        ])),
+#    ))
 
