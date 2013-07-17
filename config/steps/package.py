@@ -82,19 +82,9 @@ PACKAGE.addStep(transfer.FileDownload(
 
 PACKAGE.addStep(shell.ShellCommand(
     command=WithProperties(
-        " && ".join([
-            "/bin/mkdir -p /tmp/release-%(buildnumber)d",
-#            "pyrus.phar /tmp/release-%(buildnumber)d "
-#                "set handle Ere-build-bot",
-#            "pyrus.phar /tmp/release-%(buildnumber)d "
-#                "set openssl_cert /tmp/buildbot.p12.%(buildnumber)d",
-            "vendor/bin/phing release "
-                " -Dstability=devel "
-                " -Dopensslkey.tmp=/tmp/buildbot.p12.%(buildnumber)d "
-                " -Dopensslpassfile=/tmp/buildbot.sign.%(buildnumber)d",
-        ]) + "; " + " && ".join([
-            "/bin/rm -rf /tmp/release-%(buildnumber)d",
-        ])
+        "vendor/bin/phing release "
+            " -Dopensslkey.tmp=/tmp/buildbot.p12.%(buildnumber)d "
+            " -Dopensslpassfile=/tmp/buildbot.sign.%(buildnumber)d"
     ),
     env={
         # Ensures the output doesn't use
@@ -211,7 +201,7 @@ PACKAGE.addStep(master.MasterShellCommand(
 ))
 
 PACKAGE.addStep(shell.SetProperty(
-    command=WithProperties("php buildenv/get_version.php -v RELEASE"),
+    command=WithProperties("php vendor/erebot/buildenv/get_version.php"),
     property='release',
     env={
         # Ensures the output doesn't use
