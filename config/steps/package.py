@@ -19,7 +19,9 @@ PACKAGE.addStep(common.composer_install)
 PACKAGE.addStep(common.composer_deps)
 
 PACKAGE.addStep(shell.Compile(
-    command="vendor/bin/phing -logger phing.listener.DefaultLogger -Dskip.update_catalog=false",
+    command=
+        "vendor/bin/phing -logger phing.listener.DefaultLogger "
+            "-Dskip.update_catalog=false",
     env={
         # Ensures the output doesn't use
         # some locale-specific formatting.
@@ -39,7 +41,7 @@ PACKAGE.addStep(shell.Compile(
 PACKAGE.addStep(shell.SetProperty(
     command=WithProperties(
         "/usr/bin/git diff -U0 -- data/i18n/%(shortProject)s.pot | "
-        "/bin/grep -E '^[-+](\"(?!POT-Creation-Date:)|msgid)'"
+            "/bin/grep -E '^[-+](\"(?!POT-Creation-Date:)|msgid)'"
     ),
     extract_fn=lambda rc, stdout, stderr: {'i18n update': not rc},
     description=["Checking", "i18n", "template"],
@@ -112,9 +114,6 @@ PACKAGE.addStep(shell.ShellCommand(
 PACKAGE.addStep(shell.SetProperty(
     command=WithProperties(
         "/bin/ls -1 "
-            "%(shortProject)s-*.tgz "
-            "%(shortProject)s-*.tar "
-            "%(shortProject)s-*.zip "
             "%(shortProject)s-*.phar "
             "%(shortProject)s-*.pubkey "
             "%(shortProject)s-*.pem "
@@ -185,7 +184,7 @@ PACKAGE.addStep(Link(
     doStepIf=helpers.get_package('.pem'),
 ))
 
-PACKAGE.addStep(master.ShellCommand(
+PACKAGE.addStep(master.MasterShellCommand(
     command="php /var/www/php/satis/bin/satis build "
                 "/var/www/satis.json "
                 "/var/www/packages.erebot.net",
