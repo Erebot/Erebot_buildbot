@@ -100,14 +100,6 @@ SCHEDULERS = [
     )
     for buildslave in secrets.BUILDSLAVES
 ] + [
-    # Create triggerable schedulers for the
-    # different installation methods.
-    triggerable.Triggerable(
-        name="Install - %s" % method,
-        builderNames=["Install - %s" % method],
-    )
-    for method in misc.INSTALLATION_METHODS
-] + [
     # Builds the doc for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages.
     PerProjectAndBranchScheduler(

@@ -211,19 +211,3 @@ PACKAGE.addStep(shell.SetProperty(
     maxTime=60,
 ))
 
-#for method in misc.INSTALLATION_METHODS:
-#    PACKAGE.addStep(trigger.Trigger(
-#        schedulerNames=["Install - %s" % method],
-#        set_properties={
-#            'project': Property('project'),
-#            'repository': Property('repository'),
-#            'branch': Property('branch'),
-#            'revision': Property('revision'),
-#            'release': Property('release'),
-#            'pkgBuildnumber': Property('buildnumber'),
-#        },
-#        doStepIf=helpers.negate(helpers.if_component([
-#            'Erebot/www.erebot.net',
-#        ])),
-#    ))
-

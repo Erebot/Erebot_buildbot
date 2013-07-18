@@ -33,16 +33,6 @@ BUILDERS = [
     )
     for buildslave, conf in secrets.BUILDSLAVES.iteritems()
 ] + [
-    # Create an "Install - *" builder for each
-    # installation method we support.
-    BuilderConfig(
-        name='Install - %s' % method,
-        slavenames=['Debian (x64)'],
-        factory=getattr(steps, 'INSTALL_%s' % method.upper()),
-        category='Install',
-    )
-    for method in misc.INSTALLATION_METHODS
-] + [
     BuilderConfig(
         name='Documentation',
         slavenames=['Debian (x64)'],

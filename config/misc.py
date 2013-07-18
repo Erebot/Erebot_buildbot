@@ -38,7 +38,3 @@ GITHUB_BASE = "https://github.com/"
 BUILDBOT_URL = "https://ci.erebot.net/"
 PACKAGE_URL = "https://packages.erebot.net/"
 
-INSTALLATION_METHODS = (
-    'composer',
-    'phar',
-)
