@@ -30,7 +30,6 @@ COMPONENTS = (
     'Erebot/Erebot_Module_WebGetter',
     'Erebot/Erebot_Module_Wordlists',
     'Erebot/Plop',
-    'Erebot/www.erebot.net',
     'fpoirotte/XRL',
 )
 

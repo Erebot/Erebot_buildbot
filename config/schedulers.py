@@ -111,13 +111,7 @@ SCHEDULERS = [
         change_filter=ChangeFilter(
             project=[
                 p for p in misc.COMPONENTS if
-                    p.startswith('Erebot/Erebot_Module_') or
-                    p in (
-                        'Erebot/Erebot',
-                        'Erebot/Erebot_API',
-                        'Erebot/Plop',
-                        'fpoirotte/XRL',
-                    )
+                p != 'Erebot/DependencyInjection'
             ],
             branch_fn=_exclude_values('gh-pages'),
             filter_fn=_has_doc_change,
@@ -137,15 +131,8 @@ SCHEDULERS = [
         ],
         change_filter=ChangeFilter(
             project=[
-                p for p in misc.COMPONENTS if
-                    p.startswith('Erebot/Erebot_Module_') or
-                    p in (
-                        'Erebot/Erebot',
-                        'Erebot/Plop',
-                        'Erebot/Erebot_API',
-                        'fpoirotte/XRL',
-                        'Erebot/DependencyInjection'
-                    )
+                p for p in misc.COMPONENTS
+                if p != 'Erebot/DependencyInjection'
             ],
             branch_fn=_exclude_values('gh-pages'),
             filter_fn=_has_code_change,
@@ -162,25 +149,10 @@ SCHEDULERS = [
         builderNames=['I18N'],
         change_filter=ChangeFilter(
             category=['transifex'],
-        ),
-    ),
-
-    # This scheduler only executes for the Erebot project
-    # and updates the Live instance of the bot.
-    # Not triggered for GitHub Pages or if the changeset
-    # only deals with the documentation.
-    PerProjectAndBranchScheduler(
-        name="Live",
-        treeStableTimer=10 * 60,
-        builderNames=['Live'],
-        change_filter=ChangeFilter(
             project=[
-                'Erebot/Erebot',
-                'Erebot/www.erebot.net',
+                p for p in misc.COMPONENTS
+                if p != 'Erebot/DependencyInjection'
             ],
-            branch_fn=_exclude_values('gh-pages'),
-            filter_fn=_has_code_change,
-            category_fn=_exclude_values('transifex'),
         ),
     ),
 ]
