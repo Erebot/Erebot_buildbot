@@ -85,7 +85,7 @@ PACKAGE.addStep(transfer.FileDownload(
 PACKAGE.addStep(shell.ShellCommand(
     command=WithProperties(
         "vendor/bin/phing release "
-            " -Dopensslkey.tmp=/tmp/buildbot.p12.%(buildnumber)d "
+            " -Dopensslkey=/tmp/buildbot.p12.%(buildnumber)d "
             " -Dopensslpassfile=/tmp/buildbot.sign.%(buildnumber)d"
     ),
     env={
