@@ -77,7 +77,10 @@ PACKAGE.addStep(transfer.FileDownload(
 ))
 
 PACKAGE.addStep(transfer.FileDownload(
-    mastersrc='/home/qa/master/buildenv/certificate.p12',
+    # Necessary until https://github.com/phingofficial/phing/pull/229
+    # is merged into phingofficial/phing.
+#    mastersrc='/home/qa/master/buildenv/certificate.p12',
+    mastersrc='/home/qa/master/buildenv/key',
     slavedest=WithProperties('/tmp/buildbot.p12.%(buildnumber)d'),
     mode=0600,
 ))
