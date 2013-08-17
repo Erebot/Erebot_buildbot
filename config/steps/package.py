@@ -119,7 +119,6 @@ PACKAGE.addStep(shell.SetProperty(
         "/bin/ls -1 "
             "%(shortProject)s-*.phar "
             "%(shortProject)s-*.pubkey "
-            "%(shortProject)s-*.pem "
             "2> /dev/null || :"
     ),
     description="Got any package?",
@@ -168,24 +167,6 @@ for ext in (
         ),
         doStepIf=helpers.get_package(ext),
     ))
-
-PACKAGE.addStep(master.MasterShellCommand(
-    command=WithProperties(
-        "/bin/ln -sf '../certificate.pem' '/var/www/packages.erebot.net/get/%(pkg.pem:-)s'"
-    ),
-    description=['Linking', 'to', 'certificate'],
-    descriptionDone=['Link', 'to', 'certificate'],
-    doStepIf=helpers.get_package('.pem'),
-))
-
-PACKAGE.addStep(Link(
-    label="Release certificate",
-    href=WithProperties(
-        "%(packages)s/get/%(pkg.pem:-)s",
-        packages=lambda _: misc.PACKAGE_URL.rstrip('/'),
-    ),
-    doStepIf=helpers.get_package('.pem'),
-))
 
 PACKAGE.addStep(master.MasterShellCommand(
     command="php /var/www/php/satis/bin/satis build "
