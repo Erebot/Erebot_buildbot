@@ -50,6 +50,13 @@ class PHPUnit(ShellCommand, LogLineObserver):
         }
         self.progressMetrics += tuple(self.metrics.keys())
         self.phpError = False
+        self.percent = None
+
+    def getText2(self, cmd, results):
+        text = [self.name]
+        if self.percent:
+            text.append('(coverage: %s)' % self.parent)
+        return text
 
     def outLineReceived(self, line):
         # Handle (fatal) PHP errors.
@@ -58,7 +65,12 @@ class PHPUnit(ShellCommand, LogLineObserver):
         if self.phpError:
             return
 
-        # Ignore everything that's not related to the tests.
+        # First, detect and handle coverage data.
+        if '[coverage-threshold]' in line and 'Minimum found' in line:
+            self.percent = line.split(':')[1].lstrip().split(' ')[0]
+            return
+
+        # Ignore everything else that's not related to the tests.
         if '[phpunit]' not in line or ' Tests ' not in line:
             return
         (ign, sep, rest) = line.partition(' Tests ')
