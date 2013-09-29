@@ -10,8 +10,8 @@ class ComponentsResource(HtmlResource):
     title = "Components"
     addSlash = True
 
-    def _get_results(self, res, root):
-        status = self.getStatus()
+    def _get_results(self, res, root, req):
+        status = self.getStatus(req)
         results = {}
         labels = dict(enumerate(builder.Results))
         for number, buildername, project, result in res.fetchall():
@@ -28,7 +28,7 @@ class ComponentsResource(HtmlResource):
             )
         return results
 
-    def _engine_txn(self, engine, root, projects, revisions):
+    def _engine_txn(self, engine, root, req):
         conn = engine.connect()
 
         def _exec(txn):
@@ -57,7 +57,7 @@ class ComponentsResource(HtmlResource):
                 ORDER BY b.number DESC;
             """
             rvs = []
-            for revision in revisions:
+            for revision in req.args.get("revisions", []):
                 try:
                     assert revision != ""
                     revision = revision.tolower()
@@ -67,7 +67,7 @@ class ComponentsResource(HtmlResource):
                     pass
 
             pjs = []
-            for project in projects:
+            for project in req.args.get("project", []):
                 try:
                     assert project != ""
                     assert project.lstrip(
@@ -91,7 +91,7 @@ class ComponentsResource(HtmlResource):
             if rvs:
                 args["revisions"] = \
                     "AND sstamps.revision IN ('%s')" % "','".join(rvs)
-            return self._get_results(txn.execute(q % args), root)
+            return self._get_results(txn.execute(q % args), root, req)
 
         try:
             results = conn.transaction(_exec)
@@ -111,8 +111,7 @@ class ComponentsResource(HtmlResource):
         cxt['results'] = yield master.db.pool.do_with_engine(
                                     self._engine_txn,
                                     base_builders_url,
-                                    req.args.get("project", []),
-                                    req.args.get("revision", []),
+                                    req,
                                 )
 
         for bn in builders:
