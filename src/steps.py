@@ -67,7 +67,8 @@ class PHPUnit(ShellCommand, LogLineObserver):
                     i+2 < nb_tokens and \
                     stats[i+1] == 'per':
                     pct = float(pct[:-1])
-                    i = 'coverage-%s' % stats[i+2]
+                    # Remove separators from the names of metrics.
+                    i = 'coverage-%s' % stats[i+2].rstrip('.,')
                     self.build.setProperty(
                         i,
                         min(pct, self.build.getProperty(i, 100))
