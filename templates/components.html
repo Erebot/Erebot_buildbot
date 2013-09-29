@@ -19,19 +19,23 @@
       <td class="LastBuild box {{ results[b.name][c][2] }}">
           <a href="{{ results[b.name][c][1] }}">#{{ results[b.name][c][0] }}</a>
           {% if results[b.name][c][3].hasProperty('coverage-project') %}
-            <br/>{{ "cov. %.2f%%, %.2f%%" % (
-                results[b.name][c][3].getProperty('coverage-project', 0),
-                results[b.name][c][3].getProperty('coverage-class',   0),
-            ) }}
+            <br/><span title="Minimum coverage found per project and class">{{
+                "cov. %.2f%%, %.2f%%" % (
+                    results[b.name][c][3].getProperty('coverage-project', 0),
+                    results[b.name][c][3].getProperty('coverage-class',   0),
+                )
+            }}</span>
           {% endif %}
           {% if results[b.name][c][3].hasProperty('PHPUnit-run') %}
-            <br/><span title="OK / KO / Untested">{{ "Tests: %d/%d/%d" % (
-                results[b.name][c][3].getProperty('PHPUnit-run',        0),
-                results[b.name][c][3].getProperty('PHPUnit-Errors',     0) +
-                results[b.name][c][3].getProperty('PHPUnit-Failures',   0),
-                results[b.name][c][3].getProperty('PHPUnit-Incomplete', 0) +
-                results[b.name][c][3].getProperty('PHPUnit-Skipped',    0),
-            ) }}</span>
+            <br/><span title="Unit tests : OK / KO / Untested">{{
+                "Tests: %d/%d/%d" % (
+                    results[b.name][c][3].getProperty('PHPUnit-run',        0),
+                    results[b.name][c][3].getProperty('PHPUnit-Errors',     0) +
+                    results[b.name][c][3].getProperty('PHPUnit-Failures',   0),
+                    results[b.name][c][3].getProperty('PHPUnit-Incomplete', 0) +
+                    results[b.name][c][3].getProperty('PHPUnit-Skipped',    0),
+                )
+            }}</span>
           {% endif %}
       </td>
     {% else %}
