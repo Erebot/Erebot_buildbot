@@ -11,6 +11,7 @@ class ComponentsResource(HtmlResource):
     addSlash = True
 
     def _get_results(self, res, root):
+        status = self.getStatus()
         results = {}
         labels = dict(enumerate(builder.Results))
         for number, buildername, project, result in res.fetchall():
@@ -18,10 +19,12 @@ class ComponentsResource(HtmlResource):
                 continue
             if buildername not in results:
                 results[buildername] = {}
+            build = status.getBuilder(buildername).getBuild(number)
             results[buildername][project] = (
                 number,
                 u"%s%s/builds/%s" % (root, buildername, number),
-                labels.get(result, "building")
+                labels.get(result, "building"),
+                build,
             )
         return results
 

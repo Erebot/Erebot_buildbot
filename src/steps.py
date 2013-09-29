@@ -50,13 +50,6 @@ class PHPUnit(ShellCommand, LogLineObserver):
         }
         self.progressMetrics += tuple(self.metrics.keys())
         self.phpError = False
-        self.percent = None
-
-    def getText2(self, cmd, results):
-        text = [self.name]
-        if self.percent:
-            text.append('(coverage: %s)' % self.parent)
-        return text
 
     def outLineReceived(self, line):
         # Handle (fatal) PHP errors.
@@ -67,7 +60,18 @@ class PHPUnit(ShellCommand, LogLineObserver):
 
         # First, detect and handle coverage data.
         if '[coverage-threshold]' in line and 'Minimum found' in line:
-            self.percent = line.split(':')[1].lstrip().split(' ')[0]
+            stats = line.split(':')[1].lstrip().split(' ')
+            nb_tokens = len(stats)
+            for i, pct in enumerate(stats):
+                if pct.endswith('%') and \
+                    i+2 < nb_tokens and \
+                    stats[i+1] == 'per':
+                    pct = float(pct[:-1])
+                    i = 'coverage-%s' % stats[i+2]
+                    self.build.setProperty(
+                        i,
+                        min(pct, self.build.getProperty(i, 100))
+                    )
             return
 
         # Ignore everything else that's not related to the tests.
@@ -99,8 +103,8 @@ class PHPUnit(ShellCommand, LogLineObserver):
 
     def createSummary(self, log):
         for metric, value in self.metrics.iteritems():
-            old_value = self.getProperty("PHPUnit-%s" % metric, 0)
-            self.setProperty(
+            old_value = self.build.getProperty("PHPUnit-%s" % metric, 0)
+            self.build.setProperty(
                 "PHPUnit-%s" % metric,
                 old_value + value,
                 "PHPUnit"
