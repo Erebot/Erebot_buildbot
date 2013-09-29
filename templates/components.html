@@ -18,7 +18,6 @@
     {% if b.name in results and c in results[b.name] %}
       <td class="LastBuild box {{ results[b.name][c][2] }}">
           <a href="{{ results[b.name][c][1] }}">#{{ results[b.name][c][0] }}</a>
-          <br/>{{ results[b.name][c][2] }}
           {% if results[b.name][c][3].hasProperty('coverage-project') %}
             <br/>{{ "cov. %.2f%%, %.2f%%" % (
                 results[b.name][c][3].getProperty('coverage-project', 0),
@@ -26,13 +25,13 @@
             ) }}
           {% endif %}
           {% if results[b.name][c][3].hasProperty('PHPUnit-run') %}
-            <br/>{{ "OK: %d, KO: %d, N/A: %d" % (
+            <br/><span title="OK / KO / Untested">{{ "Tests: %d/%d/%d" % (
                 results[b.name][c][3].getProperty('PHPUnit-run',        0),
                 results[b.name][c][3].getProperty('PHPUnit-Errors',     0) +
                 results[b.name][c][3].getProperty('PHPUnit-Failures',   0),
                 results[b.name][c][3].getProperty('PHPUnit-Incomplete', 0) +
                 results[b.name][c][3].getProperty('PHPUnit-Skipped',    0),
-            ) }}
+            ) }}</span>
           {% endif %}
       </td>
     {% else %}
