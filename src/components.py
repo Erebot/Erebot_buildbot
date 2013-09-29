@@ -17,9 +17,13 @@ class ComponentsResource(HtmlResource):
         for number, buildername, project, result in res.fetchall():
             if project not in misc.COMPONENTS:
                 continue
+            try:
+                build = status.getBuilder(buildername).getBuild(number)
+            except KeyError:
+                # Ignore errors raised for obsolete builders.
+                continue
             if buildername not in results:
                 results[buildername] = {}
-            build = status.getBuilder(buildername).getBuild(number)
             results[buildername][project] = (
                 number,
                 u"%s%s/builds/%s" % (root, buildername, number),
