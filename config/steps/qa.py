@@ -30,6 +30,8 @@ QA.addStep(shell.ShellCommand(
         # some locale-specific formatting.
         'LANG': "en_US.UTF-8",
         'PATH': WithProperties("${PHP%(PHP_MAIN)s_PATH}:${PATH}"),
+        'COMPOSER_PROCESS_TIMEOUT': '900',
+        'COMPOSER_NO_INTERACTION': '1',
         # Work around a bug in WinXP where this variables is not
         # defined if the user did not log into a graphical session.
         'APPDATA': WithProperties("%(APPDATA:-${USERPROFILE}\\Application Data\\)s"),
