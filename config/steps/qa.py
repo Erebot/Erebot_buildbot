@@ -36,7 +36,7 @@ QA.addStep(shell.ShellCommand(
         # defined if the user did not log into a graphical session.
         'APPDATA': WithProperties("%(APPDATA:-${USERPROFILE}\\Application Data\\)s"),
     },
-    maxTime=10*60,
+    maxTime=20*60,
 ))
 
 QA.addStep(CountingShellCommand(
