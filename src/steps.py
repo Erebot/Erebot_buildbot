@@ -423,6 +423,8 @@ class FetchI18n(ShellCommand):
             files.add( (txProject, txResource, locale) )
 
         for txProject, txResource, locale in files:
+            if locale in ('en', 'en_US'):
+                continue
             cmd.append(
                 "/bin/mkdir -p data/i18n/%(locale)s/LC_MESSAGES/ && "
                 "/usr/bin/wget -O "
@@ -450,6 +452,8 @@ class AddI18n(ShellCommand):
 
         files = set()
         for c in self.build.allChanges():
+            if c.properties.getProperty('locale') in ('en', 'en_US'):
+                continue
             for f in c.files:
                 if f.startswith('data/i18n/'):
                     files.add(f)
@@ -470,7 +474,10 @@ class CommitI18n(ShellCommand):
 
         locales = {}
         for c in self.build.allChanges():
-            locales[c.properties.getProperty('locale')] = \
+            locale = c.properties.getProperty('locale')
+            if locale in ('en', 'en_US'):
+                continue
+            locales[locale] = \
                 c.properties.getProperty('percent')
         sorted_locales = locales.keys()
         sorted_locales.sort()
