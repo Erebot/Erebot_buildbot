@@ -70,7 +70,6 @@ def _has_code_change(change):
 SCHEDULERS = [
     # Main scheduler for the tests, that will trigger
     # a series of tests for each distrob.
-    # The tests are run for Erebot (core), modules & PLOP.
     # Not triggered for GitHub Pages or if the changeset
     # only deals with the documentation.
     PerProjectAndBranchScheduler(
@@ -100,7 +99,7 @@ SCHEDULERS = [
     )
     for buildslave in secrets.BUILDSLAVES
 ] + [
-    # Builds the doc for Erebot (core), modules & PLOP.
+    # Builds the documentation.
     # Not triggered for GitHub Pages.
     PerProjectAndBranchScheduler(
         name="Documentation",
@@ -119,7 +118,7 @@ SCHEDULERS = [
         ),
     ),
 
-    # Runs for Erebot (core), modules, PLOP & Erebot_API
+    # Triggers packaging & QA-related builders.
     # Not triggered for GitHub Pages or if the changeset
     # only deals with the documentation.
     PerProjectAndBranchScheduler(
