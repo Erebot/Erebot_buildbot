@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import os.path
+
 def find_packages():
     def _extractor(rc, stdout, stderr):
         lines = stdout.splitlines()
-        exts = ['.zip', '.tar', '.tgz', '.phar']
-        for ext in exts[:]:
-            exts.append(ext + '.pubkey')
-        exts.append('.pem')
+        exts = ['.phar', '.phar.pubkey']
         prefix = None
         props = {}
         found_packages = False
@@ -14,6 +13,7 @@ def find_packages():
         for line in lines:
             for ext in exts:
                 if line.endswith(ext):
+                    line = os.path.basename(line)
                     prop_ext = 'pkg' + ext
                     pfx = line[:-len(ext)]
                     if prefix is None:

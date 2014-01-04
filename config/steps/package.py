@@ -117,8 +117,8 @@ PACKAGE.addStep(shell.ShellCommand(
 PACKAGE.addStep(shell.SetProperty(
     command=WithProperties(
         "/bin/ls -1 "
-            "%(shortProject)s-*.phar "
-            "%(shortProject)s-*.pubkey "
+            "build/%(shortProject)s-*.phar "
+            "build/%(shortProject)s-*.pubkey "
             "2> /dev/null || :"
     ),
     description="Got any package?",
@@ -145,7 +145,7 @@ for ext in (
         maxsize = 50 * (1 << 20) # 50 MB
 
     PACKAGE.addStep(transfer.FileUpload(
-        slavesrc=WithProperties("%%(pkg%s:-)s" % ext),
+        slavesrc=WithProperties("build/%%(pkg%s:-)s" % ext),
         masterdest=WithProperties(
             "/var/www/packages.erebot.net/get/%%(pkg%s:-)s" % ext
         ),
